@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black" >
+
+    <Button
+        android:id="@+id/createNewChat"
+        style="@style/AppBaseTheme"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="47dp"
+        android:layout_marginTop="116dp"
+        android:text="@string/create_new_chat" 
+        android:textSize="12sp"/>
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/createNewChat"
+        android:layout_marginRight="52dp"
+        android:text="@string/login" 
+        android:textSize="12sp"/>
+
+    <Button
+        android:id="@+id/stopStart"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignLeft="@+id/login"
+        android:layout_below="@+id/login"
+        android:layout_marginTop="63dp"
+        android:text="@string/stop_start"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/editChats"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignLeft="@+id/createNewChat"
+        android:layout_alignTop="@+id/stopStart"
+        android:text="Edit chats"
+        android:textSize="12sp" />
+
+</RelativeLayout>

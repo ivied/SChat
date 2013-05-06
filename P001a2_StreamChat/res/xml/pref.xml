@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+ xmlns:android="http://schemas.android.com/apk/res/android">
+<CheckBoxPreference
+ android:key="stringMessage"
+ android:summary="Show message string"
+ android:title="Message string"
+ android:defaultValue ="true">
+</CheckBoxPreference>
+<EditTextPreference
+ android:key="count"
+ android:summary="of visible strings"
+ android:title="Count">
+</EditTextPreference>
+</PreferenceScreen>

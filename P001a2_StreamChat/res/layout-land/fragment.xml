@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black" >
+
+    <Button
+        android:id="@+id/createNewChat"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:layout_weight="0.25"
+        android:text="@string/create_new_chat"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/stopStart"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_weight="0.25"
+        android:text="@string/stop_start" 
+        android:textSize="12sp"/>
+
+    <Button
+        android:id="@+id/editChats"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="40dp"
+        android:layout_toRightOf="@+id/createNewChat"
+        android:layout_weight="0.25"
+        android:text="Edit chats"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="100dp"
+        android:layout_height="80dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="40dp"
+        android:layout_toLeftOf="@+id/stopStart"
+        android:layout_weight="0.25"
+        android:text="@string/login"
+        android:textSize="12sp" />
+
+</RelativeLayout>
