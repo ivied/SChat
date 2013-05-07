@@ -41,6 +41,7 @@ public class SendMessageService extends Service {
 	public String token=null;
 	HttpClient client = new DefaultHttpClient();
 	IrcClient bot;
+	public static String sc2tvNick;
 	public void onCreate() {
 		super.onCreate();
 		//es = Executors.newFixedThreadPool(1);
@@ -124,6 +125,7 @@ public class SendMessageService extends Service {
 			
 			
 			 name = preferences.getString(SAVED_NAME, "");
+			 sc2tvNick = preferences.getString(SAVED_NAME, "");
 			 pass = preferences.getString(SAVED_PASS, "");
 
 			Log.i(MainActivity.LOG_TAG, name + " " + pass);

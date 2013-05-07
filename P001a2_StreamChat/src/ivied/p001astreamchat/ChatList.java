@@ -33,16 +33,18 @@ import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -71,7 +73,9 @@ public class ChatList extends SherlockFragmentActivity {
 
 
     public static class CursorLoaderListFragment extends SherlockListFragment
-            implements LoaderManager.LoaderCallbacks<Cursor>  {
+            implements LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener {
+    	 static ListView listView;
+    	    static ActionMode mMode;
     	final String LOG_TAG = "myLogs";
     	
     	final Uri CONTACT_URI = Uri.parse("content://ivied.p001astreamchat/chats/show");
@@ -109,7 +113,9 @@ public class ChatList extends SherlockFragmentActivity {
     		};
     		(root.findViewById(R.id.internalEmpty)).setId(INTERNAL_EMPTY_ID);
     		(root.findViewById(R.id.textOfMessage)).setId(tagNumber);
+    		//(root.findViewById(android.R.id.list)).setId(android.R.id.list);
     		mList = (ListView) root.findViewById(android.R.id.list);
+    	
     		mListContainer = root.findViewById(R.id.listContainer);
     		mProgressContainer = root.findViewById(R.id.progressContainer);
     		mListShown = true;
@@ -173,11 +179,11 @@ public class ChatList extends SherlockFragmentActivity {
     				from, to, 0);
     		
     		
-    		//ListView lvData = (ListView) getActivity().findViewById(
-    			//	android.R.id.list);
+    		listView = mList;
+    		//lvData.setAdapter(adapter);*/
     		
-    		//lvData.setAdapter(adapter);
-
+    		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+    		listView.setOnItemClickListener(this);
     		setListAdapter( mAdapter);
 
     		
@@ -193,6 +199,69 @@ public class ChatList extends SherlockFragmentActivity {
         }
         
       
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            // Notice how the ListView api is lame
+            // You can use mListView.getCheckedItemIds() if the adapter
+            // has stable ids, e.g you're using a CursorAdaptor
+            SparseBooleanArray checked = listView.getCheckedItemPositions();
+            boolean hasCheckedElement = false;
+            for (int i = 0 ; i < checked.size() && ! hasCheckedElement ; i++) {
+                hasCheckedElement = checked.valueAt(i);
+            }
+     
+            if (hasCheckedElement) {
+                if (mMode == null) {
+                    Log.i(LOG_TAG,"chek");
+                    mMode = startActionMode(new ModeCallback());
+                }
+            } else {
+                if (mMode != null) {
+                    mMode.finish();
+                }
+            }
+        };  
+        
+        public  final class ModeCallback implements ActionMode.Callback {
+       	 
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                // Create the menu from the xml file
+                MenuInflater inflater = getSupportMenuInflater();
+                inflater.inflate(R.menu.message_menu, menu);
+                return true;
+            }
+     
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                // Here, you can checked selected items to adapt available actions
+                return false;
+            }
+     
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                // Destroying action mode, let's unselect all items
+                for (int i = 0; i < CursorLoaderListFragment.listView.getAdapter().getCount(); i++)
+                	CursorLoaderListFragment.listView.setItemChecked(i, false);
+     
+                if (mode == CursorLoaderListFragment.mMode) {
+                	CursorLoaderListFragment.mMode = null;
+                }
+            }
+     
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                long[] selected = CursorLoaderListFragment.listView.getCheckedItemIds();
+                if (selected.length > 0) {
+                    for (long id: selected) {
+                        // Do something with the selected item
+                    }
+                }
+                mode.finish();
+                return true;
+            }
+        };
+     
         
         
 

@@ -686,12 +686,13 @@ containing a value of this type.
         public static final int abs__bright_foreground_disabled_holo_light=0x7f070005;
         public static final int abs__bright_foreground_holo_dark=0x7f070002;
         public static final int abs__bright_foreground_holo_light=0x7f070003;
-        public static final int abs__primary_text_disable_only_holo_dark=0x7f070009;
-        public static final int abs__primary_text_disable_only_holo_light=0x7f07000a;
-        public static final int abs__primary_text_holo_dark=0x7f07000b;
-        public static final int abs__primary_text_holo_light=0x7f07000c;
+        public static final int abs__primary_text_disable_only_holo_dark=0x7f07000a;
+        public static final int abs__primary_text_disable_only_holo_light=0x7f07000b;
+        public static final int abs__primary_text_holo_dark=0x7f07000c;
+        public static final int abs__primary_text_holo_light=0x7f07000d;
         public static final int black=0x7f070006;
         public static final int nick=0x7f070008;
+        public static final int private_msg=0x7f070009;
         public static final int white=0x7f070007;
     }
     public static final class dimen {
@@ -1079,6 +1080,7 @@ containing a value of this type.
         public static final int btnSc2tvAddLogin=0x7f050049;
         public static final int btnTwitchAdd=0x7f050038;
         public static final int btnTwitchLogin=0x7f05004d;
+        public static final int cab_action_delete=0x7f050056;
         public static final int channelCode=0x7f050054;
         public static final int channelName=0x7f050052;
         public static final int chatName=0x7f050037;
@@ -1159,6 +1161,7 @@ containing a value of this type.
     }
     public static final class menu {
         public static final int main=0x7f0c0000;
+        public static final int message_menu=0x7f0c0001;
     }
     public static final class string {
         public static final int Login_complete=0x7f0a0024;

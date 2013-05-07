@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -16,6 +17,7 @@ import android.text.Spannable.Factory;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,12 +32,21 @@ import android.widget.TextView;
  * 
  */
 public class ChatCursorAdapter extends SimpleCursorAdapter {
+	final String SAVED_NAME = "sc2tv";
+	final public static Pattern bold = Pattern.compile("(\\<b\\>)(.*)(\\<\\/b\\>)");
+	 // Span to set text BOLD
+	   final static StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+	   SharedPreferences preferences;
+	 static String sc2tvNick;
 	public ChatCursorAdapter(Context context, int _layout, Cursor cursor,
 			String[] from, int[] to, int flags) {
 		super(context, _layout, cursor, from, to, flags);
 		// TODO выделение личных сообщений
+		preferences = context.getSharedPreferences("Login",
+				0);
+		sc2tvNick = preferences.getString(SAVED_NAME, "");
 	}
-
+	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		super.bindView(view, context, cursor);
@@ -257,7 +268,7 @@ public class ChatCursorAdapter extends SimpleCursorAdapter {
 	 * @return
 	 */
 	public static boolean addSmiles(Context context, Spannable spannable,
-			int length) {
+			int length, int lengthAdress, boolean privateM) {
 		boolean hasChanges = false;
 		for (Entry<Pattern, Integer> entry : emoticons.entrySet()) {
 			Matcher matcher = entry.getKey().matcher(spannable);
@@ -283,6 +294,14 @@ public class ChatCursorAdapter extends SimpleCursorAdapter {
 		spannable.setSpan(new ForegroundColorSpan(context.getResources()
 				.getColor(R.color.nick)), 0, length,
 				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		if (lengthAdress > 0){
+			spannable.setSpan(bss, length+1, length + 1 + lengthAdress, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+			if (privateM) {	spannable.setSpan(new ForegroundColorSpan(context.getResources()
+						.getColor(R.color.private_msg)), length,
+						spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			}
+		}
+		
 		return hasChanges;
 	}
 
@@ -298,11 +317,23 @@ public class ChatCursorAdapter extends SimpleCursorAdapter {
 	public static Spannable getSmiledText(Context context, CharSequence text,
 			CharSequence nick) {
 		// TODO выодить spannable объект с переработкой <b> тегов
-
-		Spannable spannable = spannableFactory.newSpannable(nick + ": " + text);
+		int adressLength = 0;
+		boolean privateM = false;
+		Matcher matcher = bold.matcher(text);
+		String message = text.toString();
+		if (matcher.find()) {
+		message = message.replace("<b>", "").replace("</b>", "");
+		String privateNick = sc2tvNick;
+		String adress = matcher.group(2);
+		privateM = adress.equalsIgnoreCase(privateNick);
+		adressLength = matcher.group(2).length();
+		}
+		
+		
+		Spannable spannable = spannableFactory.newSpannable(nick + ": " + message);
 		int length = nick.length() + 1;
 
-		addSmiles(context, spannable, length);
+		addSmiles(context, spannable, length, adressLength, privateM);
 
 		return spannable;
 	}

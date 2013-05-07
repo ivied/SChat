@@ -3,4 +3,6 @@
     <color name="black" >#000000</color>
     <color name="white" >#ffffff</color>
     <color name="nick" >#4682B4</color>
+    <color name="private_msg">#ED7221</color>
+   
 </resources>
