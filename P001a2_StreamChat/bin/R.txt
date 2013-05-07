@@ -400,6 +400,9 @@ int id abs__submit_area 0x7f05002f
 int id abs__textButton 0x7f050013
 int id abs__title 0x7f05001b
 int id abs__up 0x7f05000b
+int id action_add_to_clipboard 0x7f050058
+int id action_link 0x7f050056
+int id action_private 0x7f050057
 int id action_settings 0x7f050055
 int id btnCleanSc2tv 0x7f050034
 int id btnCleanSc2tvLogin 0x7f050048
@@ -409,7 +412,6 @@ int id btnSc2tvAdd 0x7f050035
 int id btnSc2tvAddLogin 0x7f050049
 int id btnTwitchAdd 0x7f050038
 int id btnTwitchLogin 0x7f05004d
-int id cab_action_delete 0x7f050056
 int id channelCode 0x7f050054
 int id channelName 0x7f050052
 int id chatName 0x7f050037

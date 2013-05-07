@@ -74,8 +74,8 @@ public class ChatList extends SherlockFragmentActivity {
 
     public static class CursorLoaderListFragment extends SherlockListFragment
             implements LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener {
-    	 static ListView listView;
-    	    static ActionMode mMode;
+    	 private ListView listView;
+    	 private ActionMode mMode;
     	final String LOG_TAG = "myLogs";
     	
     	final Uri CONTACT_URI = Uri.parse("content://ivied.p001astreamchat/chats/show");
@@ -213,7 +213,7 @@ public class ChatList extends SherlockFragmentActivity {
             if (hasCheckedElement) {
                 if (mMode == null) {
                     Log.i(LOG_TAG,"chek");
-                    mMode = startActionMode(new ModeCallback());
+                    mMode = getSherlockActivity().startActionMode(callback);;
                 }
             } else {
                 if (mMode != null) {
@@ -222,45 +222,29 @@ public class ChatList extends SherlockFragmentActivity {
             }
         };  
         
-        public  final class ModeCallback implements ActionMode.Callback {
-       	 
-            @Override
+        private ActionMode.Callback callback = new ActionMode.Callback() {
+
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                // Create the menu from the xml file
-                MenuInflater inflater = getSupportMenuInflater();
-                inflater.inflate(R.menu.message_menu, menu);
-                return true;
+              mode.getMenuInflater().inflate(R.menu.message_menu, menu);
+              return true;
             }
-     
-            @Override
+
             public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                // Here, you can checked selected items to adapt available actions
-                return false;
+              return false;
             }
-     
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-                // Destroying action mode, let's unselect all items
-                for (int i = 0; i < CursorLoaderListFragment.listView.getAdapter().getCount(); i++)
-                	CursorLoaderListFragment.listView.setItemChecked(i, false);
-     
-                if (mode == CursorLoaderListFragment.mMode) {
-                	CursorLoaderListFragment.mMode = null;
-                }
-            }
-     
-            @Override
+
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                long[] selected = CursorLoaderListFragment.listView.getCheckedItemIds();
-                if (selected.length > 0) {
-                    for (long id: selected) {
-                        // Do something with the selected item
-                    }
-                }
-                mode.finish();
-                return true;
+              Log.d(LOG_TAG, "item " + item.getTitle());
+              return false;
             }
-        };
+
+            public void onDestroyActionMode(ActionMode mode) {
+              Log.d(LOG_TAG, "destroy");
+              mMode = null;
+            }
+
+          };
+
      
         
         

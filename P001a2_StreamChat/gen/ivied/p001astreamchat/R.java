@@ -1071,6 +1071,9 @@ containing a value of this type.
         public static final int abs__textButton=0x7f050013;
         public static final int abs__title=0x7f05001b;
         public static final int abs__up=0x7f05000b;
+        public static final int action_add_to_clipboard=0x7f050058;
+        public static final int action_link=0x7f050056;
+        public static final int action_private=0x7f050057;
         public static final int action_settings=0x7f050055;
         public static final int btnCleanSc2tv=0x7f050034;
         public static final int btnCleanSc2tvLogin=0x7f050048;
@@ -1080,7 +1083,6 @@ containing a value of this type.
         public static final int btnSc2tvAddLogin=0x7f050049;
         public static final int btnTwitchAdd=0x7f050038;
         public static final int btnTwitchLogin=0x7f05004d;
-        public static final int cab_action_delete=0x7f050056;
         public static final int channelCode=0x7f050054;
         public static final int channelName=0x7f050052;
         public static final int chatName=0x7f050037;
