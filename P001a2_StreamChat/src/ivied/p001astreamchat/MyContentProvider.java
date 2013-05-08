@@ -129,7 +129,7 @@ public class MyContentProvider extends ContentProvider {
 			String[] selectionArgs, String sortOrder) {
 		db = dbHelper.getWritableDatabase();
 
-		String id = uri.getLastPathSegment();
+		//String id = uri.getLastPathSegment();
 		// проверяем Uri
 		Cursor cursor =null;
 		switch (uriMatcher.match(uri)) {
@@ -162,7 +162,7 @@ public class MyContentProvider extends ContentProvider {
 			break;
 		case URI_MESSAGES_INSERT:
 		
-		 
+			Log.d(LOG_TAG, "selection = " + selection);
 			cursor = db.query(MESSAGES_TABLE, projection, selection,
 					selectionArgs, null, having, sortOrder, howManyShow);
 			cursor.setNotificationUri(getContext().getContentResolver(),

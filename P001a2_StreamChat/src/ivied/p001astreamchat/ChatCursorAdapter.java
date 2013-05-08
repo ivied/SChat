@@ -1,7 +1,14 @@
 package ivied.p001astreamchat;
 
+import ivied.p001astreamchat.ChatService.IrcClientShow;
+
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -34,10 +41,13 @@ import android.widget.TextView;
 public class ChatCursorAdapter extends SimpleCursorAdapter {
 	final String SAVED_NAME = "sc2tv";
 	final public static Pattern bold = Pattern.compile("(\\<b\\>)(.*)(\\<\\/b\\>)");
+	
 	 // Span to set text BOLD
 	   final static StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
 	   SharedPreferences preferences;
 	 static String sc2tvNick;
+	//static Map<Integer, Integer> linkMap= new HashMap<Integer,Integer>();
+	static List<Integer> linkMap = new ArrayList<Integer>();
 	public ChatCursorAdapter(Context context, int _layout, Cursor cursor,
 			String[] from, int[] to, int flags) {
 		super(context, _layout, cursor, from, to, flags);
@@ -301,7 +311,27 @@ public class ChatCursorAdapter extends SimpleCursorAdapter {
 						spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
 		}
-		
+		 
+	/*	Collection<Integer> link = linkMap.values();
+		Iterator linkIter = link.iterator();
+		Integer linkClose = null;
+		int linkStart = 0;
+		while (linkIter.hasNext()) {
+			linkClose = (Integer) linkIter.next();
+			
+			for (Entry<Integer, Integer> entry : linkMap.entrySet()) {
+		        if (linkClose.equals(entry.getValue())) {
+		            linkStart = entry.getKey();
+		        }
+		        
+		}
+			Log.i(MainActivity.LOG_TAG, "линк "+  linkClose+ " " + linkStart);
+		}
+		*/
+		    for (Integer startOfLink : linkMap){
+		    	//spannable.setSpan(new UnderlineSpan(), startOfLink, startOfLink+4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		    	Log.i(MainActivity.LOG_TAG, "линк " + startOfLink );
+		    }
 		return hasChanges;
 	}
 
@@ -329,6 +359,12 @@ public class ChatCursorAdapter extends SimpleCursorAdapter {
 		adressLength = matcher.group(2).length();
 		}
 		
+		matcher = ActionProviderLink.URL.matcher(message);
+		while (matcher.find()){
+		
+		linkMap.add(matcher.start());	
+		message = message.replace(matcher.group(), "link");
+		}
 		
 		Spannable spannable = spannableFactory.newSpannable(nick + ": " + message);
 		int length = nick.length() + 1;
