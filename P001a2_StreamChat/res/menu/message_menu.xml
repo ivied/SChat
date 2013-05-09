@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+     <item
+        android:id="@+id/action_link"
+        android:title="Show links"
+        android:showAsAction="withText|ifRoom"
+        android:icon="@android:drawable/ic_menu_agenda" 
+         android:actionProviderClass="ivied.p001astreamchat.ActionProviderLink"/>
+     <item
+        android:id="@+id/action_add_to_clipboard"
+        android:title="Add message to clipboard"
+        android:icon="@android:drawable/ic_menu_save" />
+     
+     <item
+        android:id="@+id/action_private"
+        android:title="Send private message"
+        android:showAsAction="always"
+        android:icon="@android:drawable/ic_menu_edit" />
+     
+     
+</menu>

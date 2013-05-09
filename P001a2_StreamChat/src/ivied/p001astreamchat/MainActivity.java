@@ -53,8 +53,8 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
     SendMessageService SendService;
  	boolean bound = false;
  	boolean boundSend = false;
- 	DialogSendChannels dlg1;
- 	DialogTwitchChannels dlg2;
+ 	DialogSendChannels dlgChoseChannels;
+ 	DialogChoseSmile dlgChoseSmile;
  	  SharedPreferences sp;
  	final Uri SERVICE_URI = Uri.parse("content://ivied.p001astreamchat/channels/service");
  	
@@ -120,6 +120,10 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
     	getPrefs();
     	
     }
+    
+    public void addSmile (View v) {
+    	//dlgChoseSmile = 
+    }
 
     public void pressEnter(View v){
     	EditText  textOfMessage = (EditText) findViewById(
@@ -134,8 +138,8 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
     public void openDialogSendChannels (View v) {
    
     	 
-    	dlg1= DialogSendChannels.newInstance( mTabHost.getCurrentTabTag());
-		dlg1.show(getSupportFragmentManager(),  mTabHost.getCurrentTabTag());
+    	dlgChoseChannels= DialogSendChannels.newInstance( mTabHost.getCurrentTabTag());
+		dlgChoseChannels.show(getSupportFragmentManager(),  mTabHost.getCurrentTabTag());
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {

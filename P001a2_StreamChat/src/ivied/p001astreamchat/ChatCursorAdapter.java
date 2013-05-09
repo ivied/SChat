@@ -1,13 +1,8 @@
 package ivied.p001astreamchat;
 
-import ivied.p001astreamchat.ChatService.IrcClientShow;
-
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,6 +20,7 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.StyleSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -329,8 +325,12 @@ public class ChatCursorAdapter extends SimpleCursorAdapter {
 		}
 		*/
 		    for (Integer startOfLink : linkMap){
-		    	//spannable.setSpan(new UnderlineSpan(), startOfLink, startOfLink+4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		    	Log.i(MainActivity.LOG_TAG, "линк " + startOfLink );
+		    	spannable.setSpan(new UnderlineSpan(), length + 1 + startOfLink ,
+		    			length + 1  + startOfLink + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		    	spannable.setSpan(new ForegroundColorSpan(context.getResources()
+						.getColor(R.color.link)), length + 1 + startOfLink,
+						length + 1  + startOfLink + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		    	
 		    }
 		return hasChanges;
 	}
@@ -347,6 +347,7 @@ public class ChatCursorAdapter extends SimpleCursorAdapter {
 	public static Spannable getSmiledText(Context context, CharSequence text,
 			CharSequence nick) {
 		// TODO выодить spannable объект с переработкой <b> тегов
+		linkMap.clear();
 		int adressLength = 0;
 		boolean privateM = false;
 		Matcher matcher = bold.matcher(text);
@@ -364,6 +365,7 @@ public class ChatCursorAdapter extends SimpleCursorAdapter {
 		
 		linkMap.add(matcher.start());	
 		message = message.replace(matcher.group(), "link");
+		matcher = ActionProviderLink.URL.matcher(message);
 		}
 		
 		Spannable spannable = spannableFactory.newSpannable(nick + ": " + message);

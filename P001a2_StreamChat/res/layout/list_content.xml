@@ -59,22 +59,36 @@
         android:text="Enter" 
         android:textSize="12sp"/>
 
+    <ImageButton
+        android:id="@+id/smiles"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@+id/footer"
+        android:background="@drawable/sc2tvsmileminihappy"
+        android:contentDescription="Smile"
+        android:onClick="addSmile"
+        android:textSize="12sp" />
+
     <EditText
         android:id="@+id/textOfMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/enter"
-        android:layout_alignBottom="@+id/enter"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        
         android:layout_toLeftOf="@+id/enter"
-        android:layout_toRightOf="@+id/footer"
+        android:layout_toRightOf="@+id/smiles"
         android:ems="10" />
 
 </RelativeLayout>
-        <TextView android:id="@+id/internalEmpty"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
     </FrameLayout>
+
+    <TextView
+        android:id="@+id/internalEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </FrameLayout>

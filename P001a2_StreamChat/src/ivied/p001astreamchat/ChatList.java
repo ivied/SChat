@@ -21,7 +21,10 @@ import ivied.p001astreamchat.MainActivity.TabInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -41,10 +44,8 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -200,7 +201,7 @@ public class ChatList extends SherlockFragmentActivity {
 			listView = mList;
 			// lvData.setAdapter(adapter);*/
 
-			listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+			listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 			listView.setOnItemClickListener(this);
 			setListAdapter(mAdapter);
 
@@ -257,6 +258,7 @@ public class ChatList extends SherlockFragmentActivity {
 				String[] selectionArgs = new String[] { _id };
 				Cursor c = getSherlockActivity().getContentResolver().query(
 						INSERT_URI, null, " _id = ?", selectionArgs, null);
+				c.moveToNext();
 				if (selected.length > 0) {
 
 					switch (item.getItemId()) {
@@ -266,9 +268,20 @@ public class ChatList extends SherlockFragmentActivity {
 						break;
 					case R.id.action_add_to_clipboard:
 						Log.i(LOG_TAG, "Item clicked: clipboard");
+						String message = c.getString(5);
+						int sdk = android.os.Build.VERSION.SDK_INT;
+						if(sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+						    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+						    clipboard.setText(message);
+						}/* else {
+						    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE); 
+						    android.content.ClipData clip = android.content.ClipData.newPlainText("from chat",message);
+						    clipboard.setPrimaryClip(clip);
+						}*/
+						
 						break;
 					case R.id.action_private:
-						c.moveToNext();
+						
 						String nick = c.getString(4);
 						EditText msg = (EditText) getSherlockActivity().findViewById(tagNumber);
 						
