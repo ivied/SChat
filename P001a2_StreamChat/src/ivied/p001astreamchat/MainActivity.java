@@ -122,7 +122,8 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
     }
     
     public void addSmile (View v) {
-    	//dlgChoseSmile = 
+    	dlgChoseSmile = new DialogChoseSmile();
+    	dlgChoseSmile.show(getSupportFragmentManager(), "Smile");
     }
 
     public void pressEnter(View v){
@@ -134,6 +135,8 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
     textOfMessage.setText("");  
     	
     }
+    
+  
     
     public void openDialogSendChannels (View v) {
    

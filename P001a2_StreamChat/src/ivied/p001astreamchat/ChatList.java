@@ -106,7 +106,7 @@ public class ChatList extends SherlockFragmentActivity {
 		View mProgressContainer;
 		View mListContainer;
 		String chatName;
-		int tagNumber;
+		static int  tagNumber;
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,

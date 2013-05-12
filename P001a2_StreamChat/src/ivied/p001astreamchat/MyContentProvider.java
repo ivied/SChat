@@ -134,7 +134,7 @@ public class MyContentProvider extends ContentProvider {
 		Cursor cursor =null;
 		switch (uriMatcher.match(uri)) {
 		case URI_MESSAGES_SHOW:
-			Log.d(LOG_TAG, "selection = " + selection);
+			
 			String idFrom ="0";
 			cursor = db.query(MESSAGES_TABLE, projection, selection,
 					selectionArgs, null, null, sortOrder, howManyShow);
@@ -147,7 +147,7 @@ public class MyContentProvider extends ContentProvider {
 			}
 			
 			
-			Log.d(LOG_TAG, "messageshow =" + idFrom);
+			
 			selection = "( " + selection + " )" + " AND " + " _id > ?";
 
 			List<String> wordList = new ArrayList(Arrays.asList(selectionArgs));
