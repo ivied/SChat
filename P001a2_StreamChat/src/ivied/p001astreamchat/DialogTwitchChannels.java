@@ -21,23 +21,19 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.widget.EditText;
 
-
-public class DialogTwitchChannels extends DialogFragment implements  OnClickListener{
+public class DialogTwitchChannels extends DialogFragment implements
+		OnClickListener {
 	EditText input;
- 
-
-   
 
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		 
 
-		
 		input = new EditText(getActivity());
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
-        .setTitle("Add new twich channel").setView(input).setPositiveButton("Add", this);
-       
-    return adb.create();
-	
+				.setTitle("Add new twich channel").setView(input)
+				.setPositiveButton("Add", this);
+
+		return adb.create();
+
 	}
 
 	@Override
@@ -45,35 +41,37 @@ public class DialogTwitchChannels extends DialogFragment implements  OnClickList
 		// TODO Auto-generated method stub
 		String channel;
 		channel = input.getText().toString();
-		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet( "http://api.justin.tv/api/stream/list.json?channel=" + channel);
-		String line=null;
-		try {
+		if (!channel.equals("")) {
+			HttpClient client = new DefaultHttpClient();
+			HttpGet httpGet = new HttpGet(
+					"http://api.justin.tv/api/stream/list.json?channel="
+							+ channel);
+			String line = null;
+			try {
 
-			HttpResponse response = client.execute(httpGet);
-			
-			 
+				HttpResponse response = client.execute(httpGet);
+
 				HttpEntity entity = response.getEntity();
 				InputStream content = entity.getContent();
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(content));
-				
 
 				line = reader.readLine();
-				
- 		          	Log.d(MainActivity.LOG_TAG, "прошло");
-		
-			
-		} catch (ClientProtocolException e) {
 
-			e.printStackTrace();
-		} catch (IOException e) {
+				Log.d(MainActivity.LOG_TAG, "прошло");
 
-			e.printStackTrace();
+			} catch (ClientProtocolException e) {
+
+				e.printStackTrace();
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+
+			if (line.length() < 10)
+				channel = "not exist now";
+
+			EditChat.twitchAdd(channel);
 		}
-		
-		if (line.length()<10) channel = "not exist now";
-	EditChat.twitchAdd(channel);
-	
 	}
 }

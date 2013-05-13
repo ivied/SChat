@@ -4,18 +4,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textSmileSc2tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sc2tv smiles"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/textSmileSc2tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/sc2tv"
+            android:gravity="center"
+            android:text="Sc2tv smiles"
+            android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/textSmileTwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Twitch smiles"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/textSmileTwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:drawableLeft="@drawable/twitch"
+            android:gravity="center"
+            android:text="Twitch smiles"
+            android:textSize="20sp" />
 
 </LinearLayout>

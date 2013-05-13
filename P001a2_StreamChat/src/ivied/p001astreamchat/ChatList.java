@@ -79,7 +79,7 @@ public class ChatList extends SherlockFragmentActivity {
 	public static class CursorLoaderListFragment extends SherlockListFragment
 			implements LoaderManager.LoaderCallbacks<Cursor>,
 			OnItemClickListener {
-		
+
 		private ListView listView;
 		private ActionMode mMode;
 		static String _id;
@@ -106,7 +106,8 @@ public class ChatList extends SherlockFragmentActivity {
 		View mProgressContainer;
 		View mListContainer;
 		String chatName;
-		static int  tagNumber;
+		static int tagNumber;
+		SendMessageService SendService;
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -116,19 +117,21 @@ public class ChatList extends SherlockFragmentActivity {
 			String[] tokens = tag.split(delims);
 
 			tagNumber = Integer.parseInt(tokens[3]);
+
 			int INTERNAL_EMPTY_ID = 0x00ff0001;
 			View root = inflater.inflate(R.layout.list_content, container,
 					false);
 			if (!MainActivity.messageStringShow) {
-				(root.findViewById(R.id.footer)).setVisibility(View.GONE);
+
 				(root.findViewById(R.id.enter)).setVisibility(View.GONE);
 				(root.findViewById(R.id.textOfMessage))
 						.setVisibility(View.GONE);
 			}
-			;
+			
 			(root.findViewById(R.id.internalEmpty)).setId(INTERNAL_EMPTY_ID);
 			(root.findViewById(R.id.textOfMessage)).setId(tagNumber);
 			// (root.findViewById(android.R.id.list)).setId(android.R.id.list);
+
 			mList = (ListView) root.findViewById(android.R.id.list);
 
 			mListContainer = root.findViewById(R.id.listContainer);
@@ -203,6 +206,7 @@ public class ChatList extends SherlockFragmentActivity {
 
 			listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 			listView.setOnItemClickListener(this);
+			if (!MainActivity.autoScrollChat)listView.setTranscriptMode(0);
 			setListAdapter(mAdapter);
 
 			// Start out with a progress indicator.
@@ -230,7 +234,7 @@ public class ChatList extends SherlockFragmentActivity {
 				if (mMode == null) {
 					Log.i(LOG_TAG, "chek");
 					mMode = getSherlockActivity().startActionMode(callback);
-					;
+
 				}
 			} else {
 				if (mMode != null) {
@@ -263,45 +267,57 @@ public class ChatList extends SherlockFragmentActivity {
 
 					switch (item.getItemId()) {
 					case R.id.action_link:
-						
+
 						Log.i(LOG_TAG, "Item clicked: " + _id);
 						break;
 					case R.id.action_add_to_clipboard:
 						Log.i(LOG_TAG, "Item clicked: clipboard");
 						String message = c.getString(5);
 						int sdk = android.os.Build.VERSION.SDK_INT;
-						if(sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
-						    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-						    clipboard.setText(message);
-						}/* else {
-						    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSherlockActivity().getSystemService(Context.CLIPBOARD_SERVICE); 
-						    android.content.ClipData clip = android.content.ClipData.newPlainText("from chat",message);
-						    clipboard.setPrimaryClip(clip);
-						}*/
-						
+						if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+							android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSherlockActivity()
+									.getSystemService(Context.CLIPBOARD_SERVICE);
+							clipboard.setText(message);
+						}/*
+						 * else { android.content.ClipboardManager clipboard =
+						 * (android.content.ClipboardManager)
+						 * getSherlockActivity
+						 * ().getSystemService(Context.CLIPBOARD_SERVICE);
+						 * android.content.ClipData clip =
+						 * android.content.ClipData
+						 * .newPlainText("from chat",message);
+						 * clipboard.setPrimaryClip(clip); }
+						 */
+
 						break;
 					case R.id.action_private:
-						
+
 						String nick = c.getString(4);
-						EditText msg = (EditText) getSherlockActivity().findViewById(tagNumber);
-						
+						EditText msg = (EditText) getSherlockActivity()
+								.findViewById(MainActivity.focus);
+
 						String site = c.getString(2);
-						if (site.equalsIgnoreCase("sc2tv"))msg.setText("[b]" + nick + "[/b], "	+ msg.getText().toString());
-						else msg.setText( nick + ", "	+ msg.getText().toString());
+						if (site.equalsIgnoreCase("sc2tv"))
+							msg.setText("[b]" + nick + "[/b], "
+									+ msg.getText().toString());
+						else
+							msg.setText(nick + ", " + msg.getText().toString());
 						String channel = c.getString(3);
-						TabInfo tab = new TabInfo(tagNumber);
+						TabInfo tab = new TabInfo(MainActivity.focus);
 						String chatName = tab.findTag();
 						selectionArgs[0] = chatName;
 						ContentValues cv = new ContentValues();
 						cv.put("flag", "false");
-						getSherlockActivity().getContentResolver()
-						.update(INSERT_URI, cv, " chat = ?",selectionArgs);
+						getSherlockActivity().getContentResolver().update(
+								INSERT_URI, cv, " chat = ?", selectionArgs);
 						cv.put("flag", "true");
-						String [] selectionArgs2 = new String [] { chatName, site, channel };
-						getSherlockActivity().getContentResolver().update
-						(INSERT_URI, cv, " chat = ? AND site = ? AND channel = ?",selectionArgs2);
-						
-						
+						String[] selectionArgs2 = new String[] { chatName,
+								site, channel };
+						getSherlockActivity().getContentResolver().update(
+								INSERT_URI, cv,
+								" chat = ? AND site = ? AND channel = ?",
+								selectionArgs2);
+
 						break;// Do something with the selected item
 					}
 
@@ -356,6 +372,20 @@ public class ChatList extends SherlockFragmentActivity {
 		public void onListItemClick(ListView l, View v, int position, long id) {
 			// Insert desired behavior here.
 			Log.i("FragmentComplexList", "Item clicked: " + id);
+		}
+
+		public void pressEnter(View v) {
+			// EditText textOfMessage = (EditText)
+			// getSherlockActivity().findViewById(tagNumber);
+			/*
+			 * TabInfo tab = new TabInfo(tagNumber); String chatName =
+			 * tab.findTag();
+			 * 
+			 * String text = textOfMessage.getText().toString();
+			 * SendService.sendMessage(text, chatName);
+			 */
+			// textOfMessage.setText("");
+
 		}
 
 		@Override
@@ -424,4 +454,5 @@ public class ChatList extends SherlockFragmentActivity {
 		}
 
 	}
+
 }

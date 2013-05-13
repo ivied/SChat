@@ -59,7 +59,7 @@ class GetSc2tvCode extends AsyncTask<String, Void, String> {
 				String line;
 
 				boolean b = false;
-				while (b != true) {
+				while (!b ) {
 					line = reader.readLine();
 					Pattern p = Pattern
 							.compile(SC2_LOGIN_PATTERN );
@@ -69,7 +69,7 @@ class GetSc2tvCode extends AsyncTask<String, Void, String> {
 						getCode = m.group().replaceAll("\\D+", "")
 								.replaceFirst("2", "");
 					}
-					;
+					
 				}
 
 			} else {

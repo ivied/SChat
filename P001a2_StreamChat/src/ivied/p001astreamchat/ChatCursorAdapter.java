@@ -255,20 +255,20 @@ public class ChatCursorAdapter extends SimpleCursorAdapter {
         addPattern(emoticons, "StoneLightning", R.drawable.twitch8b5aaae6e2409deb20x27);
         addPattern(emoticons, "TheRinger", R.drawable.twitch1903cc415afc404c20x27);
         addPattern(emoticons, "PazPazowitz", R.drawable.twitch521420789e1e93ef18x27);
-        addPattern(emoticons, "B-?\\)", R.drawable.twitch2cde79cfe74c616924x18);
-        addPattern(emoticons, "\\:-?[z|Z|\\|]", R.drawable.twitchb9cbb6884788aa6224x18);
-        addPattern(emoticons, "\\:-?\\)", R.drawable.twitchebf60cd72f7aa60024x18);
-        addPattern(emoticons, "\\:-?\\(", R.drawable.twitchd570c4b3b8d8fc4d24x18);
-        addPattern(emoticons, "\\:-?(p|P)", R.drawable.twitche838e5e34d9f240c24x18);
-        addPattern(emoticons, "\\;-?(p|P)", R.drawable.twitch3407bf911ad2fd4a24x18);
-        addPattern(emoticons, "\\&lt\\;3", R.drawable.twitch577ade91d46d7edc24x18);
-        addPattern(emoticons, "\\:-?(?:\\/|\\\\)(?!\\/)", R.drawable.twitch374120835234cb2924x18);
-        addPattern(emoticons, "\\;-?\\)", R.drawable.twitchcfaf6eac72fe4de624x18);
-        addPattern(emoticons, "R-?\\)", R.drawable.twitch0536d670860bf73324x18);
-        addPattern(emoticons, "[o|O](_|\\.)[o|O]", R.drawable.twitch8e128fa8dc1de29c24x18);
-        addPattern(emoticons, "\\:-?D", R.drawable.twitch9f2ac5d4b53913d724x18);
-        addPattern(emoticons, "\\:-?(o|O)", R.drawable.twitchae4e17f5b9624e2f24x18);
-        addPattern(emoticons, "\\&gt\\;\\(", R.drawable.twitchd31223e81104544a24x18);
+        addPattern(emoticons, ":B)", R.drawable.twitch2cde79cfe74c616924x18);
+        addPattern(emoticons, ":z", R.drawable.twitchb9cbb6884788aa6224x18);
+        addPattern(emoticons, ":)", R.drawable.twitchebf60cd72f7aa60024x18);
+        addPattern(emoticons, ":(", R.drawable.twitchd570c4b3b8d8fc4d24x18);
+        addPattern(emoticons, ":P", R.drawable.twitche838e5e34d9f240c24x18);
+        addPattern(emoticons, ";p", R.drawable.twitch3407bf911ad2fd4a24x18);
+        addPattern(emoticons, "<3", R.drawable.twitch577ade91d46d7edc24x18);
+        addPattern(emoticons, ":\\", R.drawable.twitch374120835234cb2924x18);
+        addPattern(emoticons, ";)", R.drawable.twitchcfaf6eac72fe4de624x18);
+        addPattern(emoticons, "R)", R.drawable.twitch0536d670860bf73324x18);
+        addPattern(emoticons, "o_O", R.drawable.twitch8e128fa8dc1de29c24x18);
+        addPattern(emoticons, ":D", R.drawable.twitch9f2ac5d4b53913d724x18);
+        addPattern(emoticons, ":o", R.drawable.twitchae4e17f5b9624e2f24x18);
+        addPattern(emoticons, ">(", R.drawable.twitchd31223e81104544a24x18);
         addPattern(emoticons, "WinWaker", R.drawable.twitchd4e971f7a6830e9530x30);
         addPattern(emoticons, "TriHard", R.drawable.twitch6407e6947eb69e2124x30);
         addPattern(emoticons, "EagleEye", R.drawable.twitch95eb8045e7ae63b818x27);
@@ -447,14 +447,14 @@ public class ChatCursorAdapter extends SimpleCursorAdapter {
 		privateM = adress.equalsIgnoreCase(privateNick);
 		adressLength = matcher.group(2).length();
 		}
-		
+		if(MainActivity.messageLinksShow){
 		matcher = ActionProviderLink.URL.matcher(message);
 		while (matcher.find()){
 		
 		linkMap.add(matcher.start());	
 		message = message.replace(matcher.group(), "link");
 		matcher = ActionProviderLink.URL.matcher(message);
-		}
+		}}
 		
 		Spannable spannable = spannableFactory.newSpannable(nick + ": " + message);
 		int length = nick.length() + 1;

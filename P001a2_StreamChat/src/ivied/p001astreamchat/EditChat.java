@@ -127,9 +127,10 @@ public class EditChat extends SherlockFragmentActivity implements OnClickListene
 
 									String newchannel = ((EditText) textEntryView)
 											.getText().toString();
+									if (!newchannel.equals("")){
 									GetSc2tvCode newchannelCode = new GetSc2tvCode();
 									newchannelCode.execute(newchannel);
-									Log.i(LOG_TAG, "1");
+									
 									try {
 										newchannel = newchannelCode.get();
 									} catch (InterruptedException e) {
@@ -139,11 +140,12 @@ public class EditChat extends SherlockFragmentActivity implements OnClickListene
 
 										e.printStackTrace();
 									}
+									}
 									sc2channels.setText(sc2channels.getText()
 											.toString() + " " + newchannel);
-									Log.i(LOG_TAG, "2");
+									
 									((EditText) textEntryView).setText("");
-									Log.i(LOG_TAG, "3");
+									
 								}
 							}).create();
 		case LOAD_CHAT:
@@ -264,7 +266,7 @@ public class EditChat extends SherlockFragmentActivity implements OnClickListene
 		if (c.getCount() == 0) {
 			ContentValues cv = new ContentValues();
 			cv.put("chat", chatName);
-			cv.put("flag", "false");
+			cv.put("flag", "true");
 			cv.put("color", "");
 			// тут можно добавить сайты
 			String sc2tv = sc2channels.getText().toString();

@@ -23,7 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="AddChat"></activity>
          <service android:name="ChatService"></service>
         <provider android:name="MyContentProvider" android:authorities="ivied.p001astreamchat"></provider>
         <activity android:name="Login"></activity>

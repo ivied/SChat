@@ -32,24 +32,7 @@
     android:background="#000000"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/footer"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:onClick="openDialogSendChannels"
-        android:text="Channels"
-        android:textSize="12sp" />
-    <ListView
-        android:id="@android:id/list"
-         android:transcriptMode="alwaysScroll" 
-        android:stackFromBottom="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/footer" />
-
-    <Button
+   <Button
         android:id="@+id/enter"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -58,6 +41,14 @@
         android:onClick="pressEnter"
         android:text="Enter" 
         android:textSize="12sp"/>
+   
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/enter"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll" />
 
     <ImageButton
         android:id="@+id/smiles"

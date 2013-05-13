@@ -505,8 +505,8 @@ int id createNewChat 0x7f05003f
 int id disableHome 0x7f050009
 int id editChats 0x7f050042
 int id edit_query 0x7f050026
-int id enter 0x7f050049
-int id footer 0x7f050048
+int id enter 0x7f050048
+int id footer 0x7f05004a
 int id gridView1 0x7f05003c
 int id homeAsUp 0x7f050006
 int id internalEmpty 0x7f05004c
@@ -528,7 +528,7 @@ int id setChat 0x7f050033
 int id showCustom 0x7f050008
 int id showHome 0x7f050005
 int id showTitle 0x7f050007
-int id smiles 0x7f05004a
+int id smiles 0x7f050049
 int id spinner_link 0x7f050045
 int id stopStart 0x7f050041
 int id tabMode 0x7f050003
@@ -604,6 +604,7 @@ int string add_channel 0x7f0a0012
 int string app_name 0x7f0a000d
 int string chat_name 0x7f0a0018
 int string clear 0x7f0a0011
+int string count 0x7f0a0028
 int string create_new_chat 0x7f0a0010
 int string dialog_1 0x7f0a001e
 int string dialog_2 0x7f0a001f

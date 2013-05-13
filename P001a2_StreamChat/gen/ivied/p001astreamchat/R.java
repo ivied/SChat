@@ -1176,8 +1176,8 @@ containing a value of this type.
         public static final int disableHome=0x7f050009;
         public static final int editChats=0x7f050042;
         public static final int edit_query=0x7f050026;
-        public static final int enter=0x7f050049;
-        public static final int footer=0x7f050048;
+        public static final int enter=0x7f050048;
+        public static final int footer=0x7f05004a;
         public static final int gridView1=0x7f05003c;
         public static final int homeAsUp=0x7f050006;
         public static final int internalEmpty=0x7f05004c;
@@ -1199,7 +1199,7 @@ containing a value of this type.
         public static final int showCustom=0x7f050008;
         public static final int showHome=0x7f050005;
         public static final int showTitle=0x7f050007;
-        public static final int smiles=0x7f05004a;
+        public static final int smiles=0x7f050049;
         public static final int spinner_link=0x7f050045;
         public static final int stopStart=0x7f050041;
         public static final int tabMode=0x7f050003;
@@ -1309,6 +1309,7 @@ containing a value of this type.
         public static final int app_name=0x7f0a000d;
         public static final int chat_name=0x7f0a0018;
         public static final int clear=0x7f0a0011;
+        public static final int count=0x7f0a0028;
         public static final int create_new_chat=0x7f0a0010;
         public static final int dialog_1=0x7f0a001e;
         public static final int dialog_2=0x7f0a001f;

@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
  xmlns:android="http://schemas.android.com/apk/res/android">
+<EditTextPreference
+ 
+ android:inputType="number"
+ android:key="count"
+ android:summary="of visible strings"
+ android:title="Count">
+</EditTextPreference>
 <CheckBoxPreference
  android:key="stringMessage"
  android:summary="Show message string"
  android:title="Message string"
  android:defaultValue ="true">
 </CheckBoxPreference>
-<EditTextPreference
- android:key="count"
- android:summary="of visible strings"
- android:title="Count">
-</EditTextPreference>
+<CheckBoxPreference
+ android:key="linkShow"
+ android:summary="Show links in messages"
+ android:title="Links"
+ android:defaultValue ="true">
+</CheckBoxPreference>
+<CheckBoxPreference
+ android:key="autoScroll"
+ android:summary="Auto scroll in chat window"
+ android:title="Auto scroll"
+ android:defaultValue ="true">
+</CheckBoxPreference>
 </PreferenceScreen>

@@ -39,7 +39,8 @@ import com.actionbarsherlock.view.MenuItem;
 
 
 public class MainActivity extends SherlockFragmentActivity implements onSomeEventListener{
-    TabHost mTabHost;
+    static Integer focus;
+	TabHost mTabHost;
     ViewPager  mViewPager;
     TabsAdapter mTabsAdapter;
     final static int ADD = 1;
@@ -47,6 +48,8 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 	final static int DELETE = 1;
 	static int AMOUNT_OF_VISIBLE_ROWS;
 	static boolean messageStringShow;
+	static boolean messageLinksShow;
+	static boolean autoScrollChat;
 	final static int EDIT = 2;
     Intent intent;
     ChatService chatService;
@@ -54,7 +57,7 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
  	boolean bound = false;
  	boolean boundSend = false;
  	DialogSendChannels dlgChoseChannels;
- 	DialogChoseSmile dlgChoseSmile;
+ 	DialogChoiceSmile dlgChoseSmile;
  	  SharedPreferences sp;
  	final Uri SERVICE_URI = Uri.parse("content://ivied.p001astreamchat/channels/service");
  	
@@ -122,14 +125,14 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
     }
     
     public void addSmile (View v) {
-    	dlgChoseSmile = new DialogChoseSmile();
+    	dlgChoseSmile = new DialogChoiceSmile();
     	dlgChoseSmile.show(getSupportFragmentManager(), "Smile");
     }
 
     public void pressEnter(View v){
     	EditText  textOfMessage = (EditText) findViewById(
 		mTabHost.getCurrentTab());
-    	
+    	Log.i(MainActivity.LOG_TAG, "edit = " + mTabHost.getCurrentTab() );
     	String text = textOfMessage.getText().toString();	
     	SendService.sendMessage(text, mTabHost.getCurrentTabTag());		
     textOfMessage.setText("");  
@@ -138,12 +141,7 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
     
   
     
-    public void openDialogSendChannels (View v) {
    
-    	 
-    	dlgChoseChannels= DialogSendChannels.newInstance( mTabHost.getCurrentTabTag());
-		dlgChoseChannels.show(getSupportFragmentManager(),  mTabHost.getCurrentTabTag());
-    }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -291,10 +289,31 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 	}
  
 	 public boolean onCreateOptionsMenu(Menu menu) {
-		    MenuItem mi = menu.add(0, 1, 0, "Preferences");
-		   mi.setIntent(new Intent(this, Preference.class));
+		    menu.add(0, 1, 1, "Preferences");
+		    menu.add(0,2,0, "Channels");
+		   
 		    return super.onCreateOptionsMenu(menu);
 		  }
+	 @Override
+	 public boolean onOptionsItemSelected(MenuItem item) {
+	 // TODO Auto-generated method stub
+	 super.onOptionsItemSelected(item);
+
+	 switch(item.getItemId())
+	 {
+	 case 1:
+		 Intent intent = new Intent(this, Preference.class);
+         startActivity(intent);
+	 break;
+	 case 2:
+		 dlgChoseChannels= DialogSendChannels.newInstance( mTabHost.getCurrentTabTag());
+			dlgChoseChannels.show(getSupportFragmentManager(),  mTabHost.getCurrentTabTag());
+		 
+	 break;
+	 
+	 }
+	 return true;
+	 }
  
 	 private void getPrefs() {
          // Get the xml/preferences.xml preferences
@@ -302,6 +321,8 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
                          .getDefaultSharedPreferences(getBaseContext());
           messageStringShow = prefs.getBoolean("stringMessage", true);
           AMOUNT_OF_VISIBLE_ROWS =Integer.parseInt( prefs.getString("count", "30"));
+          messageLinksShow = prefs.getBoolean("linkShow", true);
+          autoScrollChat = prefs.getBoolean("autoScroll", true);
          
  }
 
@@ -404,6 +425,7 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
             widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
             mTabHost.setCurrentTab(position);
             widget.setDescendantFocusability(oldFocusability);
+            focus= position;
         }
 
         @Override
