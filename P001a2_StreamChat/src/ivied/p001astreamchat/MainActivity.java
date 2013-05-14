@@ -2,7 +2,6 @@ package ivied.p001astreamchat;
 
 
 
-import ivied.p001astreamchat.ChatList.CursorLoaderListFragment;
 import ivied.p001astreamchat.ChatService.ChatBinder;
 import ivied.p001astreamchat.HelloPage.onSomeEventListener;
 import ivied.p001astreamchat.SendMessageService.SendBinder;
@@ -10,12 +9,15 @@ import ivied.p001astreamchat.SendMessageService.SendBinder;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -30,15 +32,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabWidget;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 
 
-public class MainActivity extends SherlockFragmentActivity implements onSomeEventListener{
+public class MainActivity extends SherlockFragmentActivity implements onSomeEventListener/*, OnTabChangeListener*/{
     static Integer focus;
 	TabHost mTabHost;
     ViewPager  mViewPager;
@@ -51,6 +52,10 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 	static boolean messageLinksShow;
 	static boolean autoScrollChat;
 	final static int EDIT = 2;
+	public static final String CHAT_NAME = "chat";
+	public static final int NEW_MESSAGE = 1;
+	static final String BROADCAST_ACTION = "ivied.p001astreamchat.servicebackbroadcast";
+	BroadcastReceiver br;
     Intent intent;
     ChatService chatService;
     SendMessageService SendService;
@@ -59,63 +64,112 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
  	DialogSendChannels dlgChoseChannels;
  	DialogChoiceSmile dlgChoseSmile;
  	  SharedPreferences sp;
+ 	 final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
  	final Uri SERVICE_URI = Uri.parse("content://ivied.p001astreamchat/channels/service");
  	
  	  static List<String> indexOfChats = new ArrayList<String>();
- 	 private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+ 	  static List<TextView> indexOfHeaders = new ArrayList<TextView>();
+ //	 private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 
  	 
      static final class TabInfo {
-         private final String tag;
-        
-
+         
+         private final int _id;
          TabInfo( int _id) {
-             tag = indexOfChats.get(_id);
              
+             this._id = _id;
          }
+         
+         
          public String findTag (){
      		
-     		return tag;
+     		return indexOfChats.get(_id);
      	}
+         
+         public TextView findLabel() {
+        	 return indexOfHeaders.get( _id);
+         }
      }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-       setTheme(R.style.Theme_Sherlock); //Used for theme switching in samples
-        super.onCreate(savedInstanceState);
-        
-        indexOfChats.clear();
-        indexOfChats.add("");
-        setContentView(R.layout.fragment_tabs_pager);
-        mTabHost = (TabHost)findViewById(android.R.id.tabhost);
-        mTabHost.setup();
 
-        mViewPager = (ViewPager)findViewById(R.id.pager);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(R.style.Theme_Sherlock); // Used for theme switching in samples
+		super.onCreate(savedInstanceState);
 
-        mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
+		setContentView(R.layout.fragment_tabs_pager);
 
-        mTabsAdapter.addTab(mTabHost.newTabSpec("simple").setIndicator("Menu"),
-                HelloPage.class, null);
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
-       /*
-        mTabsAdapter.addTab(mTabHost.newTabSpec("custom").setIndicator("Custom"),
-                LoaderCustomSupport.AppListFragment.class, null);
-        mTabsAdapter.addTab(mTabHost.newTabSpec("throttle").setIndicator("Throttle"),
-                LoaderThrottleSupport.ThrottledLoaderListFragment.class, null);
+		mTabHost = (TabHost) findViewById(android.R.id.tabhost);
+		mTabHost.setup();
 
-        if (savedInstanceState != null) {
-            mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
-        }*/
-        
-        intent = new Intent (this, ChatService.class);
-		 bindService(intent, sConn, 0);
-		 Log.d(LOG_TAG, "MyService onCreate");
-		 startService(intent); 
-		  intent = new Intent (this, SendMessageService.class);
-		  startService(intent);
-		  bindService (intent, sendConn, 0);
-		  loadSavedChats ();
-		  
-    }
+		mViewPager = (ViewPager) findViewById(R.id.pager);
+
+		mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
+
+		mTabsAdapter.addTab(mTabHost.newTabSpec("simple").setIndicator("Menu"),
+				HelloPage.class, null);
+		indexOfChats.clear();
+		indexOfChats.add("simple");
+		indexOfHeaders.clear();
+		indexOfHeaders.add(null);
+
+		sp = PreferenceManager.getDefaultSharedPreferences(this);
+		/*
+		 * mTabsAdapter.addTab(mTabHost.newTabSpec("custom").setIndicator("Custom"
+		 * ), LoaderCustomSupport.AppListFragment.class, null);
+		 * mTabsAdapter.addTab
+		 * (mTabHost.newTabSpec("throttle").setIndicator("Throttle"),
+		 * LoaderThrottleSupport.ThrottledLoaderListFragment.class, null);
+		 * 
+		 * if (savedInstanceState != null) {
+		 * mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab")); }
+		 */
+		// mTabHost.setOnTabChangedListener(this);
+		br = new BroadcastReceiver() {
+			// действия при получении сообщений
+			public void onReceive(Context context, Intent intent) {
+
+				String channel = intent.getStringExtra(CHAT_NAME);
+				String[] selectionArgsNotify = new String[] { channel };
+				String[] projectionNotify = new String[] { "chat" };
+				Cursor notify = getContentResolver().query(ADD_URI,
+						projectionNotify, "channel = ?", selectionArgsNotify,
+						null);
+				Log.d(MainActivity.LOG_TAG,
+						"размер курсора = " + notify.getCount());
+				for (notify.moveToFirst(); !notify.isAfterLast(); notify
+						.moveToNext()) {
+
+					String chat = notify.getString(0);
+
+					// TabInfo tab = new TabInfo(indexOfChats.indexOf(chat));
+					TextView label = (TextView) mTabHost.getTabWidget().getChildTabViewAt(indexOfChats.indexOf(chat))
+				    		   .findViewById(android.R.id.title);
+					Log.d(MainActivity.LOG_TAG, chat + "индекс чата = "
+							+ MainActivity.indexOfChats.indexOf(chat));
+					
+				
+
+					label.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.radiobutton_on_background), null, null, null);
+					Log.d(LOG_TAG, "onReceive: task = " + chat);
+
+					
+				}
+			}
+		};
+		// создаем фильтр для BroadcastReceiver
+		IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+		// регистрируем (включаем) BroadcastReceiver
+		registerReceiver(br, intFilt);
+		intent = new Intent(this, ChatService.class);
+		bindService(intent, sConn, 0);
+		Log.d(LOG_TAG, "MyService onCreate");
+		startService(intent);
+		intent = new Intent(this, SendMessageService.class);
+		startService(intent);
+		bindService(intent, sendConn, 0);
+		loadSavedChats();
+
+	}
     
     @Override
     public void onStart(){
@@ -157,6 +211,11 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 			String chatName = c.getString(0);
 			addTab(chatName);
 			Log.i(LOG_TAG, "chat = " + chatName);
+			 final TextView label = (TextView) mTabHost.getTabWidget().getChildTabViewAt(indexOfChats.indexOf(chatName))
+		    		   .findViewById(android.R.id.title);
+			// label.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.radiobutton_off_background), null, null, null);
+		    indexOfHeaders.add(label);
+			 
 		}
 
 	}
@@ -203,9 +262,9 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
       };
       
     public void addTab (String chatName) { 
-    	Log.d(LOG_TAG, "addTab " + mTabHost.getTabWidget().getChildTabViewAt(mTabs.size()).toString());
+    	
     	mTabHost.setup();
-    	 mTabsAdapter.addTab(mTabHost.newTabSpec(chatName).setIndicator(chatName),
+    	 mTabsAdapter.addTab(mTabHost.newTabSpec(chatName).setIndicator(chatName/*, getResources().getDrawable(android.R.drawable.presence_online)*/),
                  ChatList.CursorLoaderListFragment.class, null);
     	
        
@@ -226,11 +285,13 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
     	Intent i;
     	stopService();
 		stopServiceSend();
+		
 		MyApp.factoryReset();
 		i = new Intent(MyApp.getContext(), MainActivity.class);
 		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		MyApp.getContext().startActivity(i);
+		
 	
     }
     
@@ -283,9 +344,8 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 			break;}
 
 			// если вернулось не ОК
-		} else {
-
-		}
+		} 
+		
 	}
  
 	 public boolean onCreateOptionsMenu(Menu menu) {
@@ -325,7 +385,23 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
           autoScrollChat = prefs.getBoolean("autoScroll", true);
          
  }
-
+	 /*@Override
+		public void onTabChanged(String tabId) {
+			// TODO Auto-generated method stub
+		
+		}*/
+	 
+	 @Override
+	    public void onDestroy(){
+	    	
+	    	unbindService(sConn);
+	    	unbindService(sendConn);
+	    	stopServiceSend();
+	    	//unregisterReceiver(br);
+	    	super.onDestroy();
+	    }
+	 
+	 
     /**
      * This is a helper class that implements the management of tabs and all
      * details of connecting a ViewPager with associated TabHost.  It relies on a
@@ -407,6 +483,10 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
         public void onTabChanged(String tabId) {
             int position = mTabHost.getCurrentTab();
             mViewPager.setCurrentItem(position);
+            
+ 		// Log.d("myLogs", "label = " + label.getText().toString());
+           
+      // 
         }
 
         @Override
@@ -426,19 +506,16 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
             mTabHost.setCurrentTab(position);
             widget.setDescendantFocusability(oldFocusability);
             focus= position;
+            
+        
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
         }
     }
-    @Override
-    public void onDestroy(){
-    	
-    	unbindService(sConn);
-    	unbindService(sendConn);
-    	stopServiceSend();
-    	super.onDestroy();
-    }
+    
+
+	
   
 }

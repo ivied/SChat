@@ -21,12 +21,11 @@ import ivied.p001astreamchat.MainActivity.TabInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -46,6 +45,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListFragment;
@@ -140,6 +140,7 @@ public class ChatList extends SherlockFragmentActivity {
 
 			return root;
 		}
+		
 
 		public void setListShown(boolean shown, boolean animate) {
 			if (mListShown == shown) {
@@ -216,6 +217,31 @@ public class ChatList extends SherlockFragmentActivity {
 			// or start a new one.
 
 			getLoaderManager().initLoader(tagNumber, null, this);
+		}
+		@Override
+	    public void setMenuVisibility(final boolean visible) {
+	        super.setMenuVisibility(visible);
+	        if (visible) {
+	        	String tag = this.getTag();
+				String delims = "[:]";
+				String[] tokens = tag.split(delims);
+
+				int tagNum = Integer.parseInt(tokens[3]);
+				Log.i(LOG_TAG, "tag" + tagNum);
+				if(tagNum>=0){
+				TabInfo tab = new TabInfo(tagNum);
+				
+				Log.d(MainActivity.LOG_TAG, "индекс чата = " + MainActivity.indexOfChats.indexOf(getTag()));
+				
+				TextView label = tab.findLabel();
+		       label.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.radiobutton_off_background), null, null, null);}
+	        }
+	    }
+		@Override 
+		public void onResume(){
+			super.onResume();
+			
+	          // Log.i(LOG_TAG, "lrol" + label.getTextColors());*/
 		}
 
 		@Override
@@ -340,6 +366,7 @@ public class ChatList extends SherlockFragmentActivity {
 
 		@Override
 		public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+			
 			// Place an action bar item for searching.
 			MenuItem item = menu.add("Search");
 			item.setIcon(android.R.drawable.ic_menu_search);
@@ -374,25 +401,14 @@ public class ChatList extends SherlockFragmentActivity {
 			Log.i("FragmentComplexList", "Item clicked: " + id);
 		}
 
-		public void pressEnter(View v) {
-			// EditText textOfMessage = (EditText)
-			// getSherlockActivity().findViewById(tagNumber);
-			/*
-			 * TabInfo tab = new TabInfo(tagNumber); String chatName =
-			 * tab.findTag();
-			 * 
-			 * String text = textOfMessage.getText().toString();
-			 * SendService.sendMessage(text, chatName);
-			 */
-			// textOfMessage.setText("");
-
-		}
+	
 
 		@Override
 		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
+			
 			// считываем каналы из файла
 			TabInfo tab = new TabInfo(id);
+			
 			String chatName = tab.findTag();
 			String[] name = { chatName };
 			Cursor c = getActivity().getContentResolver().query(ADD_URI, null,
@@ -425,8 +441,9 @@ public class ChatList extends SherlockFragmentActivity {
 
 		@Override
 		public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-			Log.i(LOG_TAG, "2" + this.getTag().toString().hashCode());
+			
+			Log.i(LOG_TAG, "lol" + this.getTag().toString().hashCode());
+			
 			// Swap the new cursor in. (The framework will take care of closing
 			// the
 			// old cursor once we return.)

@@ -1,5 +1,7 @@
 package ivied.p001astreamchat;
 
+import ivied.p001astreamchat.MainActivity.TabInfo;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,15 +32,21 @@ import org.jibble.pircbot.PircBot;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.PendingIntent.CanceledException;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.TextView;
 
 /**
  * ”правл€ет потоками парсинга чатов
@@ -56,6 +64,7 @@ public class ChatService extends Service {
 	final String LOG_TAG = "myLogs";
 	ScheduledExecutorService sEs;
 	ExecutorService es;
+	NotificationManager nm;
 	private final IBinder binder = new ChatBinder();
 	Map<String,  Future> channelLink = new HashMap<String, Future>();
 	Map<String, IrcClientShow> ircMap = new HashMap<String, IrcClientShow>();
@@ -63,7 +72,7 @@ public class ChatService extends Service {
 
 	public void onCreate() {
 		super.onCreate();
-		
+		 nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		loadSavedChats();
 		Log.d(LOG_TAG, "MyService onCreate");
 	}
@@ -304,6 +313,11 @@ public class ChatService extends Service {
 				i++;
 				insertSc2tv(jsonArray, i, channel);
 				i--;
+				//добавление оповещений
+				
+			
+				
+				
 				ContentValues cv = new ContentValues();
 				cv.put("site", "sc2tv");
 				cv.put("channel", channel);
@@ -330,7 +344,8 @@ public class ChatService extends Service {
 						INSERT_URI, null, null,
 						null, null);
 				Log.i(LOG_TAG, "записей стало " + c.getCount());
-				
+				sendNotif(channel, jsonObject.getString("message"));
+				//notificationAdd(channel);
 				/*
 				 * if (c.moveToFirst()) { String str; do { str = ""; for (String
 				 * cn : c.getColumnNames()) { str = str.concat(cn + " = " +
@@ -346,6 +361,24 @@ public class ChatService extends Service {
 			e.printStackTrace();
 		}
 	}
+	private void sendNotif(String channel, String message) {
+		Notification notif = new Notification(R.drawable.ic_launcher, "New message", 
+			      System.currentTimeMillis());
+		Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
+	    intent.putExtra(MainActivity.CHAT_NAME, channel);
+	    sendBroadcast(intent);
+/*	    // 2-€ часть
+	    notif.setLatestEventInfo(this, "Notification's title", "Notification's text", pIntent);
+	    
+	    // ставим флаг, чтобы уведомление пропало после нажати€
+	    notif.flags |= Notification.FLAG_AUTO_CANCEL;
+	    
+	    // отправл€ем
+	    nm.notify(1, notif);
+		// TODO Auto-generated method stub
+		*/
+	}
+
 	void shutdownAndAwaitTermination(ExecutorService pool) {
 		   pool.shutdown(); // Disable new tasks from being submitted
 		   try {
@@ -364,6 +397,7 @@ public class ChatService extends Service {
 		   }
 		 }
 
+	
 
 	public class IrcClientShow extends PircBot {
 		public IrcClientShow(String name) {
@@ -371,13 +405,16 @@ public class ChatService extends Service {
 
 		}
 
-		//private static Logger log = Logger.getLogger(IrcClient.class.getName());
+	
 
 		public void onMessage(String channel, String sender, String login,
 				String hostname, String message) {
+			//notificationAdd(channel);
+			
 			ContentValues cv = new ContentValues();
 			cv.put("site", "twitch");
 			channel = channel.substring(1);
+			sendNotif(channel,message);
 			cv.put("channel", channel);
 			cv.put("nick", sender);
 			cv.put("message", message);

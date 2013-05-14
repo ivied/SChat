@@ -159,14 +159,15 @@ public class MyContentProvider extends ContentProvider {
 					selectionArgsAdd, null , null, " _id ASC ", howManyShow);
 			cursor.setNotificationUri(getContext().getContentResolver(),
 					MESSAGES_CONTENT_URI);
+			
 			break;
 		case URI_MESSAGES_INSERT:
 		
-			Log.d(LOG_TAG, "selection = " + selection);
+			
 			cursor = db.query(MESSAGES_TABLE, projection, selection,
 					selectionArgs, null, having, sortOrder, howManyShow);
-			cursor.setNotificationUri(getContext().getContentResolver(),
-					MESSAGES_CONTENT_URI);
+		/*	cursor.setNotificationUri(getContext().getContentResolver(),
+					MESSAGES_CONTENT_URI);*/
 		break;
 		case URI_CHANNEL_ADD:
 			

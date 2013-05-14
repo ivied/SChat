@@ -35,13 +35,15 @@ import android.widget.TextView;
  * 
  */
 public class ChatCursorAdapter extends SimpleCursorAdapter {
-	final String SAVED_NAME = "sc2tv";
+	final String SAVED_SC2TV_NAME = "sc2tv";
+	//final String SAVED_TWITCH_NAME = "twitch";
 	final public static Pattern bold = Pattern.compile("(\\<b\\>)(.*)(\\<\\/b\\>)");
 	
 	 // Span to set text BOLD
 	   final static StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
 	   SharedPreferences preferences;
 	 static String sc2tvNick;
+	 //static String twitchNick;
 	//static Map<Integer, Integer> linkMap= new HashMap<Integer,Integer>();
 	static List<Integer> linkMap = new ArrayList<Integer>();
 	public ChatCursorAdapter(Context context, int _layout, Cursor cursor,
@@ -50,7 +52,8 @@ public class ChatCursorAdapter extends SimpleCursorAdapter {
 		// TODO выделение личных сообщений
 		preferences = context.getSharedPreferences("Login",
 				0);
-		sc2tvNick = preferences.getString(SAVED_NAME, "");
+		sc2tvNick = preferences.getString(SAVED_SC2TV_NAME, "");
+		//twitchNick = preferences.getString(SAVED_TWITCH_NAME, "");
 	}
 	
 	@Override

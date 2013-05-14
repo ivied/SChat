@@ -5,4 +5,5 @@
     <color name="nick" >#4682B4</color>
     <color name="private_msg">#ED7221</color>
    <color name="link">#94DDFF</color>
+   <color name="green">#00FF00</color>
 </resources>
