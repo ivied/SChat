@@ -26,4 +26,23 @@
  android:title="Auto scroll"
  android:defaultValue ="true">
 </CheckBoxPreference>
+<PreferenceCategory
+
+        android:title="Notifications"
+
+        android:key="notifications">
+        <CheckBoxPreference
+ android:key="notifHeaders"
+ android:summary="Show notifications in headers of chats"
+ android:title="Chat notifications"
+ android:defaultValue ="true">
+</CheckBoxPreference>
+<CheckBoxPreference
+ android:key="notifSystem"
+ android:summary="Show notifications in  Status Bar"
+ android:title=" Status Bar notifications"
+ android:defaultValue ="true">
+    </CheckBoxPreference>
+  
+</PreferenceCategory>
 </PreferenceScreen>

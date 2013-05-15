@@ -16,7 +16,8 @@
     android:name="MyApp">
         <activity
             android:name="ivied.p001astreamchat.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,6 +30,8 @@
         <service android:name="SendMessageService"></service>
         <activity android:name="EditChat"></activity>
         <activity android:name="Preference"></activity>
+        <activity android:name="AddChat"></activity>
+        <activity android:name="AddChannel"></activity>
        
     </application>
 

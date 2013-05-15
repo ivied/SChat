@@ -62,7 +62,7 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
  	boolean bound = false;
  	boolean boundSend = false;
  	DialogSendChannels dlgChoseChannels;
- 	DialogChoiceSmile dlgChoseSmile;
+ 	DialogChoiceSmile dlgChoiceSmile;
  	  SharedPreferences sp;
  	 final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
  	final Uri SERVICE_URI = Uri.parse("content://ivied.p001astreamchat/channels/service");
@@ -128,32 +128,31 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 			// действия при получении сообщений
 			public void onReceive(Context context, Intent intent) {
 
-				String channel = intent.getStringExtra(CHAT_NAME);
-				String[] selectionArgsNotify = new String[] { channel };
-				String[] projectionNotify = new String[] { "chat" };
-				Cursor notify = getContentResolver().query(ADD_URI,
-						projectionNotify, "channel = ?", selectionArgsNotify,
-						null);
-				Log.d(MainActivity.LOG_TAG,
-						"размер курсора = " + notify.getCount());
-				for (notify.moveToFirst(); !notify.isAfterLast(); notify
-						.moveToNext()) {
-
-					String chat = notify.getString(0);
-
-					// TabInfo tab = new TabInfo(indexOfChats.indexOf(chat));
-					TextView label = (TextView) mTabHost.getTabWidget().getChildTabViewAt(indexOfChats.indexOf(chat))
-				    		   .findViewById(android.R.id.title);
-					Log.d(MainActivity.LOG_TAG, chat + "индекс чата = "
-							+ MainActivity.indexOfChats.indexOf(chat));
-					
+				
+				String [] chats = getChatNamesToNotif(intent);
+				
+				
 				
 
-					label.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.radiobutton_on_background), null, null, null);
-					Log.d(LOG_TAG, "onReceive: task = " + chat);
+				for (String chat : chats) {
+					if (!mTabHost.getCurrentTabTag().equalsIgnoreCase(chat)) {
+						// TabInfo tab = new
+						// TabInfo(indexOfChats.indexOf(chat));
+						TextView label = (TextView) mTabHost.getTabWidget()
+								.getChildTabViewAt(indexOfChats.indexOf(chat))
+								.findViewById(android.R.id.title);
+						Log.d(MainActivity.LOG_TAG, chat + "индекс чата = "
+								+ MainActivity.indexOfChats.indexOf(chat));
 
-					
+						label.setCompoundDrawablesWithIntrinsicBounds(
+								getResources()
+										.getDrawable(
+												android.R.drawable.radiobutton_on_background),
+								null, null, null);
+						Log.d(LOG_TAG, "onReceive: task = " + chat);
+					}
 				}
+				
 			}
 		};
 		// создаем фильтр для BroadcastReceiver
@@ -168,10 +167,35 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 		startService(intent);
 		bindService(intent, sendConn, 0);
 		loadSavedChats();
+		Intent intentFocus = getIntent();
+		//Log.d(LOG_TAG, "chat intent =  " + intent.getCharSequenceExtra(CHAT_NAME));
+		if( intentFocus.hasExtra(CHAT_NAME)){
+		String [] chats = getChatNamesToNotif(intentFocus);
+		Log.d(LOG_TAG, "chat intent =  " + chats[0]);
+		mTabHost.setCurrentTab(indexOfChats.indexOf(chats[0]));}
 
 	}
     
-    @Override
+    protected String[] getChatNamesToNotif(Intent intent) {
+		// TODO Auto-generated method stub
+    	String channel = intent.getStringExtra(CHAT_NAME);
+    	String[] selectionArgsNotify = new String[] { channel };
+		String[] projectionNotify = new String[] { "chat" };
+		Cursor notify = getContentResolver().query(ADD_URI,
+				projectionNotify, "channel = ?", selectionArgsNotify,
+				null);
+		String[] chats =new String [notify.getCount()];
+		int i=0;
+		for (notify.moveToFirst(); !notify.isAfterLast(); notify
+				.moveToNext()) {
+			
+			 chats[i] = notify.getString(0);
+			i++;
+		}
+		return chats;
+	}
+
+	@Override
     public void onStart(){
     	super.onStart();
     	getPrefs();
@@ -179,8 +203,8 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
     }
     
     public void addSmile (View v) {
-    	dlgChoseSmile = new DialogChoiceSmile();
-    	dlgChoseSmile.show(getSupportFragmentManager(), "Smile");
+    	dlgChoiceSmile = new DialogChoiceSmile();
+    	dlgChoiceSmile.show(getSupportFragmentManager(), "Smile");
     }
 
     public void pressEnter(View v){

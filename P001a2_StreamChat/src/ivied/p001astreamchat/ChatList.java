@@ -25,7 +25,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -189,7 +188,7 @@ public class ChatList extends SherlockFragmentActivity {
 			// application this would come from a resource.
 			setEmptyText("No Channels set");
 
-			// We have a menu item to show in action bar.
+			// We have a menu iteóm to show in action bar.
 			setHasOptionsMenu(true);
 
 			String[] from = new String[] {
@@ -221,6 +220,7 @@ public class ChatList extends SherlockFragmentActivity {
 		@Override
 	    public void setMenuVisibility(final boolean visible) {
 	        super.setMenuVisibility(visible);
+	      try{
 	        if (visible) {
 	        	String tag = this.getTag();
 				String delims = "[:]";
@@ -235,6 +235,8 @@ public class ChatList extends SherlockFragmentActivity {
 				
 				TextView label = tab.findLabel();
 		       label.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.radiobutton_off_background), null, null, null);}
+	        }} catch (IllegalStateException e) {
+	        	
 	        }
 	    }
 		@Override 

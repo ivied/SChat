@@ -3,47 +3,17 @@
     android:id="@+id/mLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/setChat"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="@string/set_chat" />
-
-    <Button
-        android:id="@+id/btnCleanSc2tv"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignBottom="@+id/btnSc2tvAdd"
-        android:layout_alignParentRight="true"
-        android:text="@string/clear" />
-
-    <EditText
-        android:id="@+id/sc2tvChannels"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layoutNameChat"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btnSc2tvAdd"
-        android:layout_alignTop="@+id/btnSc2tvAdd"
-        android:layout_toLeftOf="@+id/btnCleanSc2tv"
-        android:layout_toRightOf="@+id/btnSc2tvAdd"
-        android:ems="10"
-        android:inputType="textUri" />
+        android:layout_alignBottom="@+id/imageButton1"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/imageButton1" >
 
-    <ImageButton
-        android:id="@+id/btnSc2tvAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/chatName"
-        android:background="@drawable/sc2tv"
-        android:contentDescription="@string/create_new_chat"
-        android:src="@drawable/sc2tv" />
-
-    <EditText
+       <EditText
         android:id="@+id/chatName"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -54,33 +24,39 @@
 
         <requestFocus />
     </EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutControlEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:gravity="right" >
+
+        <Button
+            android:id="@+id/setChat"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:text="@string/set_chat" />
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/gridView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/layoutControlEdit"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/layoutNameChat"
+        android:numColumns="3" >
+    </GridView>
 
     <ImageButton
-        android:id="@+id/btnTwitchAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sc2tvChannels"
-        android:background="@drawable/twitch"
-        android:contentDescription="@string/create_new_chat"
-        android:src="@drawable/twitch" />
-
-    <EditText
-        android:id="@+id/twitchChannels"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btnCleanTwitch"
-        android:layout_alignRight="@+id/sc2tvChannels"
-        android:layout_alignTop="@+id/btnTwitchAdd"
-        android:layout_toRightOf="@+id/btnSc2tvAdd"
-        android:ems="10"
-        android:inputType="textUri" />
-
-    <Button
-        android:id="@+id/btnCleanTwitch"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignTop="@+id/btnTwitchAdd"
-        android:layout_toRightOf="@+id/twitchChannels"
-        android:text="@string/clear" />
+        android:id="@+id/btnAddChannel"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@android:drawable/ic_menu_add" />
 
 </RelativeLayout>

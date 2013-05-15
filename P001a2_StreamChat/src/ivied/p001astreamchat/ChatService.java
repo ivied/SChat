@@ -1,7 +1,5 @@
 package ivied.p001astreamchat;
 
-import ivied.p001astreamchat.MainActivity.TabInfo;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,12 +10,15 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -32,21 +33,23 @@ import org.jibble.pircbot.PircBot;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningAppProcessInfo;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.PendingIntent.CanceledException;
 import android.app.Service;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.TextView;
 
 /**
  * Управляет потоками парсинга чатов
@@ -57,6 +60,7 @@ import android.widget.TextView;
 
 public class ChatService extends Service {
 	private static final String CHANNEL_MESSAGES = "http://chat.sc2tv.ru/memfs/channel-";
+	final public static Pattern bold = Pattern.compile("(\\<b\\>)(.*)(\\<\\/b\\>)");
 	final Uri INSERT_URI = Uri.parse("content://ivied.p001astreamchat/chats/insert");
 	final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
 	final Uri SERVICE_URI = Uri.parse("content://ivied.p001astreamchat/channels/service");
@@ -344,7 +348,7 @@ public class ChatService extends Service {
 						INSERT_URI, null, null,
 						null, null);
 				Log.i(LOG_TAG, "записей стало " + c.getCount());
-				sendNotif(channel, jsonObject.getString("message"));
+				sendNotif(channel, jsonObject.getString("message"), "sc2tv");
 				//notificationAdd(channel);
 				/*
 				 * if (c.moveToFirst()) { String str; do { str = ""; for (String
@@ -361,23 +365,82 @@ public class ChatService extends Service {
 			e.printStackTrace();
 		}
 	}
-	private void sendNotif(String channel, String message) {
-		Notification notif = new Notification(R.drawable.ic_launcher, "New message", 
-			      System.currentTimeMillis());
-		Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
-	    intent.putExtra(MainActivity.CHAT_NAME, channel);
-	    sendBroadcast(intent);
-/*	    // 2-я часть
-	    notif.setLatestEventInfo(this, "Notification's title", "Notification's text", pIntent);
-	    
-	    // ставим флаг, чтобы уведомление пропало после нажатия
-	    notif.flags |= Notification.FLAG_AUTO_CANCEL;
-	    
-	    // отправляем
-	    nm.notify(1, notif);
-		// TODO Auto-generated method stub
-		*/
+	private void sendNotif(String channel, String message, String site) {
+		if (getPrefsNotifHeaders()) {
+			Intent intent = new Intent(MainActivity.BROADCAST_ACTION);
+			intent.putExtra(MainActivity.CHAT_NAME, channel);
+			sendBroadcast(intent);
+		}
+		// 2-я часть
+		// notif.setLatestEventInfo(this, "Notification's title",
+		// "Notification's text", pIntent);
+		if (getPrefsNotifSystem()) {
+			if (site.equalsIgnoreCase("sc2tv")
+					&& !isAppOnForeground(MyApp.getContext())) {
+				Matcher matcher = bold.matcher(message);
+
+				if (matcher.find()) {
+					message = message.replace("<b>", "").replace("</b>", "");
+					String privateNick = ChatCursorAdapter.sc2tvNick;
+					String adress = matcher.group(2);
+					if (adress.equalsIgnoreCase(privateNick)) {
+				 Intent notificationIntent = new Intent(getBaseContext(), MainActivity.class); // по клику на уведомлении 
+				 notificationIntent.putExtra(MainActivity.CHAT_NAME, channel);
+	   
+				 NotificationCompat.Builder nb = new NotificationCompat.Builder(getApplication())
+				 .setSmallIcon(R.drawable.ic_launcher) //иконка уведомления
+				 .setAutoCancel(true) //уведомление закроется по клику на него
+				 .setTicker(message) //текст, который отобразится вверху статус-бара при создании уведомления
+				 .setContentText(message) // Основной текст уведомления
+				 .setContentIntent(PendingIntent.getActivity(getApplication(), 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT))
+				 .setWhen(System.currentTimeMillis()) //отображаемое время уведомления
+        		.setContentTitle("New private message") //заголовок уведомления
+        		.setDefaults(Notification.DEFAULT_ALL); // звук, вибро и диодный индикатор выставляются по умолчанию
+				 
+						Notification notification = nb.getNotification(); // генерируем
+																			// уведомление
+						nm.notify(0, notification);
+					}
+				}
+			}
+
+		}
+
 	}
+	
+	private boolean getPrefsNotifHeaders() {
+        // Get the xml/preferences.xml preferences
+        SharedPreferences prefs = PreferenceManager
+                        .getDefaultSharedPreferences(MyApp.getContext());
+        boolean notifHeaders = prefs.getBoolean("notifHeaders", true);
+         
+        
+        return notifHeaders;
+	}
+	private boolean getPrefsNotifSystem() {
+        // Get the xml/preferences.xml preferences
+        SharedPreferences prefs = PreferenceManager
+                        .getDefaultSharedPreferences(MyApp.getContext());
+        
+         boolean notifSystem = prefs.getBoolean("notifSystem", true);
+        
+        return notifSystem;
+	}
+	
+	private boolean isAppOnForeground(Context context) {
+	    ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+	    List<RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+	    if (appProcesses == null) {
+	      return false;
+	    }
+	    final String packageName = context.getPackageName();
+	    for (RunningAppProcessInfo appProcess : appProcesses) {
+	      if (appProcess.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
+	        return true;
+	      }
+	    }
+	    return false;
+	  }
 
 	void shutdownAndAwaitTermination(ExecutorService pool) {
 		   pool.shutdown(); // Disable new tasks from being submitted
@@ -414,7 +477,7 @@ public class ChatService extends Service {
 			ContentValues cv = new ContentValues();
 			cv.put("site", "twitch");
 			channel = channel.substring(1);
-			sendNotif(channel,message);
+			
 			cv.put("channel", channel);
 			cv.put("nick", sender);
 			cv.put("message", message);
@@ -426,7 +489,7 @@ public class ChatService extends Service {
 					INSERT_URI, cv);
 			// TODO Auto-generated method stub
 			Log.d(MainActivity.LOG_TAG, message);
-			
+			sendNotif(channel,message,"twitch");
 		}
 	}
 

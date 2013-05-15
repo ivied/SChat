@@ -53,7 +53,7 @@ public class EditChat extends SherlockFragmentActivity implements OnClickListene
 		super.onCreate(savedInstanceState);
 		Intent i = getIntent();
 		String button = i.getStringExtra("button");
-		setContentView(R.layout.add_chat);
+		setContentView(R.layout.add_chat_old);
 		twitchChannels = (EditText) findViewById(R.id.twitchChannels);
 		mLayout = (RelativeLayout) findViewById(R.id.mLayout);
 		addSc2 = (ImageButton) findViewById(R.id.btnSc2tvAdd);

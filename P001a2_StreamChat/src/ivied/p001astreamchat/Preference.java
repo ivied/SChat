@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.text.InputFilter;
-import android.text.Spanned;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,7 +14,7 @@ import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
-public class Preference extends SherlockPreferenceActivity implements OnClickListener {
+public class Preference extends SherlockPreferenceActivity {
 	Button savePrefs;  
 	@SuppressWarnings("deprecation")
 	  @Override
@@ -33,19 +33,18 @@ public class Preference extends SherlockPreferenceActivity implements OnClickLis
 	
 	
 	
-	 savePrefs = (Button) findViewById (R.id.savePrefs);
-	 savePrefs.setOnClickListener(this);
+	
 	  }
 	  
 	  @Override
 	  public void onBuildHeaders(List<Header> target) {
 	   // loadHeadersFromResource(R.xml.pref, target);
 	  }
-
-	@Override
-	public void onClick(View arg0) {
-		
-		Intent i;
+	  @Override
+	  public boolean onKeyDown(int keyCode, KeyEvent event)  {
+	      if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+	          // do something on back.
+	    	  Intent i;
 		stopService(new Intent(this,SendMessageService.class));
 		 stopService(new Intent(this,ChatService.class));
 		MyApp.factoryReset();
@@ -53,7 +52,11 @@ public class Preference extends SherlockPreferenceActivity implements OnClickLis
 		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		MyApp.getContext().startActivity(i);
-		
-		
-	}
+	          return true;
+	      }
+
+	      return super.onKeyDown(keyCode, event);
+	  }
+
+	
 	}

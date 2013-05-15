@@ -77,7 +77,7 @@ public class HelloPage extends SherlockFragment implements OnClickListener{
 		Intent intent;
 		switch (v.getId()) {
 		case R.id.createNewChat:
-			intent = new Intent(getActivity(), EditChat.class);
+			intent = new Intent(getActivity(), AddChat.class);
 			intent.putExtra("button", "Add");
 			getActivity().startActivityForResult(intent, 2);
 
@@ -94,7 +94,7 @@ public class HelloPage extends SherlockFragment implements OnClickListener{
 			getActivity().startActivityForResult(intentLogin, 3);
 			break;
 		case R.id.editChats:
-			Intent intentEdit = new Intent(getActivity(), EditChat.class);
+			Intent intentEdit = new Intent(getActivity(), AddChat.class);
 			intentEdit.putExtra("button", "Edit");
 			getActivity().startActivityForResult(intentEdit, 1);
 			break;
