@@ -34,7 +34,7 @@ import android.widget.TextView;
  * @author Serv
  * 
  */
-public class ChatCursorAdapter extends SimpleCursorAdapter {
+public class AdapterChatCursor extends SimpleCursorAdapter {
 	final String SAVED_SC2TV_NAME = "sc2tv";
 	//final String SAVED_TWITCH_NAME = "twitch";
 	final public static Pattern bold = Pattern.compile("(\\<b\\>)(.*)(\\<\\/b\\>)");
@@ -46,7 +46,7 @@ public class ChatCursorAdapter extends SimpleCursorAdapter {
 	 //static String twitchNick;
 	//static Map<Integer, Integer> linkMap= new HashMap<Integer,Integer>();
 	static List<Integer> linkMap = new ArrayList<Integer>();
-	public ChatCursorAdapter(Context context, int _layout, Cursor cursor,
+	public AdapterChatCursor(Context context, int _layout, Cursor cursor,
 			String[] from, int[] to, int flags) {
 		super(context, _layout, cursor, from, to, flags);
 		// TODO выделение личных сообщений

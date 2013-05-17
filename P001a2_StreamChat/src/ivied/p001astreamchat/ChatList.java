@@ -95,7 +95,7 @@ public class ChatList extends SherlockFragmentActivity {
 		String selection = "";
 		SharedPreferences preferences;
 		// This is the Adapter being used to display the list's data.
-		ChatCursorAdapter mAdapter;
+		AdapterChatCursor mAdapter;
 
 		// If non-null, this is the current filter the user has provided.
 		String mCurFilter;
@@ -198,7 +198,7 @@ public class ChatList extends SherlockFragmentActivity {
 					MyContentProvider.MESSAGES_CHANEL };
 			int[] to = new int[] { R.id.ivImg, 0, R.id.tvText, R.id.channelName };
 			// Initialize the adapter.
-			mAdapter = new ChatCursorAdapter(getActivity(), R.layout.message,
+			mAdapter = new AdapterChatCursor(getActivity(), R.layout.message,
 					null, from, to, 0);
 
 			listView = mList;

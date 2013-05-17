@@ -321,7 +321,7 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
     
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Intent i;
+		
 		// запишем в лог значения requestCode и resultCode
 		Log.d("myLogs", "requestCode = " + requestCode + ", resultCode = "
 				+ resultCode);

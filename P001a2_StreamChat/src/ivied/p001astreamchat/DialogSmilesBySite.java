@@ -45,7 +45,7 @@ public class DialogSmilesBySite extends DialogFragment {
 		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
 		int width = display.getWidth(); 
 		int x = (int) Math.round((double)width/ 80);
-		GridView sc2tvSmile =(GridView) v.findViewById(R.id.gridView1);
+		GridView sc2tvSmile =(GridView) v.findViewById(R.id.gridChannelList);
 		sc2tvSmile.setNumColumns(x);
 		
 		sc2tvSmile.setAdapter(new ImageAdapter(getActivity()));

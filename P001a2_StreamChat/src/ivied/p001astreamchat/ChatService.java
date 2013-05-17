@@ -381,7 +381,7 @@ public class ChatService extends Service {
 
 				if (matcher.find()) {
 					message = message.replace("<b>", "").replace("</b>", "");
-					String privateNick = ChatCursorAdapter.sc2tvNick;
+					String privateNick = AdapterChatCursor.sc2tvNick;
 					String adress = matcher.group(2);
 					if (adress.equalsIgnoreCase(privateNick)) {
 				 Intent notificationIntent = new Intent(getBaseContext(), MainActivity.class); // по клику на уведомлении 
