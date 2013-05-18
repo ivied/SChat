@@ -29,7 +29,7 @@ public class MyContentProvider extends ContentProvider {
 	// // Константы для БД
 	// БД
 	static final String DB_NAME = "mydb20";
-	static final int DB_VERSION = 3;
+	static final int DB_VERSION = 5;
 
 	// Таблица
 	static final String MESSAGES_TABLE = "chats";
@@ -56,13 +56,14 @@ public class MyContentProvider extends ContentProvider {
 	static final String CHANNELS_CHANNEL = "channel";
 	static final String CHANNELS_FLAG = "flag";
 	static final String CHANNELS_COLOR = "color";
+	static final String CHANNELS_PERSONAL = "personal";
 	// Скрипт создания таблицы
 	static final String DB_CREATE_CHANNELS = "create table " + CHANNELS_TABLE + "("
 			+ MESSAGES_ID + " integer primary key autoincrement, "
 			+ CHANNELS_CHAT_NAME
 			+ " text, " + CHANNELS_SITE_NAME + " text, " + CHANNELS_CHANNEL
 			+ " text, " + CHANNELS_FLAG + " text, " + CHANNELS_COLOR
-			+ " text" + ");";
+			+ " integer, " + CHANNELS_PERSONAL + " text " + ");";
 	
 	// // Uri
 	// authority

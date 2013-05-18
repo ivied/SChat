@@ -37,6 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="@string/hint_type_sc2tv_code"
         android:inputType="number" >
 
         <requestFocus />

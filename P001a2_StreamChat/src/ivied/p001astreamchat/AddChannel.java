@@ -27,12 +27,13 @@ public class AddChannel extends SherlockFragmentActivity implements
 	Button setChannel;
 	EditText channelId, personalName;
 	int color, site;
-	
+	Intent intent =new Intent();
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_channel);
-		Intent intent = getIntent();
+		intent = getIntent();
+	
 		site = intent.getIntExtra(DialogChoiceSite.SITE, 0);
 		fTrans = getSupportFragmentManager().beginTransaction();
 		switch (site) {
@@ -53,26 +54,49 @@ public class AddChannel extends SherlockFragmentActivity implements
 		personalName = (EditText) findViewById(R.id.personalName);
 		setChannel =(Button) findViewById(R.id.btnSetChannel);
 		setChannel.setOnClickListener(this);
-		 
+		
+	}
+	@Override
+	public void onResume() {
+		super.onResume();
+		String action = intent.getStringExtra(DialogChoiceSite.FOR); 
+		if(action.equalsIgnoreCase("edit")){
+			String name= intent.getStringExtra(AddChat.PERSONAL_NAME);
+			personalName.setText(name);
+			///if( !intent.getStringExtra(AddChat.COLOR).equalsIgnoreCase("0"))
+			color = intent.getIntExtra(AddChat.COLOR, 0);
+			textColor.setBackgroundColor(color);
+			//Log.i(MainActivity.LOG_TAG,"site = " + channel.siteInt + " channel = " + channel.channelId + " color = " +color + " personal = " + name);
+			
+			switch (site) {
+			case DialogChoiceSite.SC2TV:
+				channelId =(EditText) fragmentFind.getView().findViewById(R.id.editChannelNumberSc2tv);
+				
+				break;
+				
+			}
+			channelId.setText(intent.getStringExtra(AddChat.CHANNEL));
+		}else  {
+		switch (site){
+			case DialogChoiceSite.SC2TV:
+				channelId =(EditText) fragmentFind.getView().findViewById(R.id.editChannelNumberSc2tv);
+				break;
+				
+		}
+		}
 	}
 
 	@Override
 	public void onClick(View v) {
-		channelId =(EditText) fragmentFind.getView().findViewById(R.id.editChannelNumberSc2tv);
+		
 		switch (v.getId()) {
 		case R.id.radioStandartColor:
 			switch (site) {
 			case DialogChoiceSite.SC2TV:
 				
 				
+				getStandartColor ();
 				
-				int length = channelId.getText().toString().length();
-				
-				if (length>8) length=8;
-				if (!(length==0)){
-				color = -Integer.parseInt(channelId.getText().toString().substring(0, length));
-				Log.d(MainActivity.LOG_TAG, "color = "+ color+ "   ");
-				textColor.setBackgroundColor(color);}
 				break;
 			//case DialogChoiceSite.
 			}
@@ -82,18 +106,18 @@ public class AddChannel extends SherlockFragmentActivity implements
 			
 			new DialogColorPicker(this, this, Color.MAGENTA).show();
 
-			/*
-			 * dlgColorPicker = new DialogColorPicker();
-			 * dlgColorPicker.show(getSupportFragmentManager(), "Color pick");
-			 */
+			
 			break;
 		case R.id.btnSetChannel:
+			
 			Intent i =new Intent() ;
 			String [] channel = channelId.getText().toString().trim().split("\\s+");
-			 if(!channel[0].equalsIgnoreCase("")){
+			
+			if(!channel[0].equalsIgnoreCase("")){
 			
 			i.putExtra("channelId", channel[0]);
-			i.putExtra("color", String.valueOf(color));
+			if (color == 0 ) getStandartColor();
+			i.putExtra("color", color);
 			i.putExtra("name", personalName.getText().toString());
 			i.putExtra("site", site);
 			setResult(RESULT_OK, i);
@@ -107,6 +131,28 @@ public class AddChannel extends SherlockFragmentActivity implements
 
 	}
 
+	
+	private int getStandartColor (){
+		switch (site) {
+		case DialogChoiceSite.SC2TV:
+			
+			
+		
+			
+			
+		int length = channelId.getText().toString().length();
+		
+		if (length>8) length=8;
+		if (!(length==0)){
+		color = -Integer.parseInt(channelId.getText().toString().substring(0, length));
+		Log.d(MainActivity.LOG_TAG, "color = "+ color+ "   ");
+		textColor.setBackgroundColor(color);}
+		
+		break;
+		//case DialogChoiceSite.
+		}
+		return color;
+	}
 	@Override
 	public void colorChanged(int color) {
 		this.color = color;

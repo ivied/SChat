@@ -20,15 +20,6 @@
             android:text="@string/set_chat" />
     </LinearLayout>
 
-    <GridView
-        android:id="@+id/gridChannelList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layoutControlEdit"
-        android:layout_alignParentLeft="true"
-        android:numColumns="3" >
-    </GridView>
-
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="wrap_content"
@@ -55,5 +46,15 @@
         android:layout_alignParentTop="true"
         android:layout_weight="0.11"
         android:src="@android:drawable/ic_menu_add" />
+
+    <ListView
+        android:id="@+id/listChannels"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/layoutControlEdit"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/chatName" >
+
+    </ListView>
 
 </RelativeLayout>

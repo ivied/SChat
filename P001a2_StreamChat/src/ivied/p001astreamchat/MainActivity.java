@@ -3,7 +3,6 @@ package ivied.p001astreamchat;
 
 
 import ivied.p001astreamchat.ChatService.ChatBinder;
-import ivied.p001astreamchat.HelloPage.onSomeEventListener;
 import ivied.p001astreamchat.SendMessageService.SendBinder;
 
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -39,8 +37,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 
-public class MainActivity extends SherlockFragmentActivity implements onSomeEventListener/*, OnTabChangeListener*/{
-    static Integer focus;
+public class MainActivity extends SherlockFragmentActivity {
+    static Integer focus=0;
 	TabHost mTabHost;
     ViewPager  mViewPager;
     TabsAdapter mTabsAdapter;
@@ -95,7 +93,8 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(R.style.Theme_Sherlock); // Used for theme switching in samples
 		super.onCreate(savedInstanceState);
-
+		indexOfChats.clear();
+		indexOfHeaders.clear();
 		setContentView(R.layout.fragment_tabs_pager);
 
 		mTabHost = (TabHost) findViewById(android.R.id.tabhost);
@@ -104,36 +103,15 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 
 		mTabsAdapter = new TabsAdapter(this, mTabHost, mViewPager);
-
-		mTabsAdapter.addTab(mTabHost.newTabSpec("simple").setIndicator("Menu"),
-				HelloPage.class, null);
-		indexOfChats.clear();
-		indexOfChats.add("simple");
-		indexOfHeaders.clear();
-		indexOfHeaders.add(null);
-
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
-		/*
-		 * mTabsAdapter.addTab(mTabHost.newTabSpec("custom").setIndicator("Custom"
-		 * ), LoaderCustomSupport.AppListFragment.class, null);
-		 * mTabsAdapter.addTab
-		 * (mTabHost.newTabSpec("throttle").setIndicator("Throttle"),
-		 * LoaderThrottleSupport.ThrottledLoaderListFragment.class, null);
-		 * 
-		 * if (savedInstanceState != null) {
-		 * mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab")); }
-		 */
-		// mTabHost.setOnTabChangedListener(this);
+		
 		br = new BroadcastReceiver() {
-			// действия при получении сообщений
+			/// действия при получении сообщений
 			public void onReceive(Context context, Intent intent) {
 
 				
 				String [] chats = getChatNamesToNotif(intent);
 				
-				
-				
-
 				for (String chat : chats) {
 					if (!mTabHost.getCurrentTabTag().equalsIgnoreCase(chat)) {
 						// TabInfo tab = new
@@ -156,9 +134,9 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 			}
 		};
 		// создаем фильтр для BroadcastReceiver
-		IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+		
 		// регистрируем (включаем) BroadcastReceiver
-		registerReceiver(br, intFilt);
+		
 		intent = new Intent(this, ChatService.class);
 		bindService(intent, sConn, 0);
 		Log.d(LOG_TAG, "MyService onCreate");
@@ -166,13 +144,20 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 		intent = new Intent(this, SendMessageService.class);
 		startService(intent);
 		bindService(intent, sendConn, 0);
-		loadSavedChats();
+		
 		Intent intentFocus = getIntent();
-		//Log.d(LOG_TAG, "chat intent =  " + intent.getCharSequenceExtra(CHAT_NAME));
+		///Log.d(LOG_TAG, "chat intent =  " + intent.getCharSequenceExtra(CHAT_NAME));
 		if( intentFocus.hasExtra(CHAT_NAME)){
 		String [] chats = getChatNamesToNotif(intentFocus);
 		Log.d(LOG_TAG, "chat intent =  " + chats[0]);
 		mTabHost.setCurrentTab(indexOfChats.indexOf(chats[0]));}
+		Cursor c = getContentResolver().query(SERVICE_URI, null, null, null, null);
+		if (c.getCount() ==  0){
+			intent = new Intent(this, AddChat.class);
+			intent.putExtra("button", "Add");
+			startActivityForResult(intent, 2);
+		}
+    	loadSavedChats();
 
 	}
     
@@ -201,6 +186,15 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
     	getPrefs();
     	
     }
+	 
+	@Override
+    public void onResume(){
+    	super.onResume();
+    	IntentFilter intFilt = new IntentFilter(BROADCAST_ACTION);
+    	registerReceiver(br, intFilt);
+    
+		
+    }
     
     public void addSmile (View v) {
     	dlgChoiceSmile = new DialogChoiceSmile();
@@ -209,7 +203,7 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 
     public void pressEnter(View v){
     	EditText  textOfMessage = (EditText) findViewById(
-		mTabHost.getCurrentTab());
+		mTabHost.getCurrentTab()+1);
     	Log.i(MainActivity.LOG_TAG, "edit = " + mTabHost.getCurrentTab() );
     	String text = textOfMessage.getText().toString();	
     	SendService.sendMessage(text, mTabHost.getCurrentTabTag());		
@@ -344,7 +338,8 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 
 				break;
 			case 2:
-				//String chatNameADD = data.getStringExtra("name");
+				 
+				///String chatNameADD = data.getStringExtra("name");
 				
 					/*if (indexOfChats.size() > 2) {
 						addTab(chatNameADD);
@@ -375,7 +370,10 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 	 public boolean onCreateOptionsMenu(Menu menu) {
 		    menu.add(0, 1, 1, "Preferences");
 		    menu.add(0,2,0, "Channels");
-		   
+		    menu.add(0,3,2, "Add chat");
+		    menu.add(0,4,3, "Edit chat");
+		    menu.add(0,5,4, "Login");
+		   // menu.add(0,6,5,)
 		    return super.onCreateOptionsMenu(menu);
 		  }
 	 @Override
@@ -394,7 +392,21 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
 			dlgChoseChannels.show(getSupportFragmentManager(),  mTabHost.getCurrentTabTag());
 		 
 	 break;
-	 
+	 case 3:
+		 intent = new Intent(this, AddChat.class);
+			intent.putExtra("button", "Add");
+			startActivityForResult(intent, 2);
+		 break;
+	 case 4:
+		 Intent intentEdit = new Intent(this, AddChat.class);
+			intentEdit.putExtra("button", "Edit");
+			startActivityForResult(intentEdit, 1);
+		 break;
+	 case 5:
+		 Intent intentLogin = new Intent(this, Login.class);
+		 startActivityForResult(intentLogin, 3);
+		 break;
+		
 	 }
 	 return true;
 	 }
@@ -409,6 +421,8 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
           autoScrollChat = prefs.getBoolean("autoScroll", true);
          
  }
+	 
+	
 	 /*@Override
 		public void onTabChanged(String tabId) {
 			// TODO Auto-generated method stub
@@ -489,7 +503,7 @@ public class MainActivity extends SherlockFragmentActivity implements onSomeEven
             TabInfo info = new TabInfo(tag, clss, args);
             mTabs.add(info);
             mTabHost.addTab(tabSpec);
-            notifyDataSetChanged();
+          ///  notifyDataSetChanged();
         }
 
         @Override

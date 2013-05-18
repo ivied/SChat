@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Spannable;
 import android.text.Spannable.Factory;
@@ -36,9 +37,9 @@ import android.widget.TextView;
  */
 public class AdapterChatCursor extends SimpleCursorAdapter {
 	final String SAVED_SC2TV_NAME = "sc2tv";
-	//final String SAVED_TWITCH_NAME = "twitch";
+	///final String SAVED_TWITCH_NAME = "twitch";
 	final public static Pattern bold = Pattern.compile("(\\<b\\>)(.*)(\\<\\/b\\>)");
-	
+	final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
 	 // Span to set text BOLD
 	   final static StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
 	   SharedPreferences preferences;
@@ -64,18 +65,24 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 				.getColumnIndex(MyContentProvider.MESSAGES_NICK_NAME));
 		// nick = "<font color=#4682B4>" + nick + ": " +
 		// "</font> <font color=#ffffff>" + message.getText() + "</font>";
-		// message.setText(Html.fromHtml(nick));
-
+		//// message.setText(Html.fromHtml(nick));
+	
 		Spannable text = getSmiledText(this.mContext, message.getText(), nick);
 		message.setText(text);
 		TextView channel = (TextView) view.findViewById(R.id.channelName);
 		String channelText = channel.getText().toString();
 		String site = cursor.getString(2);
+		Cursor c = MyApp.getContext().getContentResolver()
+				.query(ADD_URI, new String [] { "personal"}, "site = ? AND channel = ?", 
+				new String [] { site,channelText}, null);
+		if (c.moveToNext()){String personal = c.getString(0);
+		
+		if (!personal.equalsIgnoreCase("")) channel.setText(personal);}
 		if (site.equals("sc2tv"))
 		channel.setBackgroundColor(Color.parseColor("#"	+ "0"	+ channelText));
-		String color=null;
+		
 		if (site.equals("twitch")) {
-			
+			String color=null;
 			 try {
 				color = stringToHex(channelText).substring(0, 6);
 			} catch (UnsupportedEncodingException e) {

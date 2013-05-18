@@ -54,7 +54,8 @@ public class DialogSmilesBySite extends DialogFragment {
 			public void onItemClick(AdapterView<?> parent, View v,
 				int position, long id) {
 				onDismiss(getDialog());
-				EditText message = (EditText) getActivity().findViewById(MainActivity.focus);
+				Log.i(MainActivity.LOG_TAG, "focus = " + MainActivity.focus);
+				EditText message = (EditText) getActivity().findViewById(MainActivity.focus+1);
 					;
 					 message.setText( message.getText().toString() + " " + idMap.get(v.getId()));
 					 

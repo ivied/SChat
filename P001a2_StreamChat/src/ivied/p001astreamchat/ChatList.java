@@ -21,6 +21,7 @@ import ivied.p001astreamchat.MainActivity.TabInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -31,9 +32,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SearchViewCompat;
-import android.support.v4.widget.SearchViewCompat.OnQueryTextListenerCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -52,6 +50,7 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 
 /**
  * Demonstration of the use of a CursorLoader to load and display contacts data
@@ -77,7 +76,14 @@ public class ChatList extends SherlockFragmentActivity {
 
 	public static class CursorLoaderListFragment extends SherlockListFragment
 			implements LoaderManager.LoaderCallbacks<Cursor>,
-			OnItemClickListener {
+			OnItemClickListener, OnMenuItemClickListener {
+		
+		
+		
+		
+			  
+			  
+			  
 
 		private ListView listView;
 		private ActionMode mMode;
@@ -128,7 +134,8 @@ public class ChatList extends SherlockFragmentActivity {
 			}
 			
 			(root.findViewById(R.id.internalEmpty)).setId(INTERNAL_EMPTY_ID);
-			(root.findViewById(R.id.textOfMessage)).setId(tagNumber);
+			Log.i(MainActivity.LOG_TAG, "id textOfMessage = " + tagNumber);
+			(root.findViewById(R.id.textOfMessage)).setId(tagNumber+1);
 			// (root.findViewById(android.R.id.list)).setId(android.R.id.list);
 
 			mList = (ListView) root.findViewById(android.R.id.list);
@@ -195,8 +202,10 @@ public class ChatList extends SherlockFragmentActivity {
 					MyContentProvider.MESSAGES_SITE_NAME,
 					MyContentProvider.MESSAGES_NICK_NAME,
 					MyContentProvider.MESSAGES_MESSAGE,
-					MyContentProvider.MESSAGES_CHANEL };
-			int[] to = new int[] { R.id.ivImg, 0, R.id.tvText, R.id.channelName };
+					MyContentProvider.MESSAGES_CHANEL,
+					
+					};
+			int[] to = new int[] { R.id.ivImg, 0, R.id.tvText, R.id.channelName};
 			// Initialize the adapter.
 			mAdapter = new AdapterChatCursor(getActivity(), R.layout.message,
 					null, from, to, 0);
@@ -306,23 +315,14 @@ public class ChatList extends SherlockFragmentActivity {
 							android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSherlockActivity()
 									.getSystemService(Context.CLIPBOARD_SERVICE);
 							clipboard.setText(message);
-						}/*
-						 * else { android.content.ClipboardManager clipboard =
-						 * (android.content.ClipboardManager)
-						 * getSherlockActivity
-						 * ().getSystemService(Context.CLIPBOARD_SERVICE);
-						 * android.content.ClipData clip =
-						 * android.content.ClipData
-						 * .newPlainText("from chat",message);
-						 * clipboard.setPrimaryClip(clip); }
-						 */
+						}
 
 						break;
 					case R.id.action_private:
 
 						String nick = c.getString(4);
 						EditText msg = (EditText) getSherlockActivity()
-								.findViewById(MainActivity.focus);
+								.findViewById(MainActivity.focus+1);
 
 						String site = c.getString(2);
 						if (site.equalsIgnoreCase("sc2tv"))
@@ -369,8 +369,12 @@ public class ChatList extends SherlockFragmentActivity {
 		@Override
 		public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 			
+			MenuItem item = menu.add("Close");
+			item.setIcon(android.R.drawable.btn_dialog);
+			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			item.setOnMenuItemClickListener(this);
 			// Place an action bar item for searching.
-			MenuItem item = menu.add("Search");
+			/*MenuItem item = menu.add("Search");
 			item.setIcon(android.R.drawable.ic_menu_search);
 			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			SherlockFragmentActivity activity = (SherlockFragmentActivity) getActivity();
@@ -380,21 +384,21 @@ public class ChatList extends SherlockFragmentActivity {
 				SearchViewCompat.setOnQueryTextListener(searchView,
 						new OnQueryTextListenerCompat() {
 							@Override
-							public boolean onQueryTextChange(String newText) {
+							public boolean onQueryTextChange(String newText) {*/
 								// Called when the action bar search text has
 								// changed. Update
 								// the search filter, and restart the loader to
 								// do a new query
 								// with this filter.
-								mCurFilter = !TextUtils.isEmpty(newText) ? newText
-										: null;
+							/*	mCurFilter = !TextUtils.isEmpty(newText) ? newText
+										: null;*/
 								// getLoaderManager().restartLoader(0, null,
 								// CursorLoaderListFragment.this);
-								return true;
+								/*return true;
 							}
 						});
 				item.setActionView(searchView);
-			}
+			}*/
 		}
 
 		@Override
@@ -470,6 +474,17 @@ public class ChatList extends SherlockFragmentActivity {
 			// above is about to be closed. We need to make sure we are no
 			// longer using it.
 			mAdapter.swapCursor(null);
+		}
+
+
+		@Override
+		public boolean onMenuItemClick(MenuItem item) {
+		
+
+			((MainActivity)getSherlockActivity()).stopService();
+			((MainActivity) getSherlockActivity()).stopServiceSend(); 
+			getActivity().finish();
+			return false;
 		}
 
 	}

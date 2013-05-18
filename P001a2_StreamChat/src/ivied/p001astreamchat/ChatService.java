@@ -190,7 +190,7 @@ public class ChatService extends Service {
 
 		String site;
 		String channel;
-		String message;
+		//	String message;
 
 		public channelRun(String site, String channel) {
 			this.channel = channel;

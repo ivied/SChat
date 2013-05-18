@@ -71,7 +71,7 @@ public class DialogTwitchChannels extends DialogFragment implements
 			if (line.length() < 10)
 				channel = "not exist now";
 
-			EditChat.twitchAdd(channel);
+			//EditChat.twitchAdd(channel);
 		}
 	}
 }

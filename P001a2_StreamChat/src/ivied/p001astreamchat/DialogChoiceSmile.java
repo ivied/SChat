@@ -28,7 +28,7 @@ public class DialogChoiceSmile extends DialogFragment implements  OnClickListene
 	@Override
 	public void onClick(View v) {
 		onDismiss(getDialog());
-		// TODO Auto-generated method stub
+		/// TODO Auto-generated method stub
 		switch (v.getId()){
 		case R.id.textSmileSc2tv:
 			
