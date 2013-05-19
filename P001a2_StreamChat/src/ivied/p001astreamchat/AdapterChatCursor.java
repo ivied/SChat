@@ -127,9 +127,9 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 		super.setViewImage(v, value);
 		// разрисовываем ImageView
 		if (value.equals("sc2tv"))
-			v.setImageResource(R.drawable.sc2tv);
+			v.setImageResource(R.drawable.sc2tv_small);
 		if (value.equals("twitch"))
-			v.setImageResource(R.drawable.twitch);
+			v.setImageResource(R.drawable.twitch_small);
 
 	}
 

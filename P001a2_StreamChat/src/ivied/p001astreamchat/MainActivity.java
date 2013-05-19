@@ -425,9 +425,15 @@ public class MainActivity extends SherlockFragmentActivity {
 	
 	 /*@Override
 		public void onTabChanged(String tabId) {
-			// TODO Auto-generated method stub
+			/// TODO Auto-generated method stub
 		
 		}*/
+	 @Override
+	    public void onPause(){
+		 unregisterReceiver(br);
+		 super.onPause();
+		 
+	 }
 	 
 	 @Override
 	    public void onDestroy(){
@@ -435,7 +441,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	    	unbindService(sConn);
 	    	unbindService(sendConn);
 	    	stopServiceSend();
-	    	//unregisterReceiver(br);
+	    	
 	    	super.onDestroy();
 	    }
 	 

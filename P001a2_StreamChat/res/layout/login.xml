@@ -18,7 +18,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_alignParentRight="true"
-        android:text="@string/clear" />
+        android:text="@string/login_to_sc2tv" />
 
     <ImageButton
         android:id="@+id/btnSc2tvAddLogin"
@@ -58,7 +58,7 @@
         android:layout_height="80dp"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/sc2tvPass"
-        android:text="@string/clear" />
+        android:text="@string/login_to_twitch" />
 
     <ImageButton
         android:id="@+id/btnTwitchLogin"
@@ -89,5 +89,13 @@
         android:layout_toRightOf="@+id/btnTwitchLogin"
         android:ems="10"
         android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/btnClearLogins"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/btn_clear_all_logins" />
 
 </RelativeLayout>

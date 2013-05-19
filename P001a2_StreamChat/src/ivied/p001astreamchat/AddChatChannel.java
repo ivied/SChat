@@ -19,7 +19,10 @@ public class AddChatChannel {
 			
 			this.drawable = R.drawable.sc2tv;
 			break;
-			
+		case DialogChoiceSite.TWITCH:
+			this.site = "twitch";
+			this.drawable = R.drawable.twitch;
+			break;
 		}
 	}
 
@@ -32,6 +35,10 @@ public class AddChatChannel {
 		if(siteName.equalsIgnoreCase("sc2tv")){
 			this.siteInt = DialogChoiceSite.SC2TV;
 			this.drawable = R.drawable.sc2tv;
+		}
+		if (siteName.equalsIgnoreCase("twitch")){
+			this.siteInt = DialogChoiceSite.TWITCH;
+			this.drawable = R.drawable.twitch;
 		}
 		
 		// TODO Auto-generated constructor stub

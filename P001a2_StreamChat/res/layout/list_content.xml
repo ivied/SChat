@@ -32,7 +32,7 @@
     android:background="#000000"
     android:orientation="vertical" >
 
-   <Button
+   <ImageButton
         android:id="@+id/enter"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -40,7 +40,8 @@
         android:layout_alignParentRight="true"
         android:onClick="pressEnter"
         android:text="Enter" 
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        android:background="@drawable/btn_enter_message" />
    
     <ListView
         android:id="@android:id/list"
@@ -56,7 +57,7 @@
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
-        android:layout_toRightOf="@+id/footer"
+       
         android:background="@drawable/sc2tvsmileminihappy"
         android:contentDescription="Smile"
         android:onClick="addSmile"

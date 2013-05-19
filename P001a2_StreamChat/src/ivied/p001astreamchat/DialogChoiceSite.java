@@ -12,6 +12,7 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
 	 public static final String SITE = "site";
 	 public static final String FOR = "for";
 	 public static final int SC2TV = 1;
+	public static final int TWITCH = 2;
 
 
 
@@ -41,7 +42,10 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
 			
 			break;
 		case R.id.textSiteTwitch:
-			
+			Intent intentTwitch = new Intent(getActivity(),AddChannel.class);
+			intentTwitch.putExtra(SITE, TWITCH);
+			intentTwitch.putExtra(FOR, "add");
+			getActivity().startActivityForResult(intentTwitch, AddChat.TASK_ADD);
 			break;
 		}
 		 

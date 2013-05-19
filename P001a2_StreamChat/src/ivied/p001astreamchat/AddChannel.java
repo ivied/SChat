@@ -1,11 +1,12 @@
 package ivied.p001astreamchat;
 
+import java.io.UnsupportedEncodingException;
+
 import ivied.p001astreamchat.DialogColorPicker.OnColorChangedListener;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +20,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class AddChannel extends SherlockFragmentActivity implements
 		OnClickListener, OnColorChangedListener {
-	private FragmentFindChannelSc2tv fragmentFind;
+	private FragmentFindChannelSc2tv fragmentFindSc2tv;
+	private FragmentFindChannelTwitch fragmentFindTwitch;
 	DialogFragment dlgColorPicker;
 	FragmentTransaction fTrans;
 	TextView textColor;
@@ -39,12 +41,15 @@ public class AddChannel extends SherlockFragmentActivity implements
 		switch (site) {
 		case DialogChoiceSite.SC2TV:
 			
-			fragmentFind = new FragmentFindChannelSc2tv();
-			
+			fragmentFindSc2tv = new FragmentFindChannelSc2tv();
+			fTrans.add(R.id.frameToFragments, fragmentFindSc2tv);
 			break;
-
+		case DialogChoiceSite.TWITCH:
+			fragmentFindTwitch = new FragmentFindChannelTwitch();
+			fTrans.add(R.id.frameToFragments, fragmentFindTwitch);
+			break;
 		}
-		fTrans.add(R.id.frameToFragments, fragmentFind);
+		
 			fTrans.commit();
 		textColor = (TextView) findViewById(R.id.textColor);
 		radioStandartColor = (RadioButton) findViewById(R.id.radioStandartColor);
@@ -59,6 +64,16 @@ public class AddChannel extends SherlockFragmentActivity implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		switch (site) {
+		case DialogChoiceSite.SC2TV:
+		channelId =(EditText) fragmentFindSc2tv.getView().findViewById(R.id.editChannelNumberSc2tv);
+		
+		break;
+		case DialogChoiceSite.TWITCH:
+		channelId = (EditText) fragmentFindTwitch.getView().findViewById(R.id.editChannelTwitch);
+		
+		break;
+		}
 		String action = intent.getStringExtra(DialogChoiceSite.FOR); 
 		if(action.equalsIgnoreCase("edit")){
 			String name= intent.getStringExtra(AddChat.PERSONAL_NAME);
@@ -68,21 +83,13 @@ public class AddChannel extends SherlockFragmentActivity implements
 			textColor.setBackgroundColor(color);
 			//Log.i(MainActivity.LOG_TAG,"site = " + channel.siteInt + " channel = " + channel.channelId + " color = " +color + " personal = " + name);
 			
-			switch (site) {
-			case DialogChoiceSite.SC2TV:
-				channelId =(EditText) fragmentFind.getView().findViewById(R.id.editChannelNumberSc2tv);
+			
 				
-				break;
-				
-			}
+			
 			channelId.setText(intent.getStringExtra(AddChat.CHANNEL));
-		}else  {
-		switch (site){
-			case DialogChoiceSite.SC2TV:
-				channelId =(EditText) fragmentFind.getView().findViewById(R.id.editChannelNumberSc2tv);
-				break;
-				
-		}
+		
+	
+		
 		}
 	}
 
@@ -91,15 +98,7 @@ public class AddChannel extends SherlockFragmentActivity implements
 		
 		switch (v.getId()) {
 		case R.id.radioStandartColor:
-			switch (site) {
-			case DialogChoiceSite.SC2TV:
-				
-				
-				getStandartColor ();
-				
-				break;
-			//case DialogChoiceSite.
-			}
+			getStandartColor ();
 			
 			break;
 		case R.id.radioPersonalColor:
@@ -133,26 +132,59 @@ public class AddChannel extends SherlockFragmentActivity implements
 
 	
 	private int getStandartColor (){
-		switch (site) {
-		case DialogChoiceSite.SC2TV:
-			
-			
-		
-			
-			
 		int length = channelId.getText().toString().length();
 		
-		if (length>8) length=8;
+		
+		switch (site) {
+		
+		
+		case DialogChoiceSite.SC2TV:
 		if (!(length==0)){
+		
+		if (length>8) length=8;
 		color = -Integer.parseInt(channelId.getText().toString().substring(0, length));
 		Log.d(MainActivity.LOG_TAG, "color = "+ color+ "   ");
-		textColor.setBackgroundColor(color);}
+		}
 		
 		break;
-		//case DialogChoiceSite.
-		}
+		case DialogChoiceSite.TWITCH:
+			if ((length>3)){
+			try {
+				String text =stringToHex (channelId.getText().toString()).substring(0, 6);
+				Log.d(MainActivity.LOG_TAG, "color = "+ text);
+				color = Color.parseColor("#"+text); 
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			}
+			break;
+		
+		};
+		textColor.setBackgroundColor(color);
+		
 		return color;
 	}
+	
+	private static final char[] HEX_CHARS = "0123456789abcdef".toCharArray();
+    public String stringToHex(String input) throws UnsupportedEncodingException
+    {
+        if (input == null) throw new NullPointerException();
+        return asHex(input.getBytes());
+    }
+ 
+   
+ 
+    private String asHex(byte[] buf)
+    {
+        char[] chars = new char[2 * buf.length];
+        for (int i = 0; i < buf.length; ++i)
+        {
+            chars[2 * i] = HEX_CHARS[(buf[i] & 0xF0) >>> 4];
+            chars[2 * i + 1] = HEX_CHARS[buf[i] & 0x0F];
+        }
+        return new String(chars);
+    }
 	@Override
 	public void colorChanged(int color) {
 		this.color = color;

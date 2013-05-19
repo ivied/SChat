@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class DialogTwitchChannels extends DialogFragment implements
 		OnClickListener {
@@ -29,7 +30,7 @@ public class DialogTwitchChannels extends DialogFragment implements
 
 		input = new EditText(getActivity());
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
-				.setTitle("Add new twich channel").setView(input)
+				.setTitle("Check twich channel").setView(input)
 				.setPositiveButton("Add", this);
 
 		return adb.create();
@@ -40,7 +41,9 @@ public class DialogTwitchChannels extends DialogFragment implements
 	public void onClick(DialogInterface arg0, int arg1) {
 		// TODO Auto-generated method stub
 		String channel;
-		channel = input.getText().toString();
+		channel = input.getText().toString().trim().split("\\s+")[0];
+		
+		if(!channel.equalsIgnoreCase("")){
 		if (!channel.equals("")) {
 			HttpClient client = new DefaultHttpClient();
 			HttpGet httpGet = new HttpGet(
@@ -71,7 +74,8 @@ public class DialogTwitchChannels extends DialogFragment implements
 			if (line.length() < 10)
 				channel = "not exist now";
 
-			//EditChat.twitchAdd(channel);
+			((EditText) getActivity().findViewById(R.id.editChannelTwitch)).setText(channel);
+		}
 		}
 	}
 }

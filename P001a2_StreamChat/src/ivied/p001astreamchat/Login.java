@@ -42,7 +42,7 @@ public class Login extends Activity implements OnClickListener {
 	ImageButton loginSc2,loginTwitch;
 	EditText nameSc2tv, nameTwitch;
 	EditText passSc2tv, passTwitch;
-	Button clearSc2tvLogin,clearTwitchLogin;
+	Button clearSc2tvLogin,clearTwitchLogin,clearAllLoigins;
 	Button okay;
 	int flag = 0;
 	 static final int LOGIN_WRONG = 2;
@@ -65,6 +65,8 @@ public class Login extends Activity implements OnClickListener {
 		passTwitch = (EditText) findViewById(R.id.twitchPass);
 		clearTwitchLogin = (Button) findViewById(R.id.btnCleanTwitchLogin);
 		clearTwitchLogin.setOnClickListener(this);
+		clearAllLoigins = (Button) findViewById(R.id.btnClearLogins);
+		clearAllLoigins.setOnClickListener(this);
 		loadLogins();
 
 	};
@@ -74,35 +76,53 @@ public class Login extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.okLog:
 			setResult(RESULT_OK, null);
+			loginToTwich();
+			loginToSc2tv ();
 			finish();
 			break;
 		case R.id.btnSc2tvAddLogin:
-			LogInSc2tv login = new LogInSc2tv();
-			login.execute();
+			loginToSc2tv ();
 			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(passSc2tv.getWindowToken(), 0);
 			break;
 		case R.id.btnCleanSc2tvLogin:
-			deletePass("sc2tv");
-			nameSc2tv.setText("");
-			passSc2tv.setText("");
+			
+			loginToSc2tv ();
+		
 			break;
 		case R.id.btnTwitchLogin:
-			LoginIrc loginIrc = new LoginIrc();
-			loginIrc.execute();
+			loginToTwich();
 	        
 	      
 			break;
 		case R.id.btnCleanTwitchLogin:
+			
+			loginToTwich();
+			
+			break;
+		case R.id.btnClearLogins:
+			deletePass("sc2tv");
 			deletePass("twitch");
 			nameTwitch.setText("");
 			passTwitch.setText("");
-			break;
+			nameSc2tv.setText("");
+			passSc2tv.setText("");
 			
+			break;
 		default:
 			break;
 
 		}
+	}
+	
+	private void loginToTwich() {
+		LoginIrc loginIrc = new LoginIrc();
+		loginIrc.execute();
+	}
+	
+	private void loginToSc2tv (){
+		LogInSc2tv login = new LogInSc2tv();
+		login.execute();
 	}
 
 	class LoginIrc extends AsyncTask<Void, Integer, Void> {

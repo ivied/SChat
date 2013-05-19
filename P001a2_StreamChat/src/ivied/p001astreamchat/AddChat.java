@@ -42,12 +42,13 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 	ListView channelList;
 	private ActionMode mMode;
 	protected static int _id;
+	String button;
 	 ArrayList<AddChatChannel> channels =new ArrayList<AddChatChannel>();
 	 AdapterChannelList adapter;
 	protected void onCreate(Bundle savedInstanceState ) {
 		super.onCreate(savedInstanceState);
 		Intent i = getIntent();
-		String button = i.getStringExtra("button");
+		button = i.getStringExtra("button");
 		setContentView(R.layout.add_chat);
 		setChat= (Button) findViewById(R.id.setChat);
 		setChat.setOnClickListener(this);
@@ -94,8 +95,14 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 			dialogChoice.show(getSupportFragmentManager(), "Smile");
 			break;
 		case R.id.setChat:
-
+			if (button.equalsIgnoreCase("Edit")){
+				getContentResolver().delete
+				(ADD_URI, "chat = ?", new String [] {  setName.getText().toString()});
+				intent.putExtra("action", MainActivity.EDIT);
+			}
+			//Add "action"   "edit" in intent  	
 			switch (saveChat()) {
+			
 			case 0:
 				Toast.makeText(this, "Chat name exist", Toast.LENGTH_SHORT)
 						.show();
@@ -124,7 +131,8 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 			dlgLoadSavedChat.show(getSupportFragmentManager(), "Load chat");
 			break;
 		case 3:
-			
+			getContentResolver().delete
+			(ADD_URI, "chat = ?", new String [] {  setName.getText().toString()});
 			intent.putExtra("name", setName.getText().toString());
 			intent.putExtra("action", MainActivity.DELETE);	
 			
@@ -275,7 +283,7 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 		 channelList.setAdapter(adapter);
 		 channelList.setOnItemClickListener(this);
 		setName.setText(chatName);
-		getContentResolver().delete(ADD_URI, "chat = ?", new String [] { chatName});
+		
 	}
 
 }

@@ -63,12 +63,12 @@ public class DialogLoadSavedChat extends DialogFragment {
 					channels.add(new AddChatChannel(channelId,color,personalName,siteName));
 
 				}
-				
+				AddChat callingActivity = (AddChat) getActivity();
+				callingActivity.loadSavedChat(channels, names.get(lv.getCheckedItemPosition())); 
 				
 				}
 				 dialog.dismiss();
-				 AddChat callingActivity = (AddChat) getActivity();
-				callingActivity.loadSavedChat(channels, names.get(lv.getCheckedItemPosition())); 
+				 
 			}
 
 			

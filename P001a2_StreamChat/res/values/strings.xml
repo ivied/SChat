@@ -8,7 +8,7 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="create_new_chat">Create new chat</string>
-    <string name="clear">Clear</string>
+    <string name="btn_clear_all_logins">Clear all logins</string>
     <string name="add_channel">add channel</string>
     <string name="set_code">Set by code</string>
     <string name="set_name">Set by name</string>
@@ -35,4 +35,8 @@
 	<string name="main_straems_sc2tv">Show main streams</string>
 	<string name="hint_type_personal_Name">Prefer name</string>
 	<string name="hint_type_sc2tv_code">sc2tv code</string>
+	<string name="hint_type_twitch_add">Type twitch channel name</string>
+	<string name="btn_chek_twitch_channel">Preess for check channel</string>
+	<string name="login_to_sc2tv">Login to sc2tv</string>
+	<string name="login_to_twitch">Login to twitch</string>
 </resources>
