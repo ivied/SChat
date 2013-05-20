@@ -26,6 +26,7 @@ public class DialogSmilesBySite extends DialogFragment {
 	String site;
 	GridView  sc2tvSmile;
 	Map<Integer,String> idMap;
+	
 	public static DialogSmilesBySite newInstance(String title) {
 		DialogSmilesBySite frag = new DialogSmilesBySite();
 		Bundle args = new Bundle();
@@ -56,8 +57,9 @@ public class DialogSmilesBySite extends DialogFragment {
 				onDismiss(getDialog());
 				Log.i(MainActivity.LOG_TAG, "focus = " + MainActivity.focus);
 				EditText message = (EditText) getActivity().findViewById(MainActivity.focus+1);
-					;
-					 message.setText( message.getText().toString() + " " + idMap.get(v.getId()));
+				 List<Integer> idArray = new ArrayList<Integer>();
+				 idArray = new ArrayList<Integer>(idMap.keySet());
+					 message.setText( message.getText().toString() + " " + idMap.get(idArray.get(position)));
 					 
 					
 			}
@@ -94,7 +96,7 @@ public class DialogSmilesBySite extends DialogFragment {
 	    }
 
 	    public long getItemId(int position) {
-	        return 0;
+	        return position;
 	    }
 
 	    // create a new ImageView for each item referenced by the Adapter

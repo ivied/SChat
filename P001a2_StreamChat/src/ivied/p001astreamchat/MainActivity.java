@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -49,6 +50,9 @@ public class MainActivity extends SherlockFragmentActivity {
 	static boolean messageStringShow;
 	static boolean messageLinksShow;
 	static boolean autoScrollChat;
+	static boolean messageDelete;
+	static boolean showSmiles;
+	static boolean showChannelsInfo;
 	final static int EDIT = 2;
 	public static final String CHAT_NAME = "chat";
 	public static final int NEW_MESSAGE = 1;
@@ -202,12 +206,20 @@ public class MainActivity extends SherlockFragmentActivity {
     }
 
     public void pressEnter(View v){
-    	EditText  textOfMessage = (EditText) findViewById(
-		mTabHost.getCurrentTab()+1);
+    	
+    	/*String chtaName = mTabHost.getCurrentTab();
+    	String [] projection =  new String[] { "site", "channel"}; 
+		String [] selectionArgs = new String [] {chatName, "true"};
+    	Cursor c = getContentResolver().query
+				(ADD_URI, projection, "chat = ? AND flag = ?", selectionArgs, null);
+		if (c.getCount()== 0) Toast.makeText(MyApp.getContext(), "" + getResources().getString(R.string.notify_channels_not_set) , Toast.LENGTH_SHORT).show();
+		*/
+    	EditText  textOfMessage = (EditText) 
+    			findViewById(mTabHost.getCurrentTab()+1);
     	Log.i(MainActivity.LOG_TAG, "edit = " + mTabHost.getCurrentTab() );
     	String text = textOfMessage.getText().toString();	
     	SendService.sendMessage(text, mTabHost.getCurrentTabTag());		
-    textOfMessage.setText("");  
+    	if  (messageDelete)     textOfMessage.setText("");  
     	
     }
     
@@ -419,7 +431,9 @@ public class MainActivity extends SherlockFragmentActivity {
           AMOUNT_OF_VISIBLE_ROWS =Integer.parseInt( prefs.getString("count", "30"));
           messageLinksShow = prefs.getBoolean("linkShow", true);
           autoScrollChat = prefs.getBoolean("autoScroll", true);
-         
+          messageDelete = prefs.getBoolean("deleteMessage", true);
+          showSmiles = prefs.getBoolean("showSmiles", true);
+          showChannelsInfo = prefs.getBoolean("showChannelInfo", true);
  }
 	 
 	

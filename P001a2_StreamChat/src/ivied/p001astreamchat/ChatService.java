@@ -338,10 +338,16 @@ public class ChatService extends Service {
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}
-
+				
 				cv.put("identificator", jsonObject.getString("id"));
 				//TODO инсерт insert ignore
-				Uri newUri = getContentResolver().insert(
+				Cursor customCursor = getCursor("sc2tv" , channel);
+				String personal = personalSet(customCursor);
+				if (personal.equalsIgnoreCase("")) personal = channel;
+				cv.put("personal", personal);
+				
+				cv.put("color",colorSet(customCursor));
+				getContentResolver().insert(
 						INSERT_URI, cv);
 				
 				c = getContentResolver().query(
@@ -381,7 +387,7 @@ public class ChatService extends Service {
 
 				if (matcher.find()) {
 					message = message.replace("<b>", "").replace("</b>", "");
-					String privateNick = AdapterChatCursor.sc2tvNick;
+					String privateNick = SendMessageService.sc2tvNick;
 					String adress = matcher.group(2);
 					if (adress.equalsIgnoreCase(privateNick)) {
 				 Intent notificationIntent = new Intent(getBaseContext(), MainActivity.class); // по клику на уведомлении 
@@ -485,12 +491,40 @@ public class ChatService extends Service {
 				cv.put("time", unixTime);
 				cv.put("identificator", "");
 			//TODO инсерт insert ignore
-			Uri newUri = getContentResolver().insert(
+				Cursor customCursor = getCursor("twitch" , channel);
+				String personal = personalSet(customCursor);
+				if (personal.equalsIgnoreCase("")) personal = channel;
+				cv.put("personal", personal);
+				cv.put("color",colorSet(customCursor));
+			getContentResolver().insert(
 					INSERT_URI, cv);
 			// TODO Auto-generated method stub
 			Log.d(MainActivity.LOG_TAG, message);
 			sendNotif(channel,message,"twitch");
 		}
+	}
+	
+	private Cursor getCursor (String site , String channel) {
+		Cursor c = getContentResolver()
+				.query(ADD_URI, new String [] { "color","personal"}, "site = ? AND channel = ?", 
+				new String [] { site,channel}, null);
+		return c;
+	}
+	
+	private String personalSet (Cursor c) {
+		
+		String personal = "";
+		
+		if (c.moveToNext()){personal = c.getString(1);}
+		
+		return personal;
+	}
+	
+	private int colorSet (Cursor c) {
+		int color = -111111;
+		if (c.moveToFirst()){color = c.getInt(0);}
+		
+		return color;
 	}
 
 }

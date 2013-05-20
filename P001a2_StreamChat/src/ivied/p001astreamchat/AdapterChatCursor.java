@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,83 +37,44 @@ import android.widget.TextView;
  * 
  */
 public class AdapterChatCursor extends SimpleCursorAdapter {
-	final String SAVED_SC2TV_NAME = "sc2tv";
-	///final String SAVED_TWITCH_NAME = "twitch";
+	
 	final public static Pattern bold = Pattern.compile("(\\<b\\>)(.*)(\\<\\/b\\>)");
 	final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
 	 // Span to set text BOLD
 	   final static StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
 	   SharedPreferences preferences;
-	 static String sc2tvNick;
-	 //static String twitchNick;
+	 
 	//static Map<Integer, Integer> linkMap= new HashMap<Integer,Integer>();
 	static List<Integer> linkMap = new ArrayList<Integer>();
 	public AdapterChatCursor(Context context, int _layout, Cursor cursor,
 			String[] from, int[] to, int flags) {
 		super(context, _layout, cursor, from, to, flags);
 		// TODO выделение личных сообщений
-		preferences = context.getSharedPreferences("Login",
-				0);
-		sc2tvNick = preferences.getString(SAVED_SC2TV_NAME, "");
-		//twitchNick = preferences.getString(SAVED_TWITCH_NAME, "");
+		
+		
 	}
 	
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		super.bindView(view, context, cursor);
 		TextView message = (TextView) view.findViewById(R.id.tvText);
-		String nick = cursor.getString(cursor
-				.getColumnIndex(MyContentProvider.MESSAGES_NICK_NAME));
-		// nick = "<font color=#4682B4>" + nick + ": " +
-		// "</font> <font color=#ffffff>" + message.getText() + "</font>";
-		//// message.setText(Html.fromHtml(nick));
+		String nick = cursor.getString(4);
+		
 	
 		Spannable text = getSmiledText(this.mContext, message.getText(), nick);
 		message.setText(text);
 		TextView channel = (TextView) view.findViewById(R.id.channelName);
-		String channelText = channel.getText().toString();
-		String site = cursor.getString(2);
-		Cursor c = MyApp.getContext().getContentResolver()
-				.query(ADD_URI, new String [] { "personal"}, "site = ? AND channel = ?", 
-				new String [] { site,channelText}, null);
-		if (c.moveToNext()){String personal = c.getString(0);
 		
-		if (!personal.equalsIgnoreCase("")) channel.setText(personal);}
-		if (site.equals("sc2tv"))
-		channel.setBackgroundColor(Color.parseColor("#"	+ "0"	+ channelText));
+		int color = cursor.getInt(7);
 		
-		if (site.equals("twitch")) {
-			String color=null;
-			 try {
-				color = stringToHex(channelText).substring(0, 6);
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			channel.setBackgroundColor(Color.parseColor("#"+color));
+		channel.setBackgroundColor(color);
+		if ( !MainActivity.showChannelsInfo){
+			channel.setText("");
+			channel.setBackgroundColor(0);
 		}
 		
-		
 	}
-	 private static final char[] HEX_CHARS = "0123456789abcdef".toCharArray();
-    public String stringToHex(String input) throws UnsupportedEncodingException
-    {
-        if (input == null) throw new NullPointerException();
-        return asHex(input.getBytes());
-    }
- 
-   
- 
-    private String asHex(byte[] buf)
-    {
-        char[] chars = new char[2 * buf.length];
-        for (int i = 0; i < buf.length; ++i)
-        {
-            chars[2 * i] = HEX_CHARS[(buf[i] & 0xF0) >>> 4];
-            chars[2 * i + 1] = HEX_CHARS[buf[i] & 0x0F];
-        }
-        return new String(chars);
-    }
+
 	@Override
 	public View newView(Context context, Cursor cursor, ViewGroup parent) {
 		LayoutInflater inflater = LayoutInflater.from(context);
@@ -277,7 +239,7 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
         addPattern(emoticons, "R)", R.drawable.twitch0536d670860bf73324x18);
         addPattern(emoticons, "o_O", R.drawable.twitch8e128fa8dc1de29c24x18);
         addPattern(emoticons, ":D", R.drawable.twitch9f2ac5d4b53913d724x18);
-        addPattern(emoticons, ":o", R.drawable.twitchae4e17f5b9624e2f24x18);
+        //addPattern(emoticons, ":o", R.drawable.twitchae4e17f5b9624e2f24x18);
         addPattern(emoticons, ">(", R.drawable.twitchd31223e81104544a24x18);
         addPattern(emoticons, "WinWaker", R.drawable.twitchd4e971f7a6830e9530x30);
         addPattern(emoticons, "TriHard", R.drawable.twitch6407e6947eb69e2124x30);
@@ -374,15 +336,21 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 	public static boolean addSmiles(Context context, Spannable spannable,
 			int length, int lengthAdress, boolean privateM) {
 		boolean hasChanges = false;
+		
+		if (MainActivity.showSmiles){
+			Log.d(MainActivity.LOG_TAG,  "cообщение = "
+				+ spannable.toString());
 		for (Entry<Pattern, Integer> entry : emoticons.entrySet()) {
+			
 			Matcher matcher = entry.getKey().matcher(spannable);
 			while (matcher.find()) {
 				boolean set = true;
 				for (ImageSpan span : spannable.getSpans(matcher.start(),
 						matcher.end(), ImageSpan.class))
 					if (spannable.getSpanStart(span) >= matcher.start()
-							&& spannable.getSpanEnd(span) <= matcher.end())
+							&& spannable.getSpanEnd(span) <= matcher.end()){
 						spannable.removeSpan(span);
+				}
 					else {
 						set = false;
 						break;
@@ -395,6 +363,9 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 
 			}
 		}
+		}
+		Log.d(MainActivity.LOG_TAG,  "cообщение после обработки = "
+						+ spannable.toString());
 		spannable.setSpan(new ForegroundColorSpan(context.getResources()
 				.getColor(R.color.nick)), 0, length,
 				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -406,22 +377,9 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 			}
 		}
 		 
-	/*	Collection<Integer> link = linkMap.values();
-		Iterator linkIter = link.iterator();
-		Integer linkClose = null;
-		int linkStart = 0;
-		while (linkIter.hasNext()) {
-			linkClose = (Integer) linkIter.next();
+	
 			
-			for (Entry<Integer, Integer> entry : linkMap.entrySet()) {
-		        if (linkClose.equals(entry.getValue())) {
-		            linkStart = entry.getKey();
-		        }
-		        
-		}
-			Log.i(MainActivity.LOG_TAG, "линк "+  linkClose+ " " + linkStart);
-		}
-		*/
+		
 		    for (Integer startOfLink : linkMap){
 		    	spannable.setSpan(new UnderlineSpan(), length + 1 + startOfLink ,
 		    			length + 1  + startOfLink + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -452,7 +410,7 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 		String message = text.toString();
 		if (matcher.find()) {
 		message = message.replace("<b>", "").replace("</b>", "");
-		String privateNick = sc2tvNick;
+		String privateNick = SendMessageService.sc2tvNick;
 		String adress = matcher.group(2);
 		privateM = adress.equalsIgnoreCase(privateNick);
 		adressLength = matcher.group(2).length();

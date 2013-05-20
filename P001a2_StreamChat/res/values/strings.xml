@@ -39,4 +39,8 @@
 	<string name="btn_chek_twitch_channel">Preess for check channel</string>
 	<string name="login_to_sc2tv">Login to sc2tv</string>
 	<string name="login_to_twitch">Login to twitch</string>
+	<string name="notify_channels_not_set">Set some channels for send message in menu or send private message</string>
+	<string name="toast_login_to_sc2tv">At first, login to sc2tv in menu</string>
+	<string name="toast_login_to_twitch">At first, login to twitch in menu</string>
+	<string name="btn_login_exit">Back to chat</string>
 </resources>

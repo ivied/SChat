@@ -76,8 +76,7 @@ public class Login extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.okLog:
 			setResult(RESULT_OK, null);
-			loginToTwich();
-			loginToSc2tv ();
+		
 			finish();
 			break;
 		case R.id.btnSc2tvAddLogin:

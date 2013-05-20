@@ -1,48 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
- xmlns:android="http://schemas.android.com/apk/res/android">
-<EditTextPreference
- 
- android:inputType="number"
- android:key="count"
- android:summary="of visible strings"
- android:title="Count">
-</EditTextPreference>
-<CheckBoxPreference
- android:key="stringMessage"
- android:summary="Show message string"
- android:title="Message string"
- android:defaultValue ="true">
-</CheckBoxPreference>
-<CheckBoxPreference
- android:key="linkShow"
- android:summary="Show links in messages"
- android:title="Links"
- android:defaultValue ="true">
-</CheckBoxPreference>
-<CheckBoxPreference
- android:key="autoScroll"
- android:summary="Auto scroll in chat window"
- android:title="Auto scroll"
- android:defaultValue ="true">
-</CheckBoxPreference>
-<PreferenceCategory
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
-        android:title="Notifications"
-
-        android:key="notifications">
-        <CheckBoxPreference
- android:key="notifHeaders"
- android:summary="Show notifications in headers of chats"
- android:title="Chat notifications"
- android:defaultValue ="true">
-</CheckBoxPreference>
-<CheckBoxPreference
- android:key="notifSystem"
- android:summary="Show notifications in  Status Bar"
- android:title=" Status Bar notifications"
- android:defaultValue ="true">
+   
+    <PreferenceCategory
+        android:key="showPrefs"
+        android:title="Show preferences" >
+     <EditTextPreference
+        android:inputType="number"
+        android:key="count"
+        android:summary="Count of visible lines"
+        android:title="Count" >
+    </EditTextPreference>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="linkShow"
+        android:summary="Show links in messages"
+        android:title="Links" >
     </CheckBoxPreference>
-  
-</PreferenceCategory>
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="autoScroll"
+        android:summary="Auto scroll in chat window"
+        android:title="Auto scroll" >
+    </CheckBoxPreference>
+     <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showSmiles"
+        android:summary="Show graphic smiles in chat"
+        android:title="Show smiles" >
+    </CheckBoxPreference>
+      <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showChannelInfo"
+        android:summary="Show color and text info adbout channels"
+        android:title="Show channels info" >
+    </CheckBoxPreference>
+  </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="messaging"
+        android:title="Messaging" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="deleteMessage"
+            android:summary="Delete message from line after send"
+            android:title="Delete message" >
+        </CheckBoxPreference>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="stringMessage"
+            android:summary="Show message line"
+            android:title="Message line" >
+        </CheckBoxPreference>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="notifications"
+        android:title="Notifications" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="notifHeaders"
+            android:summary="Show notifications in headers of chats"
+            android:title="Chat notifications" >
+        </CheckBoxPreference>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="notifSystem"
+            android:summary="Show notifications in  Status Bar"
+            android:title=" Status Bar notifications" >
+        </CheckBoxPreference>
+    </PreferenceCategory>
+
 </PreferenceScreen>

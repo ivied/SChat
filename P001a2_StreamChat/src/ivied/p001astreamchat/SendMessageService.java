@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -31,17 +30,21 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 public class SendMessageService extends Service {
-	//ExecutorService es;
+	private Handler handler = new Handler();
+	
 	private final IBinder binder = new SendBinder();
 	SharedPreferences preferences;
 	public String token=null;
 	HttpClient client = new DefaultHttpClient();
 	IrcClient bot;
 	public static String sc2tvNick;
+	public static String twitchNick;
 	public void onCreate() {
 		super.onCreate();
 		//es = Executors.newFixedThreadPool(1);
@@ -99,7 +102,7 @@ public class SendMessageService extends Service {
 			
 			
 			String name = preferences.getString(TWITCH_SAVED_NAME, "");
-			
+			twitchNick = preferences.getString(TWITCH_SAVED_NAME, "");
 			String pass = preferences.getString(TWITCH_SAVED_PASS, "");
 			bot = new IrcClient(name);
 	        
@@ -192,11 +195,15 @@ public class SendMessageService extends Service {
 			String [] selectionArgs = new String [] {chatName, "true"};
 			Cursor c = getContentResolver().query
 					(ADD_URI, projection, "chat = ? AND flag = ?", selectionArgs, null);
+			if (c.getCount()== 0) sendToast (R.string.notify_channels_not_set);
+	          
+	        // Toast.makeText(getApplicationContext(), "" + getResources().getString(R.string.notify_channels_not_set) , Toast.LENGTH_SHORT).show();
 			for (c.moveToFirst(); !c.isAfterLast();c.moveToNext()){
 				String site = c.getString(0);
 				String channel = c.getString(1);
 				if (site.equalsIgnoreCase("sc2tv")){
-				
+					if (sc2tvNick.equalsIgnoreCase(""))
+						sendToast(R.string.toast_login_to_sc2tv);else{
 				
 					
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
@@ -227,9 +234,11 @@ public class SendMessageService extends Service {
 							e.printStackTrace();
 						}
 					//TODO делать рекконект если сообщение не доставленно
-				Log.i(MainActivity.LOG_TAG, channel);
+						}
 				}
 				if (site.equalsIgnoreCase("twitch")){
+					if (twitchNick.equalsIgnoreCase(""))
+						sendToast(R.string.toast_login_to_twitch);else{
 					Log.i(MainActivity.LOG_TAG, channel + " message " +a[1]);
 					try {
 						bot.reconnect();
@@ -245,7 +254,7 @@ public class SendMessageService extends Service {
 						e.printStackTrace();
 					}
 					bot.sendMessage("#"+channel, a[1]);
-					
+						}
 				}
 			}
 			
@@ -272,9 +281,16 @@ public class SendMessageService extends Service {
 
 	}
 
-
+	private void sendToast(final int stringId){
+		handler.post(new Runnable() {
+            public void run() {
+          	  Toast.makeText(getApplicationContext(), "" + getResources().getString(stringId) , Toast.LENGTH_SHORT).show();
+               
+            }
 	
 	
+	 });
+	}
 	
 
 }

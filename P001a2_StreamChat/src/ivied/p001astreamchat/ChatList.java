@@ -127,7 +127,7 @@ public class ChatList extends SherlockFragmentActivity {
 			View root = inflater.inflate(R.layout.list_content, container,
 					false);
 			if (!MainActivity.messageStringShow) {
-
+				(root.findViewById(R.id.smiles)).setVisibility(View.GONE);
 				(root.findViewById(R.id.enter)).setVisibility(View.GONE);
 				(root.findViewById(R.id.textOfMessage))
 						.setVisibility(View.GONE);
@@ -202,10 +202,11 @@ public class ChatList extends SherlockFragmentActivity {
 					MyContentProvider.MESSAGES_SITE_NAME,
 					MyContentProvider.MESSAGES_NICK_NAME,
 					MyContentProvider.MESSAGES_MESSAGE,
-					MyContentProvider.MESSAGES_CHANEL,
+					MyContentProvider.MESSAGES_PERSONAL,
+					MyContentProvider.MESSAGES_COLOR,
 					
 					};
-			int[] to = new int[] { R.id.ivImg, 0, R.id.tvText, R.id.channelName};
+			int[] to = new int[] { R.id.ivImg, 0, R.id.tvText, R.id.channelName, 0};
 			// Initialize the adapter.
 			mAdapter = new AdapterChatCursor(getActivity(), R.layout.message,
 					null, from, to, 0);
@@ -370,7 +371,7 @@ public class ChatList extends SherlockFragmentActivity {
 		public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 			
 			MenuItem item = menu.add("Close");
-			item.setIcon(android.R.drawable.btn_dialog);
+			item.setIcon(R.drawable.btn_close_app);
 			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 			item.setOnMenuItemClickListener(this);
 			// Place an action bar item for searching.

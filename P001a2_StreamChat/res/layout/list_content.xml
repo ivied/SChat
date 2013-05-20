@@ -58,7 +58,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
        
-        android:background="@drawable/sc2tvsmileminihappy"
+        android:background="@drawable/btn_send_smile"
         android:contentDescription="Smile"
         android:onClick="addSmile"
         android:textSize="12sp" />
