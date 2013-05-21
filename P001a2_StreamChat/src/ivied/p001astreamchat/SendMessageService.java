@@ -6,6 +6,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -203,38 +206,52 @@ public class SendMessageService extends Service {
 				String channel = c.getString(1);
 				if (site.equalsIgnoreCase("sc2tv")){
 					if (sc2tvNick.equalsIgnoreCase(""))
-						sendToast(R.string.toast_login_to_sc2tv);else{
-				
-					
-					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
-							4);
-					
-					
-						nameValuePairs.clear();
-						nameValuePairs.add(new BasicNameValuePair("task",
-								"WriteMessage"));
-						nameValuePairs.add(new BasicNameValuePair("message",
-								a[1]));
-						nameValuePairs.add(new BasicNameValuePair("channel_id",
-								channel));
-						nameValuePairs.add(new BasicNameValuePair("token",
-								token));
-						HttpPost post2 = new HttpPost(
-								"http://chat.sc2tv.ru/gate.php");
-					
-						try {
-							post2.setEntity(new UrlEncodedFormEntity(
-									nameValuePairs, HTTP.UTF_8));
-							client.execute(post2);
-						} catch (ClientProtocolException e) {
-							
-							e.printStackTrace();
-						} catch (IOException e) {
-							
-							e.printStackTrace();
+						sendToast(R.string.toast_login_to_sc2tv);
+					else {
+
+						int count = 0;
+						for (Entry<Pattern, Integer> entry : AdapterChatCursor.emoticons
+								.entrySet()) {
+
+							Matcher matcher = entry.getKey().matcher(a[1]);
+							while (matcher.find()) {
+								count++;
+							}
 						}
-					//TODO делать рекконект если сообщение не доставленно
+						if (count < 3) {
+							List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+									4);
+
+							nameValuePairs.clear();
+							nameValuePairs.add(new BasicNameValuePair("task",
+									"WriteMessage"));
+							nameValuePairs.add(new BasicNameValuePair(
+									"message", a[1]));
+							nameValuePairs.add(new BasicNameValuePair(
+									"channel_id", channel));
+							nameValuePairs.add(new BasicNameValuePair("token",
+									token));
+							HttpPost post2 = new HttpPost(
+									"http://chat.sc2tv.ru/gate.php");
+
+							try {
+								post2.setEntity(new UrlEncodedFormEntity(
+										nameValuePairs, HTTP.UTF_8));
+								client.execute(post2);
+							} catch (ClientProtocolException e) {
+
+								e.printStackTrace();
+							} catch (IOException e) {
+
+								e.printStackTrace();
+							}
+							// TODO делать рекконект если сообщение не
+							// доставленно
+						}else{
+							sendToast(R.string.toast_sc2tv_much_smiles);
 						}
+					}
+
 				}
 				if (site.equalsIgnoreCase("twitch")){
 					if (twitchNick.equalsIgnoreCase(""))

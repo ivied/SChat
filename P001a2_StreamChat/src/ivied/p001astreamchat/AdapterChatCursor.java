@@ -88,17 +88,19 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 		// метод супер-класса
 		super.setViewImage(v, value);
 		// разрисовываем ImageView
+		if (MainActivity.showSiteLogo){
 		if (value.equals("sc2tv"))
 			v.setImageResource(R.drawable.sc2tv_small);
 		if (value.equals("twitch"))
 			v.setImageResource(R.drawable.twitch_small);
+		}
 
 	}
 
 	private static final Factory spannableFactory = Spannable.Factory
 			.getInstance();
 
-	private static final Map<Pattern, Integer> emoticons = new HashMap<Pattern, Integer>();
+	static final Map<Pattern, Integer> emoticons = new HashMap<Pattern, Integer>();
 
 	static {
 		addPattern(emoticons, ":s:happy:", R.drawable.sc2tvsmilea);
@@ -338,8 +340,7 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 		boolean hasChanges = false;
 		
 		if (MainActivity.showSmiles){
-			Log.d(MainActivity.LOG_TAG,  "cообщение = "
-				+ spannable.toString());
+			
 		for (Entry<Pattern, Integer> entry : emoticons.entrySet()) {
 			
 			Matcher matcher = entry.getKey().matcher(spannable);
@@ -364,8 +365,7 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 			}
 		}
 		}
-		Log.d(MainActivity.LOG_TAG,  "cообщение после обработки = "
-						+ spannable.toString());
+		
 		spannable.setSpan(new ForegroundColorSpan(context.getResources()
 				.getColor(R.color.nick)), 0, length,
 				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

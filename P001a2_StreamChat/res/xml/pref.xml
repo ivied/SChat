@@ -32,8 +32,14 @@
       <CheckBoxPreference
         android:defaultValue="true"
         android:key="showChannelInfo"
-        android:summary="Show color and text info adbout channels"
+        android:summary="Show color and text info adbout channels near messages"
         android:title="Show channels info" >
+    </CheckBoxPreference>
+     <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showSiteLogo"
+        android:summary="Show site logo near messages"
+        android:title="Show site logo " >
     </CheckBoxPreference>
   </PreferenceCategory>
 

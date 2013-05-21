@@ -193,7 +193,7 @@ public class ChatList extends SherlockFragmentActivity {
 
 			// Give some text to display if there is no data. In a real
 			// application this would come from a resource.
-			setEmptyText("No Channels set");
+			setEmptyText(getResources().getText(R.string.default_message));
 
 			// We have a menu iteóm to show in action bar.
 			setHasOptionsMenu(true);

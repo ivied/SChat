@@ -45,7 +45,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_weight="0.11"
-        android:src="@android:drawable/ic_menu_add" />
+        android:background="@drawable/btn_add_channel" />
 
     <ListView
         android:id="@+id/listChannels"

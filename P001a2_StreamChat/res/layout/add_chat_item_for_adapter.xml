@@ -26,6 +26,6 @@
             android:layout_gravity="center"
             android:layout_weight="0.2"
             android:cropToPadding="true"
-            android:src="@android:drawable/btn_dialog" />
+            android:src="@drawable/btn_edit_channel" />
 
 </LinearLayout>

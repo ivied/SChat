@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -53,6 +54,7 @@ public class MainActivity extends SherlockFragmentActivity {
 	static boolean messageDelete;
 	static boolean showSmiles;
 	static boolean showChannelsInfo;
+	static boolean showSiteLogo;
 	final static int EDIT = 2;
 	public static final String CHAT_NAME = "chat";
 	public static final int NEW_MESSAGE = 1;
@@ -65,6 +67,7 @@ public class MainActivity extends SherlockFragmentActivity {
  	boolean boundSend = false;
  	DialogSendChannels dlgChoseChannels;
  	DialogChoiceSmile dlgChoiceSmile;
+ 	DialogFragment dlgStopService;
  	  SharedPreferences sp;
  	 final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
  	final Uri SERVICE_URI = Uri.parse("content://ivied.p001astreamchat/channels/service");
@@ -385,7 +388,8 @@ public class MainActivity extends SherlockFragmentActivity {
 		    menu.add(0,3,2, "Add chat");
 		    menu.add(0,4,3, "Edit chat");
 		    menu.add(0,5,4, "Login");
-		   // menu.add(0,6,5,)
+		    menu.add(0,6,5, "Stop App");
+		    menu.add(0,7,6, "Help");
 		    return super.onCreateOptionsMenu(menu);
 		  }
 	 @Override
@@ -418,6 +422,14 @@ public class MainActivity extends SherlockFragmentActivity {
 		 Intent intentLogin = new Intent(this, Login.class);
 		 startActivityForResult(intentLogin, 3);
 		 break;
+	 case 6:
+		 dlgStopService = new DialogStopService();
+		 dlgStopService.show(getSupportFragmentManager(), "Stop service");
+		 break;
+	 case 7:
+		 intent = new Intent (this, Help.class);
+		 startActivity(intent);
+		 break;
 		
 	 }
 	 return true;
@@ -434,6 +446,7 @@ public class MainActivity extends SherlockFragmentActivity {
           messageDelete = prefs.getBoolean("deleteMessage", true);
           showSmiles = prefs.getBoolean("showSmiles", true);
           showChannelsInfo = prefs.getBoolean("showChannelInfo", true);
+          showSiteLogo = prefs.getBoolean("showSiteLogo", true);
  }
 	 
 	

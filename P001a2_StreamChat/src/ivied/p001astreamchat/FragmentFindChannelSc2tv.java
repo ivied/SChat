@@ -1,8 +1,8 @@
 package ivied.p001astreamchat;
 
-import ivied.p001astreamchat.R.id;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,10 +23,13 @@ public class FragmentFindChannelSc2tv  extends SherlockFragment implements OnCli
 		    
 		    Button btnFindFromApi = (Button) v.findViewById(R.id.btnFromApiSc2tv);
 		    btnFindFromApi.setOnClickListener(this);
+		    btnFindFromApi.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14); 
 		    Button btnFindFromMain = (Button) v.findViewById(R.id.btnShowMainPageSc2tv);
 		    btnFindFromMain.setOnClickListener(this);
+		    btnFindFromMain.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14); 
 		    Button btnCheckName = (Button) v.findViewById(R.id.btnByNameSc2tv);
 		    btnCheckName.setOnClickListener(this);
+		    btnCheckName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14); 
 		    return v;
 		  }
 
