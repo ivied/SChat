@@ -32,9 +32,9 @@ public class DialogLoadSavedChat extends DialogFragment {
 		// This example shows how to add a custom layout to an AlertDialog
 
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-		adb.setTitle("Choice chat for edit");
+		adb.setTitle("Select Chat for edit");
 		adb.setSingleChoiceItems(chatNames, -1, myClickListener);
-		adb.setPositiveButton("choice", myClickListener);
+		adb.setPositiveButton("Select", myClickListener);
 		return adb.create();
 		
 		
