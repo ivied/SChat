@@ -32,9 +32,9 @@ public class DialogLoadSavedChat extends DialogFragment {
 		// This example shows how to add a custom layout to an AlertDialog
 
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-		adb.setTitle("Chose chat for edit");
+		adb.setTitle("Choice chat for edit");
 		adb.setSingleChoiceItems(chatNames, -1, myClickListener);
-		adb.setPositiveButton("chose", myClickListener);
+		adb.setPositiveButton("choice", myClickListener);
 		return adb.create();
 		
 		
@@ -53,7 +53,7 @@ public class DialogLoadSavedChat extends DialogFragment {
 				Cursor c = getActivity().getContentResolver()	.query(ADD_URI, projection,	" chat = ?", selectionArgs, null);
 				
 				
-				// выводим в лог позицию выбранного элемента
+				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
 					String channelId =c.getString(1);
 					int color = c.getInt(2);
