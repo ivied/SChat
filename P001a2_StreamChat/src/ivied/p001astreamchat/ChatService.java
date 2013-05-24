@@ -27,6 +27,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+
 import org.jibble.pircbot.IrcException;
 import org.jibble.pircbot.NickAlreadyInUseException;
 import org.jibble.pircbot.PircBot;
@@ -52,7 +53,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 /**
- * Управляет потоками парсинга чатов
+ * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
  * 
  * @author Serv
  * 
@@ -144,7 +145,7 @@ public class ChatService extends Service {
 	}
 
 	/**
-	 * запускает потоки класса сhannelRun и записывает карту потоков в (Map)
+	 * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅhannelRun пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ (Map)
 	 * channelCount
 	 * 
 	 * @param chatName
@@ -204,8 +205,12 @@ public class ChatService extends Service {
 			}
 			if (site.equals("twitch")) {
 				Log.d(LOG_TAG, "here!");
-				readTwitch(channel);
-			}
+                try {
+                    readTwitch(channel);
+                } catch (IrcException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+            }
 
 			
 
@@ -213,7 +218,7 @@ public class ChatService extends Service {
 
 	
 	}
-	private void readTwitch(String channel) {
+	private void readTwitch(String channel) throws IrcException {
 		Log.d(LOG_TAG, "readTwitch" + channel);
 		// Now start our bot up.
 		 int rnd=(int) (1 + Math.random() * 100);
@@ -246,7 +251,7 @@ public class ChatService extends Service {
        
 	}
 	/**
-	 * считываем каналы sc2tv
+	 * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ sc2tv
 	 * 
 	 * @param channel
 	 * @return
@@ -255,6 +260,7 @@ public class ChatService extends Service {
 		
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
+		
 		HttpGet httpGet = new HttpGet(CHANNEL_MESSAGES + channel + ".json");
 
 		try {
@@ -299,7 +305,7 @@ public class ChatService extends Service {
 	}
 
 	/**
-	 * метод рекурсивно парсит json строку добавляя в БД только новые сообщения
+	 * пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ json пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	 * 
 	 * @param jsonArray
 	 * @param i
@@ -317,7 +323,7 @@ public class ChatService extends Service {
 				i++;
 				insertSc2tv(jsonArray, i, channel);
 				i--;
-				//добавление оповещений
+				//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				
 			
 				
@@ -340,7 +346,7 @@ public class ChatService extends Service {
 				}
 				
 				cv.put("identificator", jsonObject.getString("id"));
-				//TODO инсерт insert ignore
+				//TODO пїЅпїЅпїЅпїЅпїЅпїЅ insert ignore
 				Cursor customCursor = getCursor("sc2tv" , channel);
 				String personal = personalSet(customCursor);
 				if (personal.equalsIgnoreCase("")) personal = channel;
@@ -353,7 +359,7 @@ public class ChatService extends Service {
 				c = getContentResolver().query(
 						INSERT_URI, null, null,
 						null, null);
-				Log.i(LOG_TAG, "записей стало " + c.getCount());
+				Log.i(LOG_TAG, "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ " + c.getCount());
 				sendNotif(channel, jsonObject.getString("message"), "sc2tv");
 				//notificationAdd(channel);
 				/*
@@ -377,7 +383,7 @@ public class ChatService extends Service {
 			intent.putExtra(MainActivity.CHAT_NAME, channel);
 			sendBroadcast(intent);
 		}
-		// 2-я часть
+		// 2-пїЅ пїЅпїЅпїЅпїЅпїЅ
 		// notif.setLatestEventInfo(this, "Notification's title",
 		// "Notification's text", pIntent);
 		if (getPrefsNotifSystem()) {
@@ -390,21 +396,21 @@ public class ChatService extends Service {
 					String privateNick = SendMessageService.sc2tvNick;
 					String adress = matcher.group(2);
 					if (adress.equalsIgnoreCase(privateNick)) {
-				 Intent notificationIntent = new Intent(getBaseContext(), MainActivity.class); // по клику на уведомлении 
+				 Intent notificationIntent = new Intent(getBaseContext(), MainActivity.class); // пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 
 				 notificationIntent.putExtra(MainActivity.CHAT_NAME, channel);
 	   
 				 NotificationCompat.Builder nb = new NotificationCompat.Builder(getApplication())
-				 .setSmallIcon(R.drawable.ic_launcher) //иконка уведомления
-				 .setAutoCancel(true) //уведомление закроется по клику на него
-				 .setTicker(message) //текст, который отобразится вверху статус-бара при создании уведомления
-				 .setContentText(message) // Основной текст уведомления
+				 .setSmallIcon(R.drawable.ic_launcher) //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+				 .setAutoCancel(true) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ
+				 .setTicker(message) //пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+				 .setContentText(message) // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				 .setContentIntent(PendingIntent.getActivity(getApplication(), 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT))
-				 .setWhen(System.currentTimeMillis()) //отображаемое время уведомления
-        		.setContentTitle("New private message") //заголовок уведомления
-        		.setDefaults(Notification.DEFAULT_ALL); // звук, вибро и диодный индикатор выставляются по умолчанию
+				 .setWhen(System.currentTimeMillis()) //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        		.setContentTitle("New private message") //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        		.setDefaults(Notification.DEFAULT_ALL); // пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				 
-						Notification notification = nb.getNotification(); // генерируем
-																			// уведомление
+						Notification notification = nb.getNotification(); // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+																			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 						nm.notify(0, notification);
 					}
 				}
@@ -490,7 +496,7 @@ public class ChatService extends Service {
 			long unixTime = System.currentTimeMillis() / 1000L;
 				cv.put("time", unixTime);
 				cv.put("identificator", "");
-			//TODO инсерт insert ignore
+			//TODO пїЅпїЅпїЅпїЅпїЅпїЅ insert ignore
 				Cursor customCursor = getCursor("twitch" , channel);
 				String personal = personalSet(customCursor);
 				if (personal.equalsIgnoreCase("")) personal = channel;

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,15 +17,16 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class DialogTwitchChannels extends DialogFragment implements
 		OnClickListener {
 	EditText input;
+	CheckTwitchChannel checkTwitch;
 
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -42,13 +44,35 @@ public class DialogTwitchChannels extends DialogFragment implements
 		// TODO Auto-generated method stub
 		String channel;
 		channel = input.getText().toString().trim().split("\\s+")[0];
-		
-		if(!channel.equalsIgnoreCase("")){
-		if (!channel.equals("")) {
+
+		if (!channel.equalsIgnoreCase("")) {
+			if (!channel.equals("")) {
+				checkTwitch = new CheckTwitchChannel();
+				checkTwitch.execute(channel);
+				try {
+					channel = checkTwitch.get();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				((EditText) getActivity().findViewById(R.id.editChannelTwitch)).setText(channel);
+			}
+		}
+	}
+	
+	class CheckTwitchChannel extends AsyncTask<String, Void , String> {
+
+	   
+
+		@Override
+		protected String doInBackground(String... a) {
 			HttpClient client = new DefaultHttpClient();
 			HttpGet httpGet = new HttpGet(
 					"http://api.justin.tv/api/stream/list.json?channel="
-							+ channel);
+							+ a[0]);
 			String line = null;
 			try {
 
@@ -71,11 +95,15 @@ public class DialogTwitchChannels extends DialogFragment implements
 				e.printStackTrace();
 			}
 
-			if (line.length() < 10)
-				channel = "not exist now";
-
-			((EditText) getActivity().findViewById(R.id.editChannelTwitch)).setText(channel);
+			if (line.length() < 10)	a[0] = "not exist now";
+			 
+			return a[0];
 		}
-		}
+		
+		  @Override
+		    protected void onPostExecute(String result) {
+		      super.onPostExecute(result);
+		      
+		    }
 	}
 }
