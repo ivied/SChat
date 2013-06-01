@@ -34,6 +34,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
 
 
@@ -42,9 +44,9 @@ public class MainActivity extends SherlockFragmentActivity {
 	TabHost mTabHost;
     ViewPager  mViewPager;
     TabsAdapter mTabsAdapter;
-    final static int ADD = 1;
     final static String LOG_TAG = "myLogs";
 	final static int DELETE = 1;
+    public final static int ID_LOGIN_FRAGMENTS =1000;
 	static int AMOUNT_OF_VISIBLE_ROWS;
 	static boolean messageStringShow;
 	static boolean messageLinksShow;
@@ -53,9 +55,11 @@ public class MainActivity extends SherlockFragmentActivity {
 	static boolean showSmiles;
 	static boolean showChannelsInfo;
 	static boolean showSiteLogo;
+    public static boolean showNotifySystem;
+    static boolean showNotifyHeaders;
 	final static int EDIT = 2;
-	public static final String CHAT_NAME = "chat";
-	public static final int NEW_MESSAGE = 1;
+	public static final String CHANNEL = "channel";
+	public static final String SITE = "site";
 	static final String BROADCAST_ACTION = "ivied.p001astreamchat.servicebackbroadcast";
 	BroadcastReceiver br;
     Intent intent;
@@ -152,10 +156,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		
 		Intent intentFocus = getIntent();
 		///Log.d(LOG_TAG, "chat intent =  " + intent.getCharSequenceExtra(CHAT_NAME));
-		if( intentFocus.hasExtra(CHAT_NAME)){
-		String [] chats = getChatNamesToNotif(intentFocus);
-		Log.d(LOG_TAG, "chat intent =  " + chats[0]);
-		mTabHost.setCurrentTab(indexOfChats.indexOf(chats[0]));}
+
 		Cursor c = getContentResolver().query(SERVICE_URI, null, null, null, null);
 		if (c.getCount() ==  0){
 			intent = new Intent(this, AddChat.class);
@@ -163,16 +164,20 @@ public class MainActivity extends SherlockFragmentActivity {
 			startActivityForResult(intent, 2);
 		}
     	loadSavedChats();
-
+        if( intentFocus.hasExtra(CHANNEL)){
+            String [] chats = getChatNamesToNotif(intentFocus);
+            Log.d(LOG_TAG, "chat intent =  " + chats[0]);
+            mTabHost.setCurrentTab(indexOfChats.indexOf(chats[0]));}
 	}
     
     protected String[] getChatNamesToNotif(Intent intent) {
 		// TODO Auto-generated method stub
-    	String channel = intent.getStringExtra(CHAT_NAME);
-    	String[] selectionArgsNotify = new String[] { channel };
+    	String channel = intent.getStringExtra(CHANNEL);
+        FactorySite.SiteName site = (FactorySite.SiteName) intent.getSerializableExtra(SITE);
+    	String[] selectionArgsNotify = new String[] { channel, site.name()};
 		String[] projectionNotify = new String[] { "chat" };
 		Cursor notify = getContentResolver().query(ADD_URI,
-				projectionNotify, "channel = ?", selectionArgsNotify,
+				projectionNotify, "channel = ? AND site = ?", selectionArgsNotify,
 				null);
 		String[] chats =new String [notify.getCount()];
 		int i=0;
@@ -432,20 +437,22 @@ public class MainActivity extends SherlockFragmentActivity {
 	 }
 	 return true;
 	 }
- 
-	 private void getPrefs() {
-         // Get the xml/preferences.xml preferences
-         SharedPreferences prefs = PreferenceManager
-                         .getDefaultSharedPreferences(getBaseContext());
-          messageStringShow = prefs.getBoolean("stringMessage", true);
-          AMOUNT_OF_VISIBLE_ROWS =Integer.parseInt( prefs.getString("count", "30"));
-          messageLinksShow = prefs.getBoolean("linkShow", true);
-          autoScrollChat = prefs.getBoolean("autoScroll", true);
-          messageDelete = prefs.getBoolean("deleteMessage", true);
-          showSmiles = prefs.getBoolean("showSmiles", true);
-          showChannelsInfo = prefs.getBoolean("showChannelInfo", true);
-          showSiteLogo = prefs.getBoolean("showSiteLogo", true);
- }
+
+    private void getPrefs() {
+        // Get the xml/preferences.xml preferences
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(getBaseContext());
+        messageStringShow = prefs.getBoolean("stringMessage", true);
+        AMOUNT_OF_VISIBLE_ROWS =Integer.parseInt( prefs.getString("count", "30"));
+        messageLinksShow = prefs.getBoolean("linkShow", true);
+        autoScrollChat = prefs.getBoolean("autoScroll", true);
+        messageDelete = prefs.getBoolean("deleteMessage", true);
+        showSmiles = prefs.getBoolean("showSmiles", true);
+        showChannelsInfo = prefs.getBoolean("showChannelInfo", true);
+        showSiteLogo = prefs.getBoolean("showSiteLogo", true);
+        showNotifyHeaders = prefs.getBoolean("notifHeaders", true);
+        showNotifySystem = prefs.getBoolean("notifSystem", true);
+    }
 	 
 	
 	 /*@Override

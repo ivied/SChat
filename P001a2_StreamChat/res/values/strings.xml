@@ -50,5 +50,12 @@
 	<string name="help_info_about_login">      For posting messages into chats you need to go to menu and press “Login”. Then login. After  you password will be saved,  you can start messaging.</string>
 	<string name="text_help_prefs">There  are many useful thing for messages display customization in preferences!</string>
 	<string name='text_help_links'>Any questions and  suggestions you may post in <a href="https://play.google.com/store/apps/details?id=ivied.p001astreamchat">GooglePlay</a> or <a href="http://forum.sc2tv.ru/threads/45763-%D0%A7%D0%B0%D1%82-%D0%B4%D0%BB%D1%8F-%D0%B7%D1%80%D0%B8%D1%82%D0%B5%D0%BB%D0%B5%D0%B9">Sc2tv</a></string>
-	<string name="toast_sc2tv_much_smiles">3 or more smiles not allow in sc2tv</string> 
+	<string name="toast_sc2tv_much_smiles">3 or more smiles not allow in sc2tv</string>
+    <string name="hint_login_pass">password</string>
+    <string name="hint_login_nickname">nickname</string>
+    <string name="btn_login_sc2tv">Press to login on Sc2tv</string>
+    <string name="btn_login_twitch">Press to login on Twitch</string>
+    <string name="dialog_select_login_title">Select login to delete</string>
+    <string name="dialog_select">Select</string>
+    <string name="dialog_load_chat_edit">\"Select Chat for edit\"</string>
 </resources>

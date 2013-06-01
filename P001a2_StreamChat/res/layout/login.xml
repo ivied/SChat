@@ -21,7 +21,7 @@
         android:text="@string/login_to_sc2tv" />
 
     <ImageButton
-        android:id="@+id/btnSc2tvAddLogin"
+        android:id="@+id/btnImageAddLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -33,9 +33,9 @@
         android:id="@+id/sc2tvPass"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_alignBottom="@+id/btnSc2tvAddLogin"
+        android:layout_alignBottom="@+id/btnImageAddLogin"
         android:layout_toLeftOf="@+id/btnCleanSc2tvLogin"
-        android:layout_toRightOf="@+id/btnSc2tvAddLogin"
+        android:layout_toRightOf="@+id/btnImageAddLogin"
         android:ems="10"
         android:inputType="textPassword" />
 
@@ -65,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/btnSc2tvAddLogin"
+        android:layout_below="@+id/btnImageAddLogin"
         android:background="@drawable/sc2tv"
         android:contentDescription="@string/create_new_chat"
         android:src="@drawable/twitch" />

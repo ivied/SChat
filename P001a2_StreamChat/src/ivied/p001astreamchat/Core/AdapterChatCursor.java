@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
 
 /**

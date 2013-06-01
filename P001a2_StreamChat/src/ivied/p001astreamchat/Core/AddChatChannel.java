@@ -1,5 +1,6 @@
 package ivied.p001astreamchat.Core;
 
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
 
 public class AddChatChannel {
@@ -17,12 +18,12 @@ public class AddChatChannel {
 		this.siteInt = site;
 		switch (site){
 		case SC2TV:
-			this.site = "sc2tv";
+			this.site = "SC2TV";
 			
 			this.drawable = R.drawable.sc2tv;
 			break;
 		case TWITCH:
-			this.site = "twitch";
+			this.site = "TWITCH";
 			this.drawable = R.drawable.twitch;
 			break;
 		}

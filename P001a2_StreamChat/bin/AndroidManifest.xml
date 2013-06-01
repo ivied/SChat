@@ -26,7 +26,7 @@
         </activity>
          <service android:name=".Core.ChatService"></service>
         <provider android:name=".Core.MyContentProvider" android:authorities="ivied.p001astreamchat"></provider>
-        <activity android:name=".Core.Login"></activity>
+        <activity android:name=".Login.Login"></activity>
         <service android:name=".Core.SendMessageService"></service>
         <activity android:name=".Core.Preference"></activity>
         <activity android:name=".Core.AddChat"></activity>

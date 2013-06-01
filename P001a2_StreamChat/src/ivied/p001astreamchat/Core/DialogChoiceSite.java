@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
 
 public class DialogChoiceSite extends DialogFragment implements  OnClickListener {

@@ -26,6 +26,7 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
 
 public class AddChat extends SherlockFragmentActivity implements OnClickListener, OnItemClickListener{

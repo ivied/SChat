@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.ListView;
 
+import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.Sites.FactorySite;
+
 public class DialogLoadSavedChat extends DialogFragment {
 	final Uri SERVICE_URI = Uri.parse("content://ivied.p001astreamchat/channels/service");
 	final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
@@ -31,9 +34,9 @@ public class DialogLoadSavedChat extends DialogFragment {
 		// This example shows how to add a custom layout to an AlertDialog
 
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
-		adb.setTitle("Select Chat for edit");
+		adb.setTitle(R.string.dialog_load_chat_edit);
 		adb.setSingleChoiceItems(chatNames, -1, myClickListener);
-		adb.setPositiveButton("Select", myClickListener);
+		adb.setPositiveButton(R.string.dialog_select, myClickListener);
 		return adb.create();
 		
 		
@@ -58,7 +61,7 @@ public class DialogLoadSavedChat extends DialogFragment {
 					int color = c.getInt(2);
 					String personalName = c.getString(3);
 					String siteName = c.getString(0);
-					//Log.i(MainActivity.LOG_TAG, "id = " + channelId +" color =  " + color + " personal Name = " + personalName +" site name = "+siteName);
+					//Log.i(MainActivity.LOG_TAG, "id = " + channelId +" color =  " + color + " personal Name = " + personalName +" site name = "+siteClass);
 
 					channels.add(new AddChatChannel(channelId,color,personalName, FactorySite.SiteName.valueOf(siteName.toUpperCase())));
 

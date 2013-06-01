@@ -1,16 +1,20 @@
-package ivied.p001astreamchat.Sc2tv;
+package ivied.p001astreamchat.Sites.Sc2tv;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,19 +25,30 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import ivied.p001astreamchat.Core.FactorySite;
+import ivied.p001astreamchat.Login.FragmentLoginStandard;
+import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
-import ivied.p001astreamchat.Core.Site;
+import ivied.p001astreamchat.Core.SendMessageService;
+import ivied.p001astreamchat.Sites.Site;
 
 /**
  * Cddreated by Serv on 29.05.13.
  */
 public class Sc2tv extends Site {
-
+    final public static Pattern bold = Pattern.compile("(\\<b\\>)(.*)(\\<\\/b\\>)");
     final Uri INSERT_URI = Uri.parse("content://ivied.p001astreamchat/chats/insert");
     private static final String CHANNEL_MESSAGES = "http://chat.sc2tv.ru/memfs/channel-";
+    ScheduledExecutorService sEs;
 
     @Override
     public void readChannel(String channel) {
@@ -52,6 +67,20 @@ public class Sc2tv extends Site {
         insertSc2tv (jsonArray, 0, channel);
 
 
+    }
+
+    @Override
+    public void startThread(ChannelRun channelRun) {
+
+        sEs = Executors.newScheduledThreadPool(1);
+
+        mFuture = sEs.scheduleWithFixedDelay(channelRun, 0, 3,
+                TimeUnit.SECONDS);
+    }
+
+    @Override
+    public FragmentLoginStandard getFragment() {
+        return new FragmentLoginSC2TV();
     }
 
     private void insertSc2tv(JSONArray jsonArray, int i, String channel) {
@@ -81,11 +110,16 @@ public class Sc2tv extends Site {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                insertMessage( FactorySite.SiteName.SC2TV, channel, nick, message, id, time);
+                insertMessage(  channel, nick, message, id, time);
+                if (MainActivity.showNotifySystem){
+                    if (privateMessage(message)){
+                        message = message.replace("<b>", "").replace("</b>", "");
+                        chatService.sendPrivateNotify(message,channel,  getSiteEnum());
+                    }
 
-
+                }
             }
-
+            c.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -129,10 +163,53 @@ public class Sc2tv extends Site {
     return builder;
     }
 
-    @Override
-    protected String  getSite () {
-        return FactorySite.SiteName.SC2TV.name();
+    private boolean privateMessage (String message) {
+
+        Matcher matcher = bold.matcher(message);
+        if (matcher.find()) {
+
+            String address = matcher.group(2);
+            if (address.equalsIgnoreCase(SendMessageService.sc2tvNick)) return true;
+        }
+        return false;
     }
+
+    @Override
+    public FactorySite.SiteName getSiteEnum() {
+        return FactorySite.SiteName.SC2TV;
+    }
+
+
+    public HttpResponse getResponseSc2tvRu(String name, String pass) {
+        HttpResponse response = null;
+        HttpPost post = new HttpPost("http://sc2tv.ru/");
+        try {
+            // post
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
+                    4);
+            nameValuePairs.add(new BasicNameValuePair("name", name));
+            nameValuePairs.add(new BasicNameValuePair("pass", pass));
+            nameValuePairs.add(new BasicNameValuePair("op", "¬ход"));
+            nameValuePairs.add(new BasicNameValuePair("form_id",
+                    "user_login_block"));
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            HttpClient client = new DefaultHttpClient();
+            response = client.execute(post);
+            client.getConnectionManager().shutdown();
+
+        } catch (ClientProtocolException e) {
+
+
+        } catch (IOException e) {
+
+
+        }
+
+        return response;
+    }
+
+
+
       /*private int getCountOfNew(JSONArray jsonArray) {
 
         int i = 0 ;

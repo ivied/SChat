@@ -1,8 +1,9 @@
 package ivied.p001astreamchat.Core;
 
-import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 
+import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.Sites.Site;
 import ivied.p001astreamchat.R;
 
 import android.content.Intent;

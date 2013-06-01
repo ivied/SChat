@@ -102,10 +102,8 @@ public class SendMessageService extends Service {
 		
 			final String SAVED_NAME = "sc2tv";
 			final String SAVED_PASS = "sc2tvpass";
-			preferences = getApplicationContext().getSharedPreferences("Login",
-					0);
-			
-			
+			preferences = getApplicationContext().getSharedPreferences("Login",0);
+
 			String name = preferences.getString(TWITCH_SAVED_NAME, "");
 			twitchNick = preferences.getString(TWITCH_SAVED_NAME, "");
 			String pass = preferences.getString(TWITCH_SAVED_PASS, "");
@@ -131,7 +129,7 @@ public class SendMessageService extends Service {
 	       
 	        
 			
-			
+
 			 name = preferences.getString(SAVED_NAME, "");
 			 sc2tvNick = preferences.getString(SAVED_NAME, "");
 			 pass = preferences.getString(SAVED_PASS, "");
