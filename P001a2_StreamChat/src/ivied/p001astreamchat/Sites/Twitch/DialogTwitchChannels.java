@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Core;
+package ivied.p001astreamchat.Sites.Twitch;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,12 +30,12 @@ public class DialogTwitchChannels extends DialogFragment implements
 		OnClickListener {
 	EditText input;
 	CheckTwitchChannel checkTwitch;
-
+    final static String CHECK_CHANNEL = "http://api.justin.tv/api/stream/list.json?channel=";
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 		input = new EditText(getActivity());
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
-				.setTitle("Check twich channel").setView(input)
+				.setTitle(getResources().getString(R.string.dialog_title_check_twitch_channel)).setView(input)
 				.setPositiveButton("Add", this);
 
 		return adb.create();
@@ -73,9 +73,7 @@ public class DialogTwitchChannels extends DialogFragment implements
 		@Override
 		protected String doInBackground(String... a) {
 			HttpClient client = new DefaultHttpClient();
-			HttpGet httpGet = new HttpGet(
-					"http://api.justin.tv/api/stream/list.json?channel="
-							+ a[0]);
+			HttpGet httpGet = new HttpGet(CHECK_CHANNEL+ a[0]);
 			String line = null;
 			try {
 
@@ -88,8 +86,8 @@ public class DialogTwitchChannels extends DialogFragment implements
 
 				line = reader.readLine();
 
-				Log.d(MainActivity.LOG_TAG, "прошло");
 
+                content.close();
 			} catch (ClientProtocolException e) {
 
 				e.printStackTrace();
@@ -99,7 +97,7 @@ public class DialogTwitchChannels extends DialogFragment implements
 			}
 
 			if (line.length() < 10)	a[0] = "not exist now";
-			 
+			 client.getConnectionManager().shutdown();
 			return a[0];
 		}
 		

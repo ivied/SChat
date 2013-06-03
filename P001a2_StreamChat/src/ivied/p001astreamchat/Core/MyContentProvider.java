@@ -17,37 +17,32 @@ import android.util.Log;
 
 import ivied.p001astreamchat.Core.MainActivity;
 
-/**
- * Класс обрабатывает запросы к БД
- * @author Serv
- *
- */
-//TODO ВЫНЕСТИ в настройки количество сообщений вывдимых на экран
+
 public class MyContentProvider extends ContentProvider {
 	final String LOG_TAG = "myLogs"; 
 	String howManyShow =null;
 	String having = null;
 	//final int AMOUNT_OF_VISIBLE_ROWS = 15;
-	// // Константы для БД
-	// БД
+	// // ГЉГ®Г­Г±ГІГ Г­ГІГ» Г¤Г«Гї ГЃГ„
+	// ГЃГ„
 	static final String DB_NAME = "mydb20";
-	static final int DB_VERSION = 7;
+	static final int DB_VERSION = 9;
 
-	// Таблица
+	// Г’Г ГЎГ«ГЁГ¶Г 
 	static final String MESSAGES_TABLE = "chats";
 	static final String CHANNELS_TABLE = "channels";
-	//TODO сделать таблицу чатов в базе данных
-	// Поля
-	static final String MESSAGES_ID = "_id";
-	static final String MESSAGES_SITE_NAME = "site";
-	static final String MESSAGES_CHANEL = "channel";
-	static final String MESSAGES_NICK_NAME = "nick";
-	static final String MESSAGES_MESSAGE = "message";
-	static final String MESSAGES_UNIX_TIME = "time";
-	static final String MESSAGES_SPECIFIC_ID = "identificator";//TODO переписать name integer unique
-	static final String MESSAGES_PERSONAL =  "personal";
-	static final String MESSAGES_COLOR = "color";
-	// Скрипт создания таблицы
+    static final String SMILE_TABLE = "smiles";
+
+    public static final String MESSAGES_ID = "_id";
+    public static final String MESSAGES_SITE_NAME = "site";
+    public static final String MESSAGES_CHANEL = "channel";
+    public static final String MESSAGES_NICK_NAME = "nick";
+    public static final String MESSAGES_MESSAGE = "message";
+    public static final String MESSAGES_UNIX_TIME = "time";
+    public static final String MESSAGES_SPECIFIC_ID = "identificator";
+    public static final String MESSAGES_PERSONAL =  "personal";
+    public static final String MESSAGES_COLOR = "color";
+	// Г‘ГЄГ°ГЁГЇГІ Г±Г®Г§Г¤Г Г­ГЁГї ГІГ ГЎГ«ГЁГ¶Г»
 	static final String DB_CREATE = "create table " + MESSAGES_TABLE + "("
 			+ MESSAGES_ID + " integer primary key autoincrement, "
 			+ MESSAGES_UNIX_TIME + " integer, " + MESSAGES_SITE_NAME
@@ -55,21 +50,36 @@ public class MyContentProvider extends ContentProvider {
 			+ " text, " + MESSAGES_MESSAGE + " text, " + MESSAGES_SPECIFIC_ID
 			+ " integer, "  + MESSAGES_COLOR
 			+ " integer, " + MESSAGES_PERSONAL + " text " + ");";
-	static final String CHANNELS_ID = "_id";
-	static final String CHANNELS_CHAT_NAME = "chat";
-	static final String CHANNELS_SITE_NAME = "site";
-	static final String CHANNELS_CHANNEL = "channel";
-	static final String CHANNELS_FLAG = "flag";
-	static final String CHANNELS_COLOR = "color";
-	static final String CHANNELS_PERSONAL = "personal";
-	// Скрипт создания таблицы
+    public static final String CHANNELS_ID = "_id";
+    public static final String CHANNELS_CHAT_NAME = "chat";
+    public static final String CHANNELS_SITE_NAME = "site";
+    public static final String CHANNELS_CHANNEL = "channel";
+    public static final String CHANNELS_FLAG = "flag";
+    public static final String CHANNELS_COLOR = "color";
+    public static final String CHANNELS_PERSONAL = "personal";
+	// Г‘ГЄГ°ГЁГЇГІ Г±Г®Г§Г¤Г Г­ГЁГї ГІГ ГЎГ«ГЁГ¶Г»
 	static final String DB_CREATE_CHANNELS = "create table " + CHANNELS_TABLE + "("
-			+ MESSAGES_ID + " integer primary key autoincrement, "
+			+ CHANNELS_ID + " integer primary key autoincrement, "
 			+ CHANNELS_CHAT_NAME
 			+ " text, " + CHANNELS_SITE_NAME + " text, " + CHANNELS_CHANNEL
 			+ " text, " + CHANNELS_FLAG + " text, " + CHANNELS_COLOR
 			+ " integer, " + CHANNELS_PERSONAL + " text " + ");";
-	
+
+	public static final String SMILES_ID = "_id";
+    public static final String SMILES_SITE = "site";
+    public static final String SMILES_SMILE = "smile";
+    public static final String SMILES_REGEXP = "regexp";
+    public static final String SMILES_WIDTH = "width";
+    public static final String SMILES_HEIGHT = "height";
+
+    static final String DB_CREATE_SMILES = "create table " + SMILE_TABLE + "("
+            + SMILES_ID + " integer primary key autoincrement, " + SMILES_SITE
+            + " text, " + SMILES_SMILE + " BLOB, " + SMILES_REGEXP
+            + " text, "  + SMILES_WIDTH
+            + " integer, "  + SMILES_HEIGHT
+            + " integer "  + ");";
+
+
 	// // Uri
 	// authority
 	static final String AUTHORITY = "ivied.p001astreamchat";
@@ -77,33 +87,39 @@ public class MyContentProvider extends ContentProvider {
 	// path
 	static final String MESSAGES_PATH = "chats";
 	static final String CHANNELS_PATH = "channels";
-	// Общий Uri
+    static final String SMILES_PATH = "smiles";
+	// ГЋГЎГ№ГЁГ© Uri
 	public static final Uri MESSAGES_CONTENT_URI = Uri.parse("content://"
 			+ AUTHORITY + "/" + MESSAGES_PATH);
 	
 	public static final Uri CHANNELS_CONTENT_URI = Uri.parse("content://" +
 			AUTHORITY + "/" + CHANNELS_PATH);
 
-	// Типы данных
-	// набор строк
+
+    public static final Uri SMILES_CONTENT_URI = Uri.parse("content://" +
+            AUTHORITY + "/" + SMILES_PATH);
+	// Г’ГЁГЇГ» Г¤Г Г­Г­Г»Гµ
+	// Г­Г ГЎГ®Г° Г±ГІГ°Г®ГЄ
 	static final String MESSAGES_CONTENT_TYPE = "vnd.android.cursor.dir/vnd."
 			+ AUTHORITY + "." + MESSAGES_PATH;
 
-	// одна строка
+	// Г®Г¤Г­Г  Г±ГІГ°Г®ГЄГ 
 	static final String MESSAGES_CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd."
 			+ AUTHORITY + "." + MESSAGES_PATH;
+
+
  
 	// // UriMatcher
-	// общий Uri
+	// Г®ГЎГ№ГЁГ© Uri
 	static final int URI_MESSAGES_INSERT = 1;
 
-	// Uri с указанным ID
+	// Uri Г± ГіГЄГ Г§Г Г­Г­Г»Г¬ ID
 	static final int URI_MESSAGES_SHOW = 2;
 	
 	static final int URI_CHANNEL_ADD = 3;
 	static final int URI_CHANNEL_SERVICE =4;
      final Uri INSERT_URI = Uri.parse("content://ivied.p001astreamchat/chats/insert");
-	// описание и создание UriMatcher
+	// Г®ГЇГЁГ±Г Г­ГЁГҐ ГЁ Г±Г®Г§Г¤Г Г­ГЁГҐ UriMatcher
 	private static final UriMatcher uriMatcher;
 	static {
 		uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -131,13 +147,13 @@ public class MyContentProvider extends ContentProvider {
 	    return cnt;
 	}
 
-	// чтение
+	// Г·ГІГҐГ­ГЁГҐ
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 		db = dbHelper.getWritableDatabase();
 
 		//String id = uri.getLastPathSegment();
-		// проверяем Uri
+		// ГЇГ°Г®ГўГҐГ°ГїГҐГ¬ Uri
 		Cursor cursor =null;
 		switch (uriMatcher.match(uri)) {
 		case URI_MESSAGES_SHOW:
@@ -249,6 +265,7 @@ public class MyContentProvider extends ContentProvider {
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(DB_CREATE);
 			db.execSQL(DB_CREATE_CHANNELS);
+            db.execSQL(DB_CREATE_SMILES);
 			
 		}
 
@@ -258,6 +275,7 @@ public class MyContentProvider extends ContentProvider {
 			            + newVersion + ", which will destroy all old data");
 			    db.execSQL("DROP TABLE IF EXISTS " + MESSAGES_TABLE);
 			    db.execSQL("DROP TABLE IF EXISTS " + CHANNELS_TABLE);
+                db.execSQL("DROP TABLE IF EXISTS " + SMILE_TABLE);
 			    onCreate(db);
 		}
 	}

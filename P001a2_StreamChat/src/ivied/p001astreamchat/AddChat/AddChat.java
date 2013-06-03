@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Core;
+package ivied.p001astreamchat.AddChat;
 
 import java.util.ArrayList;
 
@@ -26,12 +26,19 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
 
 public class AddChat extends SherlockFragmentActivity implements OnClickListener, OnItemClickListener{
 	 static final int TASK_ADD = 1;
 	 static final int TASK_EDIT = 2;
+     static final int SAVE_CHAT_NAME_EXIST = 0;
+     static final int SAVE_CHAT_ADD_COMPLETE = 1;
+     static final int SAVE_CHAT_NAME_EMPTY = 2;
+     static final int SAVE_CHAT_NEED_CHANNELS = 3;
+     static final int BTN_LOAD_CHAT = 2;
+     static final int BTN_CLOSE_CHAT = 3;
 	 static final String CHANNEL = "channel";
 	 static final String COLOR = "color";
 	 static final String PERSONAL_NAME = "personal";
@@ -72,7 +79,7 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 					LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 0.2f);
 			setChat.setLayoutParams(lParams);
 			closeChat.setText("Close Chat");
-			closeChat.setId(3);
+			closeChat.setId(BTN_CLOSE_CHAT);
 			mLayout.addView(closeChat, 0);
 			closeChat.setLayoutParams(lParams);
 			closeChat.setOnClickListener(this);
@@ -81,7 +88,7 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 			
 			
 			loadSavedChats.setText("Load chat");
-			loadSavedChats.setId(2);
+			loadSavedChats.setId( BTN_LOAD_CHAT);
 			loadSavedChats.setLayoutParams(lParams);
 			mLayout.addView(loadSavedChats, 1);
 			
@@ -106,34 +113,33 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 			//Add "action"   "edit" in intent  	
 			switch (saveChat()) {
 			
-			case 0:
-				Toast.makeText(this, "Chat name exist", Toast.LENGTH_SHORT)
+			case SAVE_CHAT_NAME_EXIST :
+				Toast.makeText(this, getString(R.string.toast_chat_name_exist), Toast.LENGTH_SHORT)
 						.show();
 				break;
-			case 1:
-				Toast.makeText(this, "Chat saved", Toast.LENGTH_SHORT).show();
+			case SAVE_CHAT_ADD_COMPLETE:
+				Toast.makeText(this, getString(R.string.toast_chat_saved), Toast.LENGTH_SHORT).show();
 				
 				  intent.putExtra("name",
 				  setName.getText().toString()); setResult(RESULT_OK, intent);
 				  finish();
-				 
 
 				break;
-			case 2:
-				Toast.makeText(this, "Type chat name plz", Toast.LENGTH_SHORT).show();
+			case SAVE_CHAT_NAME_EMPTY:
+				Toast.makeText(this, getString(R.string.toast_type_chat_name), Toast.LENGTH_SHORT).show();
 				break;
-			case 3:
-				Toast.makeText(this, "Add some channels plz", Toast.LENGTH_SHORT)
+			case SAVE_CHAT_NEED_CHANNELS:
+				Toast.makeText(this, getString(R.string.toast_add_some_channels), Toast.LENGTH_SHORT)
 				.show();
 				break;
 			}
 			
 			break;
-		case 2:
+		case  BTN_LOAD_CHAT:
 			dlgLoadSavedChat = new DialogLoadSavedChat();
 			dlgLoadSavedChat.show(getSupportFragmentManager(), "Load chat");
 			break;
-		case 3:
+		case BTN_CLOSE_CHAT:
 			getContentResolver().delete
 			(ADD_URI, "chat = ?", new String [] {  setName.getText().toString()});
 			intent.putExtra("name", setName.getText().toString());
@@ -143,17 +149,17 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 			finish();
 			break;
 		}
-		// TODO Auto-generated method stub
+
 
 	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
-		// запишем в лог значения requestCode и resultCode
+
 		Log.d("myLogs", "requestCode = " + requestCode + ", resultCode = "
 				+ resultCode);
-		// если пришло ОК
+
 		if (resultCode == RESULT_OK) {
 				String channel =data.getStringExtra("channelId");
 				int color = data.getIntExtra("color", 0);
@@ -182,7 +188,7 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Log.i(MainActivity.LOG_TAG, "chek" +id);
+
 		_id=(int) id;
 		if (mMode == null)	mMode = startActionMode(callback);
 		else	 mMode.finish();
@@ -207,7 +213,7 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 
 			switch (item.getItemId()) {
 			case (R.id.actionDeleteChannel):
-				Log.i(MainActivity.LOG_TAG, "chek" +_id);
+
 				channels.remove(_id);
 				adapter.notifyDataSetChanged();
 				break;
@@ -243,10 +249,10 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 	}
 	
 	public int saveChat() {
-		int j = 0;
+
 		String chatName = setName.getText().toString();
 		if (chatName.equalsIgnoreCase(""))
-			return 2;
+			return SAVE_CHAT_NAME_EMPTY;
 		String[] name = { chatName };
 		Cursor c = getContentResolver().query(ADD_URI, null, "chat = ?", name,
 				null);
@@ -254,7 +260,7 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 			ContentValues cv = new ContentValues();
 			cv.put("chat", chatName);
 			cv.put("flag", "true");
-			j=3;
+            if (channels.isEmpty()) return SAVE_CHAT_NEED_CHANNELS;
 			for (AddChatChannel channel : channels) {
 				cv.put("site", channel.site);
 				cv.put("channel", channel.channelId);
@@ -264,24 +270,22 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 				String[] channelExist = { chatName , channel.channelId };
 				Cursor q = getContentResolver().query(ADD_URI, null, "chat = ? AND channel = ?", channelExist,
 						null);
-				if (q.getCount() == 0) {Uri newUri = getContentResolver().insert(ADD_URI, cv);
-				Log.d(MainActivity.LOG_TAG,
-						"insert, result Uri : " + newUri.toString());};
-				
-				j = 1;
-			}
+				if (q.getCount() == 0) {getContentResolver().insert(ADD_URI, cv);
+				}
 
+
+			}
+            return SAVE_CHAT_ADD_COMPLETE;
 		} else {
-			j = 0;
+			return SAVE_CHAT_NAME_EXIST ;
 
 		}
-		return j;
+
 	}
 	
 	void loadSavedChat( ArrayList<AddChatChannel> channels_,String chatName){
 		channels = channels_;
-		Log.d(MainActivity.LOG_TAG,
-				"channelId = " + channels.get(0).channelId);
+
 		adapter= new AdapterChannelList(this, channels);
 		 channelList.setAdapter(adapter);
 		 channelList.setOnItemClickListener(this);

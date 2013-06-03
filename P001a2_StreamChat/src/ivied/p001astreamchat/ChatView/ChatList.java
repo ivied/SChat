@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package ivied.p001astreamchat.Core;
+package ivied.p001astreamchat.ChatView;
 
+import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MainActivity.TabInfo;
+import ivied.p001astreamchat.Core.MyContentProvider;
+import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.R;
 
 import java.util.ArrayList;
@@ -241,11 +244,12 @@ public class ChatList extends SherlockFragmentActivity {
 				if(tagNum>=0){
 				TabInfo tab = new TabInfo(tagNum);
 				
-				Log.d(MainActivity.LOG_TAG, "индекс чата = " + MainActivity.indexOfChats.indexOf(getTag()));
+
 				
 				TextView label = tab.findLabel();
 		       label.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.radiobutton_off_background), null, null, null);}
-	        }} catch (IllegalStateException e) {
+	        }
+          } catch (IllegalStateException e) {
 	        	
 	        }
 	    }
@@ -413,7 +417,7 @@ public class ChatList extends SherlockFragmentActivity {
 		@Override
 		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 			
-			// считываем каналы из файла
+
 			TabInfo tab = new TabInfo(id);
 			
 			String chatName = tab.findTag();

@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Core;
+package ivied.p001astreamchat.AddChat;
 
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;

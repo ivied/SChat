@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Core;
+package ivied.p001astreamchat.ChatView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,15 +26,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.Sites.Sc2tv.Sc2tv;
 
-/**
- *  ласс приводит данные курkkсора к стандртному виду сообщени€
- * 
- * @author Serv
- * 
- */
+
 public class AdapterChatCursor extends SimpleCursorAdapter {
 	
 	final public static Pattern bold = Pattern.compile("(\\<b\\>)(.*)(\\<\\/b\\>)");
@@ -48,7 +45,7 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 	public AdapterChatCursor(Context context, int _layout, Cursor cursor,
 			String[] from, int[] to, int flags) {
 		super(context, _layout, cursor, from, to, flags);
-		// TODO выделение личных сообщений
+
 		
 		
 	}
@@ -84,9 +81,9 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 
 	@Override
 	public void setViewImage(ImageView v, String value) {
-		// метод супер-класса
+
 		super.setViewImage(v, value);
-		// разрисовываем ImageView
+
 		if (MainActivity.showSiteLogo){
            FactorySite.SiteName site = FactorySite.SiteName.valueOf(value.toUpperCase());
 		switch (site) {
@@ -107,7 +104,7 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 	private static final Factory spannableFactory = Spannable.Factory
 			.getInstance();
 
-	static final Map<Pattern, Integer> emoticons = new HashMap<Pattern, Integer>();
+	public static final Map<Pattern, Integer> emoticons = new HashMap<Pattern, Integer>();
 
 	static {
 		addPattern(emoticons, ":s:happy:", R.drawable.sc2tvsmilea);
@@ -320,28 +317,13 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 		// ...
 	}
 
-	/**
-	 * метод заполн€ет хэшмап парами текст-смайл»д
-	 * 
-	 * @param map
-	 * @param smile
-	 * @param resource
-	 */
+
 	private static void addPattern(Map<Pattern, Integer> map, String smile,
 			int resource) {
 		map.put(Pattern.compile(Pattern.quote(smile)), resource);
 	}
 
-	/**
-	 * добавл€ет в spannable строку смайлы и подсвечивает никнэйм
-	 * 
-	 * @param context
-	 * @param spannable
-	 *            вс€ строка сообщени€ включа€ ник
-	 * @param length
-	 *            дл€ ника
-	 * @return
-	 */
+
 	public static boolean addSmiles(Context context, Spannable spannable,
 			int length, int lengthAdress, boolean privateM) {
 		boolean hasChanges = false;
@@ -398,18 +380,10 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 		return hasChanges;
 	}
 
-	/**
-	 * выдает spannable дл€ строки cursoradapter
-	 * 
-	 * @param context
-	 * @param text
-	 *            текст основного сообщени€
-	 * @param nick
-	 * @return
-	 */
+
 	public static Spannable getSmiledText(Context context, CharSequence text,
 			CharSequence nick) {
-		// TODO выодить spannable объект с переработкой <b> тегов
+
 		linkMap.clear();
 		int adressLength = 0;
 		boolean privateM = false;
@@ -417,7 +391,7 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
 		String message = text.toString();
 		if (matcher.find()) {
 		message = message.replace("<b>", "").replace("</b>", "");
-		String privateNick = SendMessageService.sc2tvNick;
+		String privateNick = Sc2tv.sc2tvNick;
 		String adress = matcher.group(2);
 		privateM = adress.equalsIgnoreCase(privateNick);
 		adressLength = matcher.group(2).length();

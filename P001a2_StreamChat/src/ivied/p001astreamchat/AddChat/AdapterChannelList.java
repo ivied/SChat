@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Core;
+package ivied.p001astreamchat.AddChat;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ivied.p001astreamchat.AddChat.AddChatChannel;
 import ivied.p001astreamchat.R;
 
 public class AdapterChannelList extends BaseAdapter {
@@ -25,25 +26,25 @@ public class AdapterChannelList extends BaseAdapter {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
-	// кол-во элементов
+
 	@Override
 	public int getCount() {
 		return channels.size();
 	}
 
-	// элемент по позиции
+
 	@Override
 	public Object getItem(int position) {
 		return channels.get(position);
 	}
 
-	// id по позиции
+
 	@Override
 	public long getItemId(int position) {
 		return position;
 	}
 
-	/// пункт списка
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -64,10 +65,6 @@ public class AdapterChannelList extends BaseAdapter {
 		return convertView;
 	}
 
-	/*
-	 * // содержимое корзины ArrayList<Product> getBox() { ArrayList<Product>
-	 * box = new ArrayList<Product>(); for (Product p : objects) { // если в
-	 * корзине if (p.box) box.add(p); } return box; }
-	 */
+
 
 }

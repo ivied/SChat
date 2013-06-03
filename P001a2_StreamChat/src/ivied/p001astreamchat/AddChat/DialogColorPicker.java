@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Core;
+package ivied.p001astreamchat.AddChat;
 
 import android.app.Dialog;
 import android.content.Context;

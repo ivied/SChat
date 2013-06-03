@@ -5,9 +5,9 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -23,21 +22,17 @@ import com.actionbarsherlock.view.MenuItem;
 
 import java.util.ArrayList;
 
-import ivied.p001astreamchat.Core.DialogLoadSavedChat;
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 
 
-/**
- * @author Serv
- *  ласс сохран€ет логин на сайте если он правельный
- */
+
 public class Login extends SherlockFragmentActivity {
     static final public String XML_LOGIN = "Login";
     protected static final String PASSWORD = "pass";
     DialogSelectLogin mDialogSelectLogin;
-
+    FactorySite factorySite = new FactorySite();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,20 +44,19 @@ public class Login extends SherlockFragmentActivity {
        for (FactorySite.SiteName siteName : FactorySite.SiteName.values()){
 
             LinearLayout innerLayout1 = new LinearLayout(this);
+
             innerLayout1.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             innerLayout1.setId(MainActivity.ID_LOGIN_FRAGMENTS+siteName.ordinal());
             {
                 FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
-                fTrans.add(MainActivity.ID_LOGIN_FRAGMENTS+siteName.ordinal(), siteName.site.getFragment());
+
+                fTrans.add(MainActivity.ID_LOGIN_FRAGMENTS+siteName.ordinal(), factorySite.getSite(siteName).getFragment());
                 fTrans.commit();
             }
             layout.addView(innerLayout1);
             setContentView(layout);
        }
-
-
-
-    }
+     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -115,7 +109,7 @@ public class Login extends SherlockFragmentActivity {
 
         private void deletePass(String site) {
 
-            SharedPreferences sPref = getSharedPreferences(Login.XML_LOGIN,MODE_PRIVATE);
+            SharedPreferences sPref = getSharedPreferences(Login.XML_LOGIN, MODE_PRIVATE);
             final String SAVED_NAME = site;
             final String SAVED_PASS = site + PASSWORD;
             SharedPreferences.Editor ed = sPref.edit();
@@ -124,5 +118,17 @@ public class Login extends SherlockFragmentActivity {
             ed.commit();
             Toast.makeText(getActivity(), site + " " + getResources().getString(R.string.Login_delete) , Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            setResult(RESULT_OK, null);
+
+            finish();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 }

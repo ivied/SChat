@@ -34,30 +34,34 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import ivied.p001astreamchat.AddChat.AddChat;
+import ivied.p001astreamchat.ChatView.ChatList;
+import ivied.p001astreamchat.ChatView.DialogChoiceSmile;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
 
 
 public class MainActivity extends SherlockFragmentActivity {
-    static Integer focus=0;
+    public static Integer focus=0;
 	TabHost mTabHost;
     ViewPager  mViewPager;
     TabsAdapter mTabsAdapter;
-    final static String LOG_TAG = "myLogs";
-	final static int DELETE = 1;
+    public final static String LOG_TAG = "myLogs";
+	public final static int DELETE = 1;
     public final static int ID_LOGIN_FRAGMENTS =1000;
+    public final static int ID_SITE_SELECT = 100;
 	static int AMOUNT_OF_VISIBLE_ROWS;
-	static boolean messageStringShow;
-	static boolean messageLinksShow;
-	static boolean autoScrollChat;
-	static boolean messageDelete;
-	static boolean showSmiles;
-	static boolean showChannelsInfo;
-	static boolean showSiteLogo;
+	public static boolean messageStringShow;
+    public static boolean messageLinksShow;
+    public static boolean autoScrollChat;
+    public static boolean messageDelete;
+    public static boolean showSmiles;
+    public static boolean showChannelsInfo;
+    public static boolean showSiteLogo;
     public static boolean showNotifySystem;
     static boolean showNotifyHeaders;
-	final static int EDIT = 2;
+	public final static int EDIT = 2;
 	public static final String CHANNEL = "channel";
 	public static final String SITE = "site";
 	static final String BROADCAST_ACTION = "ivied.p001astreamchat.servicebackbroadcast";
@@ -74,15 +78,15 @@ public class MainActivity extends SherlockFragmentActivity {
  	 final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
  	final Uri SERVICE_URI = Uri.parse("content://ivied.p001astreamchat/channels/service");
  	
- 	  static List<String> indexOfChats = new ArrayList<String>();
+ 	  public static List<String> indexOfChats = new ArrayList<String>();
  	  static List<TextView> indexOfHeaders = new ArrayList<TextView>();
  //	 private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 
  	 
-     static final class TabInfo {
+    public static final class TabInfo {
          
          private final int _id;
-         TabInfo( int _id) {
+         public TabInfo(int _id) {
              
              this._id = _id;
          }
@@ -96,7 +100,7 @@ public class MainActivity extends SherlockFragmentActivity {
          public TextView findLabel() {
         	 return indexOfHeaders.get( _id);
          }
-     }
+    }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +119,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		sp = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		br = new BroadcastReceiver() {
-			/// действия при получении сообщений
+
 			public void onReceive(Context context, Intent intent) {
 
 				
@@ -128,8 +132,7 @@ public class MainActivity extends SherlockFragmentActivity {
 						TextView label = (TextView) mTabHost.getTabWidget()
 								.getChildTabViewAt(indexOfChats.indexOf(chat))
 								.findViewById(android.R.id.title);
-						Log.d(MainActivity.LOG_TAG, chat + "индекс чата = "
-								+ MainActivity.indexOfChats.indexOf(chat));
+
 
 						label.setCompoundDrawablesWithIntrinsicBounds(
 								getResources()
@@ -142,9 +145,7 @@ public class MainActivity extends SherlockFragmentActivity {
 				
 			}
 		};
-		// создаем фильтр для BroadcastReceiver
-		
-		// регистрируем (включаем) BroadcastReceiver
+
 		
 		intent = new Intent(this, ChatService.class);
 		bindService(intent, sConn, 0);
@@ -334,10 +335,10 @@ public class MainActivity extends SherlockFragmentActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
-		// запишем в лог значения requestCode и resultCode
+		// Г§Г ГЇГЁГёГҐГ¬ Гў Г«Г®ГЈ Г§Г­Г Г·ГҐГ­ГЁГї requestCode ГЁ resultCode
 		Log.d("myLogs", "requestCode = " + requestCode + ", resultCode = "
 				+ resultCode);
-		// если пришло ОК
+		// ГҐГ±Г«ГЁ ГЇГ°ГЁГёГ«Г® ГЋГЉ
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
 			case 1:
@@ -350,7 +351,7 @@ public class MainActivity extends SherlockFragmentActivity {
 					break;
 				case EDIT:
 					restartApp () ;
-					//TODO не обновляются потоки
+					//TODO Г­ГҐ Г®ГЎГ­Г®ГўГ«ГїГѕГІГ±Гї ГЇГ®ГІГ®ГЄГЁ
 					break;
 				}
 
@@ -380,7 +381,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			
 			break;}
 
-			// если вернулось не ОК
+			// ГҐГ±Г«ГЁ ГўГҐГ°Г­ГіГ«Г®Г±Гј Г­ГҐ ГЋГЉ
 		} 
 		
 	}

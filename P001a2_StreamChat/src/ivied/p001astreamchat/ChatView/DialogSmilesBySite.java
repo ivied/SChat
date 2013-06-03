@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Core;
+package ivied.p001astreamchat.ChatView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.R;
 
 public class DialogSmilesBySite extends DialogFragment {

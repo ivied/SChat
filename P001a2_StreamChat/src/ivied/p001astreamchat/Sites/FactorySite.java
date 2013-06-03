@@ -9,11 +9,7 @@ import ivied.p001astreamchat.Sites.Twitch.Twitch;
  */
 public class FactorySite {
     public enum SiteName {
-        SC2TV(new Sc2tv()), TWITCH(new Twitch());
-        public Site site;
-        private   SiteName (Site site) {
-            this.site = site  ;
-        }
+        SC2TV(), TWITCH();
 
     }
     public Site getSite (SiteName site) {

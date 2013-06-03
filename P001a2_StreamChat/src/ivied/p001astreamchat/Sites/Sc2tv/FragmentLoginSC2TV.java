@@ -21,7 +21,7 @@ import java.util.List;
 
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.Login.Login;
-import ivied.p001astreamchat.Login.oldLogin;
+
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 

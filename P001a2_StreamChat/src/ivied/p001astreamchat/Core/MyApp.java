@@ -5,10 +5,11 @@ import android.content.Context;
 
 	public class MyApp extends Application {
 	    private  static Context context;
-
+        static public SmileHelper SmileCache = new SmileHelper();
 	    @Override
 	    public void onCreate() {
 	        super.onCreate();
+
 	        context = getApplicationContext();
 	        
 	    }

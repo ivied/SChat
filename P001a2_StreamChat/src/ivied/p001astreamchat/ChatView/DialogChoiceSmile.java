@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Core;
+package ivied.p001astreamchat.ChatView;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;

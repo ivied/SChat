@@ -40,6 +40,7 @@ public class Preference extends SherlockPreferenceActivity {
 	  public void onBuildHeaders(List<Header> target) {
 	   // loadHeadersFromResource(R.xml.pref, target);
 	  }
+
 	  @Override
 	  public boolean onKeyDown(int keyCode, KeyEvent event)  {
 	      if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {

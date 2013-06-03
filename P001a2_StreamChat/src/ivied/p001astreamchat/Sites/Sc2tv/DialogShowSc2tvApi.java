@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Core;
+package ivied.p001astreamchat.Sites.Sc2tv;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,10 +23,11 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
+import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.R;
 
-public class DialogShowSc2tvApi extends DialogFragment implements
-		OnClickListener {
+public class DialogShowSc2tvApi extends DialogFragment  {
+    final static String  SC2TV_API = "http://sc2tv.ru/api.php";
 	ArrayList<String> list = new ArrayList<String>();
 	ArrayList<String> id = new ArrayList<String>();
 	DownloadApi downloadApi;
@@ -56,7 +57,7 @@ public class DialogShowSc2tvApi extends DialogFragment implements
 		
 
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
-				.setTitle("Channels running now").setAdapter(adapter, myClickListener);
+				.setTitle(getResources().getString(R.string.dialog_title_show_sc2tv_by_api)).setAdapter(adapter, myClickListener);
 
 		return adb.create();
 	}
@@ -64,7 +65,7 @@ public class DialogShowSc2tvApi extends DialogFragment implements
 	
 	OnClickListener myClickListener = new OnClickListener() {
 	    public void onClick(DialogInterface dialog, int which) {
-	      // выводим в лог позицию нажатого элемента
+
 	    	EditText channel = (EditText) getActivity().findViewById(R.id.editChannelNumberSc2tv);
 	    	channel.setText(id.get(which));
 	    	Log.d(MainActivity.LOG_TAG, "which = " + id.get(which));
@@ -76,14 +77,10 @@ public class DialogShowSc2tvApi extends DialogFragment implements
 
 	}
 
-	@Override
-	public void onClick(DialogInterface arg0, int arg1) {
-		// TODO Auto-generated method stub
 
-	}
 
 	class DownloadApi extends AsyncTask<Void, Void, ArrayList<String>> {
-		private final String apiUrl = "http://sc2tv.ru/api.php";
+		private final String apiUrl = SC2TV_API;
 		
 		@Override
 		protected ArrayList<String> doInBackground(Void... arg0) {
@@ -139,6 +136,7 @@ public class DialogShowSc2tvApi extends DialogFragment implements
 					
 					}
 				}
+                
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

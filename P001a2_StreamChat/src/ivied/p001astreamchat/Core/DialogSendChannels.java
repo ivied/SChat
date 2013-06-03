@@ -17,11 +17,7 @@ import android.util.Log;
 
 import ivied.p001astreamchat.R;
 
-/**
- * Класс делает окно диалога выбора списка каналов для отправки сообщений
- * @author Serv
- *
- */
+
 public class DialogSendChannels extends DialogFragment implements
 		OnClickListener {
 	
@@ -47,7 +43,7 @@ public class DialogSendChannels extends DialogFragment implements
 		
 		 c = getActivity().getContentResolver().query(ADD_URI, projection, selection, selectionArgs, null);
 		
-		 Log.i(LOG_TAG, "тут"  );
+
 		String[] data = new String[c.getCount()];
 		boolean[] chkd = new boolean[c.getCount()];
 
@@ -56,7 +52,7 @@ public class DialogSendChannels extends DialogFragment implements
 			data[i]=c.getString(0)+ " " + c.getString(1);
 			
 			chkd[i]=c.getString(2).equalsIgnoreCase("true");
-			Log.i(LOG_TAG, " канал" +data[i] + "флаг" + chkd[i]);
+
 			i++;
 		}
 	

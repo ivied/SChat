@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Core;
+package ivied.p001astreamchat.ChatView;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

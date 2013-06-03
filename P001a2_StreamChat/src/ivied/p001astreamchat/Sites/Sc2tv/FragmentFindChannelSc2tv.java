@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Core;
+package ivied.p001astreamchat.Sites.Sc2tv;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -8,16 +8,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
-import com.actionbarsherlock.app.SherlockFragment;
-
+import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
 import ivied.p001astreamchat.R;
 
-public class FragmentFindChannelSc2tv  extends SherlockFragment implements OnClickListener {
+public class FragmentFindChannelSc2tv  extends FragmentAddChannelStandard implements OnClickListener {
 	DialogFragment dlgShowApi;
-	DialogFragment dlgChekName;
+	DialogFragment dlgCheckName;
 	final static String USER_STREAMS = "user_streams";
 	final static String MAIN_PAGE = "online";
+    EditText channel;
+
 	 @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 		      Bundle savedInstanceState) {
@@ -31,13 +33,13 @@ public class FragmentFindChannelSc2tv  extends SherlockFragment implements OnCli
 		    btnFindFromMain.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14); 
 		    Button btnCheckName = (Button) v.findViewById(R.id.btnByNameSc2tv);
 		    btnCheckName.setOnClickListener(this);
-		    btnCheckName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14); 
+		    btnCheckName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            channel = (EditText) v.findViewById(R.id.editChannelNumberSc2tv);
 		    return v;
 		  }
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		switch (v.getId()){
 		case R.id.btnFromApiSc2tv:
 			dlgShowApi = new DialogShowSc2tvApi().newInstace(USER_STREAMS);
@@ -48,10 +50,14 @@ public class FragmentFindChannelSc2tv  extends SherlockFragment implements OnCli
 			dlgShowApi.show(getFragmentManager(), "Show api");
 			break;
 		case R.id.btnByNameSc2tv:
-			dlgChekName = new DialogChekNameSc2tv();
-			dlgChekName.show(getFragmentManager(), "Chek name");
+			dlgCheckName = new DialogCheckNameSc2tv();
+			dlgCheckName.show(getFragmentManager(), "Check name");
 			break;
 		}
 	}
 
+    @Override
+    public EditText getEditTextChannel() {
+        return channel;
+    }
 }
