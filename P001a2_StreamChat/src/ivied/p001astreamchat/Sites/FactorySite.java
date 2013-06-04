@@ -9,9 +9,11 @@ import ivied.p001astreamchat.Sites.Twitch.Twitch;
  */
 public class FactorySite {
     public enum SiteName {
-        SC2TV(), TWITCH();
-
+        SC2TV, TWITCH
     }
+
+
+
     public Site getSite (SiteName site) {
 
         switch (site){
@@ -22,5 +24,6 @@ public class FactorySite {
         }
         return null;
     }
+
 
 }

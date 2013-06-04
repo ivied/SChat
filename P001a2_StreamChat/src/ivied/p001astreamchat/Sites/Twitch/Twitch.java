@@ -1,13 +1,18 @@
 package ivied.p001astreamchat.Sites.Twitch;
 
+import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import org.apache.http.client.methods.HttpGet;
 import org.jibble.pircbot.IrcException;
 import org.jibble.pircbot.NickAlreadyInUseException;
 import org.jibble.pircbot.PircBot;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -17,12 +22,14 @@ import java.util.concurrent.Executors;
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
+import ivied.p001astreamchat.Core.MyContentProvider;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.Site;
+import ivied.p001astreamchat.Sites.SmileHelper;
 
 /**
  * Created by Serv on 30.05.13.
@@ -30,6 +37,8 @@ import ivied.p001astreamchat.Sites.Site;
 public class Twitch  extends Site {
     final String TWITCH_SAVED_NAME = "TWITCH";
     final String TWITCH_SAVED_PASS = "TWITCHpass";
+    final String TWITCH_SMILE_ADDRESS = "https://api.twitch.tv/kraken/chat/emoticons";
+    final String TWITCH_SMILE_HEADER_UPDATE = "x-api-version";
     public static IrcClient botSend;
     public static String twitchNick;
     ExecutorService es;
@@ -202,6 +211,64 @@ public class Twitch  extends Site {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getSmileAddress() {
+        return TWITCH_SMILE_ADDRESS;
+    }
+
+    @Override
+    public String getSmileModifyHeader() {
+        return TWITCH_SMILE_HEADER_UPDATE;
+    }
+
+    @Override
+    public void getSiteSmiles() {
+
+        HttpGet httpGet = new HttpGet(getSmileAddress());
+        StringBuilder builderJson = jsonRequest(httpGet);
+        JSONArray jsonArray = new JSONArray();
+        try {
+            JSONObject jsonObj = new JSONObject(builderJson.toString());
+
+
+            jsonArray = jsonObj.getJSONArray("emoticons");
+
+            for(int i = 0 ; i < jsonArray.length(); i++ ){
+                JSONObject smile = jsonArray.getJSONObject(i);
+                JSONArray imageList = smile.getJSONArray("images");
+                JSONObject image = imageList.getJSONObject(0);
+                if(image.getString("emoticon_set").equalsIgnoreCase("null")){
+                String imageAddress = image.getString("url");
+                String width = image.getString("width");
+                String height = image.getString("height");
+                String regex = smile.getString("regex");
+                putSmile(imageAddress,regex,width,height);
+                Log.i (MainActivity.LOG_TAG, "regex = " + regex + ", i = " + i + "   " + jsonArray.length());}
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+        /*cv.put(MyContentProvider.SMILES_SITE, getSiteName());
+        for (String smile: sc2tvSmileJson){
+            String [] smileArray = smile.split(": '");
+            smileAddress = getSmileSubstring (smileArray, SC2TV_SMILE_FIELD_ADDRESS);
+
+            try {
+                byte[] smileByte = SmileHelper.urlToImageBLOB(SC2TV_STANDARD_SMILE_WAY + smileAddress);
+                cv.put(MyContentProvider.SMILES_SMILE, smileByte );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            cv.put(MyContentProvider.SMILES_REGEXP, getSmileSubstring(smileArray, SC2TV_SMILE_FIELD_REGEXP));
+            cv.put(MyContentProvider.SMILES_WIDTH, getSmileSubstring(smileArray, SC2TV_SMILE_FIELD_WIDTH));
+            cv.put(MyContentProvider.SMILES_HEIGHT, getSmileSubstring(smileArray, SC2TV_SMILE_FIELD_HEIGHT));
+            MyApp.getContext().getContentResolver().insert(MyContentProvider.SMILE_INSERT_URI, cv);
+        }*/
     }
 
 

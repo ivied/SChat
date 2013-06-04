@@ -118,7 +118,10 @@ public class MyContentProvider extends ContentProvider {
 	
 	static final int URI_CHANNEL_ADD = 3;
 	static final int URI_CHANNEL_SERVICE =4;
+    static final int URI_SMILE_INSERT = 5;
+
      final Uri INSERT_URI = Uri.parse("content://ivied.p001astreamchat/chats/insert");
+    public final static Uri SMILE_INSERT_URI = Uri.parse("content://ivied.p001astreamchat/smiles/newSmile");
 	// îïèñàíèå è ñîçäàíèå UriMatcher
 	private static final UriMatcher uriMatcher;
 	static {
@@ -128,6 +131,7 @@ public class MyContentProvider extends ContentProvider {
 		uriMatcher.addURI(AUTHORITY, MESSAGES_TABLE + "/show", URI_MESSAGES_SHOW);
 		uriMatcher.addURI(AUTHORITY, CHANNELS_TABLE + "/add", URI_CHANNEL_ADD);
 		uriMatcher.addURI(AUTHORITY, CHANNELS_TABLE + "/service", URI_CHANNEL_SERVICE);
+        uriMatcher.addURI(AUTHORITY, SMILE_TABLE + "/newSmile", URI_SMILE_INSERT);
 	}
 
 	DBHelper dbHelper;
@@ -140,12 +144,21 @@ public class MyContentProvider extends ContentProvider {
 	}
 
 	@Override
-	public int delete(Uri uri, String selection, String[] selectionArgs) {
-		db = dbHelper.getWritableDatabase();
-	    int cnt = db.delete(CHANNELS_TABLE, selection, selectionArgs);
-	    getContext().getContentResolver().notifyChange(uri, null);
-	    return cnt;
-	}
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        db = dbHelper.getWritableDatabase();
+        int cnt = 0;
+        switch (uriMatcher.match(uri)) {
+            case URI_CHANNEL_ADD:
+                cnt = db.delete(CHANNELS_TABLE, selection, selectionArgs);
+                break;
+            case URI_SMILE_INSERT:
+                cnt = db.delete(SMILE_TABLE, selection, selectionArgs);
+                break;
+        }
+            getContext().getContentResolver().notifyChange(uri, null);
+            return cnt;
+
+    }
 
 	// ÷òåíèå
 	public Cursor query(Uri uri, String[] projection, String selection,
@@ -154,58 +167,59 @@ public class MyContentProvider extends ContentProvider {
 
 		//String id = uri.getLastPathSegment();
 		// ïðîâåðÿåì Uri
-		Cursor cursor =null;
-		switch (uriMatcher.match(uri)) {
-		case URI_MESSAGES_SHOW:
-			
-			String idFrom ="0";
-			cursor = db.query(MESSAGES_TABLE, projection, selection,
-					selectionArgs, null, null, sortOrder, howManyShow);
-			
-			if (cursor.getCount() > MainActivity.AMOUNT_OF_VISIBLE_ROWS) {
-				int idFirst = cursor.getCount() - MainActivity.AMOUNT_OF_VISIBLE_ROWS;
-				
-				cursor.moveToPosition(idFirst);
-				idFrom = cursor.getString(0);
-			}
-			
-			
-			
-			selection = "( " + selection + " )" + " AND " + " _id > ?";
+        Cursor cursor =null;
+        switch (uriMatcher.match(uri)) {
+            case URI_MESSAGES_SHOW:
 
-			List<String> wordList = new ArrayList<String>(Arrays.asList(selectionArgs));
-			wordList.add(idFrom);
-			String[] selectionArgsAdd = new String[wordList.size()];
-			selectionArgsAdd = wordList.toArray(selectionArgsAdd);
-			
-			cursor = db.query(MESSAGES_TABLE, projection, selection,
-					selectionArgsAdd, null , null, " _id ASC ", howManyShow);
-			cursor.setNotificationUri(getContext().getContentResolver(),
-					MESSAGES_CONTENT_URI);
-			
-			break;
-		case URI_MESSAGES_INSERT:
-		
-			
-			cursor = db.query(MESSAGES_TABLE, projection, selection,
-					selectionArgs, null, having, sortOrder, howManyShow);
-		/*	cursor.setNotificationUri(getContext().getContentResolver(),
-					MESSAGES_CONTENT_URI);*/
-		break;
-		case URI_CHANNEL_ADD:
-			
-			cursor = db.query(CHANNELS_TABLE, projection, selection,
-					selectionArgs, null, having, sortOrder, howManyShow);
-			
-			break;
-		case URI_CHANNEL_SERVICE:
-			
-			cursor = db.query(CHANNELS_TABLE, projection, selection,
-					selectionArgs, " chat ", having, sortOrder, howManyShow);
-			break;
-		}
-		
-		return cursor;
+                String idFrom ="0";
+                cursor = db.query(MESSAGES_TABLE, projection, selection,
+                        selectionArgs, null, null, sortOrder, howManyShow);
+
+                if (cursor.getCount() > MainActivity.AMOUNT_OF_VISIBLE_ROWS) {
+                    int idFirst = cursor.getCount() - MainActivity.AMOUNT_OF_VISIBLE_ROWS;
+
+                    cursor.moveToPosition(idFirst);
+                    idFrom = cursor.getString(0);
+                }
+
+
+
+                selection = "( " + selection + " )" + " AND " + " _id > ?";
+
+                List<String> wordList = new ArrayList<String>(Arrays.asList(selectionArgs));
+                wordList.add(idFrom);
+                String[] selectionArgsAdd = new String[wordList.size()];
+                selectionArgsAdd = wordList.toArray(selectionArgsAdd);
+
+                cursor = db.query(MESSAGES_TABLE, projection, selection,
+                        selectionArgsAdd, null , null, " _id ASC ", howManyShow);
+                cursor.setNotificationUri(getContext().getContentResolver(),
+                        MESSAGES_CONTENT_URI);
+
+                break;
+            case URI_MESSAGES_INSERT:
+                cursor = db.query(MESSAGES_TABLE, projection, selection,
+                        selectionArgs, null, null ,sortOrder, null);
+
+                break;
+            case URI_CHANNEL_ADD:
+
+                cursor = db.query(CHANNELS_TABLE, projection, selection,
+                        selectionArgs, null, having, sortOrder, howManyShow);
+
+                break;
+            case URI_CHANNEL_SERVICE:
+
+                cursor = db.query(CHANNELS_TABLE, projection, selection,
+                        selectionArgs, " chat ", having, sortOrder, howManyShow);
+                break;
+            case URI_SMILE_INSERT:
+                cursor = db.query(SMILE_TABLE, projection, selection,
+                        selectionArgs, null, having, sortOrder, howManyShow);
+                break;
+        }
+
+        return cursor;
 	}
 	
 
@@ -223,29 +237,35 @@ public class MyContentProvider extends ContentProvider {
 		return null;
 	}
 
-	public Uri insert(Uri uri, ContentValues values) {
-		Uri resultUri = null;
+    public Uri insert(Uri uri, ContentValues values) {
+        Uri resultUri = null;
 
-		switch (uriMatcher.match(uri)) {
-		case URI_MESSAGES_INSERT:
-			db = dbHelper.getWritableDatabase();
-			long rowID = db.insert(MESSAGES_TABLE, null, values);
-			resultUri = ContentUris.withAppendedId(MESSAGES_CONTENT_URI, rowID);
-			break;
-		case URI_CHANNEL_ADD:
-			db = dbHelper.getWritableDatabase();
-			rowID = db.insert(CHANNELS_TABLE, null, values);
-			resultUri = ContentUris.withAppendedId(CHANNELS_CONTENT_URI, rowID);
-			break;
-		default:			
-		
-			throw new IllegalArgumentException("Wrong URI: " + uri);
-			
-		}
-		
-		getContext().getContentResolver().notifyChange(resultUri, null);
-		return resultUri;
-	}
+        switch (uriMatcher.match(uri)) {
+            case URI_MESSAGES_INSERT:
+                db = dbHelper.getWritableDatabase();
+                long rowID = db.insert(MESSAGES_TABLE, null, values);
+                resultUri = ContentUris.withAppendedId(MESSAGES_CONTENT_URI, rowID);
+                break;
+            case URI_CHANNEL_ADD:
+                db = dbHelper.getWritableDatabase();
+                rowID = db.insert(CHANNELS_TABLE, null, values);
+                resultUri = ContentUris.withAppendedId(CHANNELS_CONTENT_URI, rowID);
+                break;
+            case URI_SMILE_INSERT:
+                db = dbHelper.getWritableDatabase();
+                rowID = db.insert(SMILE_TABLE, null, values);
+                resultUri = ContentUris.withAppendedId(CHANNELS_CONTENT_URI, rowID);
+
+                break;
+            default:
+
+                throw new IllegalArgumentException("Wrong URI: " + uri);
+
+        }
+
+        getContext().getContentResolver().notifyChange(resultUri, null);
+        return resultUri;
+    }
 
 	@Override
 	public int update(Uri uri, ContentValues values, String selection,

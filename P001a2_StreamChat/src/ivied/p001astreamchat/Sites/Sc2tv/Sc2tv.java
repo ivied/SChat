@@ -1,11 +1,15 @@
 package ivied.p001astreamchat.Sites.Sc2tv;
 
+import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
@@ -14,6 +18,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
@@ -26,10 +31,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -40,6 +48,7 @@ import java.util.regex.Pattern;
 
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
 import ivied.p001astreamchat.ChatView.AdapterChatCursor;
+import ivied.p001astreamchat.Core.MyContentProvider;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.Login.Login;
@@ -48,12 +57,14 @@ import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Sites.Site;
+import ivied.p001astreamchat.Sites.SmileHelper;
 
 /**
  * Cddreated by Serv on 29.05.13.
  */
 public class Sc2tv extends Site {
     final public static Pattern bold = Pattern.compile("(\\<b\\>)(.*)(\\<\\/b\\>)");
+    private static final String SC2TV_SMILES = "http://chat.sc2tv.ru/js/smiles.js";
     public static String sc2tvNick;
     public static String token=null;
     static public HttpClient client = new DefaultHttpClient();
@@ -61,8 +72,14 @@ public class Sc2tv extends Site {
     private static final String CHANNEL_MESSAGES = "http://chat.sc2tv.ru/memfs/channel-";
     private static final String GET_TOKEN = "http://chat.sc2tv.ru/gate.php?task=GetUserInfo&ref=http://sc2tv.ru/";
     private static final String SC2TV_GATE =  "http://chat.sc2tv.ru/gate.php";
+    private static final String SC2TV_SMILE_MODIFY_HEADER = "Last-Modified";
     final String SAVED_NAME = "SC2TV";
     final String SAVED_PASS = "SC2TVpass";
+    private static final String SC2TV_STANDARD_SMILE_WAY = "http://chat.sc2tv.ru/img/";
+    private static final int SC2TV_SMILE_FIELD_ADDRESS = 2;
+    private static final int SC2TV_SMILE_FIELD_REGEXP = 1;
+    private static final int SC2TV_SMILE_FIELD_WIDTH = 3;
+    private static final int SC2TV_SMILE_FIELD_HEIGHT = 4;
     ScheduledExecutorService sEs;
 
     @Override
@@ -158,6 +175,60 @@ public class Sc2tv extends Site {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public String getSmileAddress() {
+        return SC2TV_SMILES;
+    }
+
+    @Override
+    public String getSmileModifyHeader() {
+        return SC2TV_SMILE_MODIFY_HEADER;
+    }
+
+    @Override
+    public void getSiteSmiles() {
+
+        HttpGet httpGet = new HttpGet(getSmileAddress());
+        StringBuilder builderJson = jsonRequest(httpGet);
+        String [] sc2tvSmileJson = parseSc2tv(builderJson.toString());
+
+
+        String smileAddress;
+
+        for (String smile: sc2tvSmileJson){
+            String [] smileArray = smile.split(": '");
+            smileAddress = getSmileSubstring (smileArray, SC2TV_SMILE_FIELD_ADDRESS);
+            putSmile(SC2TV_STANDARD_SMILE_WAY + smileAddress, getSmileSubstring(smileArray, SC2TV_SMILE_FIELD_REGEXP),
+                    getSmileSubstring(smileArray, SC2TV_SMILE_FIELD_WIDTH),
+                    getSmileSubstring(smileArray, SC2TV_SMILE_FIELD_HEIGHT));
+
+        }
+    }
+
+
+
+
+
+    private String getSmileSubstring(String [] smileArray, int i) {
+
+        String substring = smileArray[i].substring(0, smileArray[i].indexOf("'"));
+
+        return substring;
+    }
+
+    private String[] parseSc2tv(String file) {
+        file = file.substring(file.indexOf("{")+1);
+        String  [] fileArray = file.split("\\{");
+        for (int i = 0; fileArray.length > i; i++) {
+
+            fileArray[i]= fileArray[i].substring(0, fileArray[i].indexOf("}"));
+
+        }
+
+        return fileArray;
+    }
+
 
     private void insertSc2tv(JSONArray jsonArray, int i, String channel) {
         try {
@@ -271,27 +342,9 @@ public class Sc2tv extends Site {
     }
 
 
-    public HttpResponse getResponseSc2tvRu(String name, String pass) {
-        HttpResponse response = null;
-        HttpPost post = getSc2tvPost(name, pass);
-        try {
-            HttpClient client = new DefaultHttpClient();
-            response = client.execute(post);
-            client.getConnectionManager().shutdown();
-
-        } catch (ClientProtocolException e) {
 
 
-        } catch (IOException e) {
-
-
-        }
-
-        return response;
-    }
-
-
-    private HttpPost getSc2tvPost (String name, String pass) {
+    public HttpPost getSc2tvPost(String name, String pass) {
         HttpPost post = new HttpPost("http://sc2tv.ru/");
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
                 4);

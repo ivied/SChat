@@ -3,7 +3,9 @@ package ivied.p001astreamchat.Core;
 import android.app.Application;
 import android.content.Context;
 
-	public class MyApp extends Application {
+import ivied.p001astreamchat.Sites.SmileHelper;
+
+public class MyApp extends Application {
 	    private  static Context context;
         static public SmileHelper SmileCache = new SmileHelper();
 	    @Override

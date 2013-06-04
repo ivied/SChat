@@ -52,7 +52,8 @@ public class FragmentLoginSC2TV extends FragmentLoginStandard{
     @Override
     public boolean tryLogin(String name, String pass) {
         Sc2tv sc2tv = new Sc2tv();
-        HttpResponse response = sc2tv.getResponseSc2tvRu(name, pass);
+        HttpPost post = sc2tv.getSc2tvPost(name, pass);
+        HttpResponse response = sc2tv.getResponse(post);
         Header[] headers = response.getAllHeaders();
         try {
             headers[9].getValue();
