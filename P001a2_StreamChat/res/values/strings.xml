@@ -40,8 +40,7 @@
 	<string name="login_to_sc2tv">Login to sc2tv</string>
 	<string name="login_to_twitch">Login to twitch</string>
 	<string name="notify_channels_not_set">Set some channels for send message in menu or send private message</string>
-	<string name="toast_login_to_sc2tv">At first, login to sc2tv in menu</string>
-	<string name="toast_login_to_twitch">At first, login to twitch in menu</string>
+
 	<string name="btn_login_exit">Back to chat</string>
 	<string name="default_message">There are no posts yet</string>
 	<string name="dlg_stop">Stop</string>
@@ -58,4 +57,15 @@
     <string name="dialog_select_login_title">Select login to delete</string>
     <string name="dialog_select">Select</string>
     <string name="dialog_load_chat_edit">\"Select Chat for edit\"</string>
+    <string name="toast_need_login_to">At first, login to</string>
+    <string name="toast_chat_name_exist">Chat name exist</string>
+    <string name="toast_chat_saved">Chat saved</string>
+    <string name="toast_type_chat_name">Type chat name plz</string>
+    <string name="toast_add_some_channels">Add some channels plz</string>
+    <string name="dialog_answer_wrong_sc2tv_name">wrong chat name</string>
+    <string name="dialog_select_site">Select site</string>
+    <string name="dialog_title_check_sc2tv_name">Type channel name</string>
+    <string name="dialog_title_show_sc2tv_by_api">Channels running now</string>
+    <string name="dialog_title_check_twitch_channel">Check twitch channel</string>
+    <string name="dialog_title_select_smile_site">Select site</string>
 </resources>

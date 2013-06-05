@@ -434,6 +434,7 @@ public class ChatList extends SherlockFragmentActivity {
 						"chat name" + chatName + " имя канала"
 								+ c.getString(c.getColumnIndex("channel")));
 			}
+            c.close();
 			selectionArgs = channels.toArray(selectionArgs);
 			Log.i(LOG_TAG, "selectionArgs = " + selectionArgs.toString());
 			for (int i = 0; i < channels.size(); i++) {

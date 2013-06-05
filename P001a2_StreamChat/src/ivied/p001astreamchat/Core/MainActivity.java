@@ -164,6 +164,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			intent.putExtra("button", "Add");
 			startActivityForResult(intent, 2);
 		}
+        c.close();
     	loadSavedChats();
         if( intentFocus.hasExtra(CHANNEL)){
             String [] chats = getChatNamesToNotif(intentFocus);
@@ -188,6 +189,7 @@ public class MainActivity extends SherlockFragmentActivity {
 			 chats[i] = notify.getString(0);
 			i++;
 		}
+        notify.close();
 		return chats;
 	}
 
@@ -254,7 +256,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		    indexOfHeaders.add(label);
 			 
 		}
-
+        c.close();
 	}
 	
 	public void stopServiceSend() {

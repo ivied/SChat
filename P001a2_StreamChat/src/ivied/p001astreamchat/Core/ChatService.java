@@ -112,6 +112,7 @@ public class ChatService extends Service {
 			startChatThread(chatName);
 			
 		}
+        c.close();
 	}
 
 	/**
@@ -139,6 +140,7 @@ public class ChatService extends Service {
             }
 
         }
+        c.close();
 
     }
 

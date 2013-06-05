@@ -35,12 +35,13 @@ import ivied.p001astreamchat.Sites.Site;
 public class SmileHelper  {
 
     public  SmileHelper() {
-        FactorySite factorySite = new FactorySite();
+
         for (FactorySite.SiteName siteName : FactorySite.SiteName.values()){
-            Site site = factorySite.getSite(siteName);
-            site.setSmileMaps();
+
+
             SmileParser smileParser = new SmileParser();
             smileParser.execute(siteName);
+
        }
 
 
@@ -48,16 +49,17 @@ public class SmileHelper  {
 
 
     static
-    class SmileParser extends AsyncTask<FactorySite.SiteName, Void, Void> {
-
+    class SmileParser extends AsyncTask<FactorySite.SiteName, Boolean, Void> {
+        FactorySite factorySite = new FactorySite();
 
         ContentValues cv = new ContentValues();
         Site site;
         @Override
         protected Void doInBackground(FactorySite.SiteName... params) {
-            FactorySite factorySite = new FactorySite();
+
             site = factorySite.getSite(params[0]);
 
+            site.setSmileMaps();
             HttpGet httpGet = new HttpGet(site.getSmileAddress());
 
             HttpResponse response = site.getResponse(httpGet);
@@ -72,31 +74,37 @@ public class SmileHelper  {
                         .query(MyContentProvider.SMILE_INSERT_URI, null, selection, selectionArgs, null );
                 if (c.moveToNext()){
                     if (c.getString(3).equalsIgnoreCase(header)) {
-
+                        c.close();
                         return null;
 
                     }else{
                         MyApp.getContext().getContentResolver().delete(MyContentProvider.SMILE_INSERT_URI, selection, selectionArgs );
                     }
                 }
-
+                c.close();
                 MyApp.getContext().getContentResolver().delete(MyContentProvider.SMILE_INSERT_URI
                         , selection, new String[]{site.getSiteName()});
                 site.getSiteSmiles();
                 cv.put(MyContentProvider.SMILES_SITE, headerName);
                 cv.put(MyContentProvider.SMILES_REGEXP, header);
                 MyApp.getContext().getContentResolver().insert(MyContentProvider.SMILE_INSERT_URI, cv);
-
+                publishProgress(true);
             }
             return null;
         }
 
-
+        @Override
+        protected void onProgressUpdate(Boolean... newSmiles) {
+            super.onProgressUpdate(newSmiles);
+            if (newSmiles[0]) site.setSmileMaps();
+        }
 
 
 
         @Override
         protected void onPostExecute(Void result) {
+
+
             super.onPostExecute(result);
 
         }

@@ -21,7 +21,7 @@ import ivied.p001astreamchat.R;
 public class ActionProviderLink extends ActionProvider implements  OnItemSelectedListener {
 	Spinner linkSpinner;
 	final Uri INSERT_URI = Uri.parse("content://ivied.p001astreamchat/chats/insert");
-	final static Pattern URL = Pattern.compile("(http|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+" +
+	public final static Pattern URL = Pattern.compile("(http|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+" +
 			"([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
 			//+"|(\\w+\\.)+(ru|com|org|tv|net|ua|at|edu|gov|int|mil|biz|πτ)+[^ ]*"
 	Context mContext;

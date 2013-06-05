@@ -7,6 +7,10 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
@@ -47,6 +51,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
+import ivied.p001astreamchat.ChatView.ActionProviderLink;
 import ivied.p001astreamchat.ChatView.AdapterChatCursor;
 import ivied.p001astreamchat.Core.MyContentProvider;
 import ivied.p001astreamchat.Core.SendMessageService;
@@ -58,6 +63,8 @@ import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Sites.Site;
 import ivied.p001astreamchat.Sites.SmileHelper;
+
+
 
 /**
  * Cddreated by Serv on 29.05.13.
@@ -80,7 +87,9 @@ public class Sc2tv extends Site {
     private static final int SC2TV_SMILE_FIELD_REGEXP = 1;
     private static final int SC2TV_SMILE_FIELD_WIDTH = 3;
     private static final int SC2TV_SMILE_FIELD_HEIGHT = 4;
+    final static StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
     ScheduledExecutorService sEs;
+    private static Map<String, Bitmap> smileMap = new HashMap<String, Bitmap>();
 
     @Override
     public Drawable getLogo() {
@@ -206,8 +215,10 @@ public class Sc2tv extends Site {
         }
     }
 
-
-
+    @Override
+    public int getMiniLogo() {
+        return R.drawable.sc2tv_small;
+    }
 
 
     private String getSmileSubstring(String [] smileArray, int i) {
@@ -292,16 +303,59 @@ public class Sc2tv extends Site {
     }
 
     @Override
+    public Spannable getSmiledText(String text, String nick) {
+
+        int addressLength = 0;
+        boolean privateM = false;
+        Matcher matcher = bold.matcher(text);
+
+        if (matcher.find()) {
+            text = text.replace("<b>", "").replace("</b>", "");
+
+            String address = matcher.group(2);
+            privateM = address.equalsIgnoreCase(sc2tvNick);
+            addressLength = matcher.group(2).length();
+        }
+        text = getLinks(text);
+
+
+        Spannable spannable = spannableFactory.newSpannable(nick + ": " + text);
+        int length = nick.length() + 1;
+        getLinkedSpan(spannable, length );
+        if (addressLength > 0){
+            spannable.setSpan(bss, length+1, length + 1 + addressLength, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            if (privateM) {	spannable.setSpan(new ForegroundColorSpan(MyApp.getContext().getResources()
+                    .getColor(R.color.private_msg)), length,
+                    spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+
+
+        addSmiles( spannable, length, "\\:s");
+        return spannable;
+    }
+
+    @Override
+    protected Map<String, Bitmap> getSmileMapLink() {
+        return smileMap;
+    }
+
+    @Override
+    public Map<String, Bitmap> getSmileMap() {
+        return smileMap;
+    }
+
+
+    @Override
     public int sendMessage(String channel, String message) {
         if (Sc2tv.sc2tvNick.equalsIgnoreCase(""))
             return SendMessageService.NEED_LOGIN;
         else {
 
             int count = 0;
-            for (Map.Entry<Pattern, Integer> entry : AdapterChatCursor.emoticons
-                    .entrySet()) {
+            for (Map.Entry<String, Bitmap> entry : smileMap.entrySet()) {
 
-                Matcher matcher = entry.getKey().matcher(message);
+                Matcher matcher = Pattern.compile(entry.getKey()).matcher(message);
                 while (matcher.find()) {
                     count++;
                 }

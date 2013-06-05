@@ -2,6 +2,7 @@ package ivied.p001astreamchat.Sites;
 
 import android.content.ComponentName;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
@@ -10,6 +11,11 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
+import android.text.style.UnderlineSpan;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
@@ -31,12 +37,18 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
+import ivied.p001astreamchat.ChatView.ActionProviderLink;
+import ivied.p001astreamchat.ChatView.AdapterChatCursor;
 import ivied.p001astreamchat.Core.ChatService;
+import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.MyContentProvider;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
+import ivied.p001astreamchat.R;
 
 /**
  * Created by Serv on 29.05.13.
@@ -49,7 +61,7 @@ public abstract class Site {
     public Future mFuture;
     final Uri INSERT_URI = Uri.parse("content://ivied.p001astreamchat/chats/insert");
     final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
-    public static Map<String, Bitmap> smileMap = new HashMap<String, Bitmap>();
+
     abstract public Drawable getLogo();
     abstract public void readChannel(String channel);
     abstract public void startThread (ChannelRun channelRun);
@@ -61,8 +73,14 @@ public abstract class Site {
     abstract public String getSmileAddress();
     abstract public String getSmileModifyHeader();
     abstract public void getSiteSmiles();
+    abstract public int getMiniLogo();
+    abstract public  FactorySite.SiteName getSiteEnum();
+    abstract public  Spannable getSmiledText(String text, String nick);
+    abstract protected  Map<String,Bitmap> getSmileMapLink();
+    abstract public  Map<String,Bitmap> getSmileMap();
+    protected static final Spannable.Factory spannableFactory = Spannable.Factory
+            .getInstance();
 
-    public abstract FactorySite.SiteName getSiteEnum();
     public void destroyLoadMessages(){
         mFuture.cancel(true);
     }
@@ -145,7 +163,7 @@ public abstract class Site {
         cv.put("color",colorSet(customCursor));
         MyApp.getContext().getContentResolver().insert(
                 INSERT_URI, cv);
-
+        customCursor.close();
         chatService.sendNotify(cv.getAsString("channel"), site);
 
     }
@@ -214,7 +232,6 @@ public abstract class Site {
         return c;
 
     }
-
     protected String personalSet (Cursor c) {
 
         String personal = "";
@@ -247,14 +264,83 @@ public abstract class Site {
     }
 
     public void setSmileMaps() {
+         Map<String, Bitmap> smileMap = getSmileMapLink();
         String selection = "site = ?";
         String [] selectionArgs = {getSiteName()};
         Cursor c = MyApp.getContext().getContentResolver().query(MyContentProvider.SMILE_INSERT_URI , null, selection, selectionArgs, null );
-        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()){
-            String regexp = c.getString(3);
-            Bitmap smile = SmileHelper.getImageFromBLOB(c.getBlob(2));
-            smileMap.put(regexp, smile);
+        if (c.getCount()!=0){
+            for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()){
+                String regexp = c.getString(3);
+                Bitmap smile = SmileHelper.getImageFromBLOB(c.getBlob(2));
+                smileMap.put(regexp, smile);
+
+            }
+        }
+        c.close();
+    }
+
+
+
+    protected String getLinks(String message){
+        if(MainActivity.messageLinksShow){
+            Matcher matcher = ActionProviderLink.URL.matcher(message);
+            while (matcher.find()){
+
+                AdapterChatCursor.linkMap.add(matcher.start());
+                message = message.replace(matcher.group(), "link");
+                matcher = ActionProviderLink.URL.matcher(message);
+            }
+        }
+        return message;
+    }
+
+    protected void getLinkedSpan(Spannable spannable, int length) {
+        for (Integer startOfLink : AdapterChatCursor.linkMap){
+            spannable.setSpan(new UnderlineSpan(), length + 1 + startOfLink ,
+                    length + 1  + startOfLink + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannable.setSpan(new ForegroundColorSpan(MyApp.getContext().getResources()
+                    .getColor(R.color.link)), length + 1 + startOfLink,
+                    length + 1  + startOfLink + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         }
+
     }
+
+
+    public void addSmiles( Spannable spannable,  int length, String perfix) {
+
+        Map<String, Bitmap> smileMap = new HashMap (getSmileMapLink());
+        if (MainActivity.showSmiles){
+
+            for (Map.Entry<String, Bitmap> entry : smileMap.entrySet()) {
+
+                Matcher matcher = Pattern.compile(perfix + entry.getKey()).matcher(spannable);
+                while (matcher.find()) {
+
+
+
+                    for (ImageSpan span : spannable.getSpans(matcher.start(),
+                            matcher.end(), ImageSpan.class))
+                        if (spannable.getSpanStart(span) >= matcher.start()
+                                && spannable.getSpanEnd(span) <= matcher.end()){
+                            spannable.removeSpan(span);
+                        }
+
+
+
+                    spannable.setSpan(new ImageSpan(MyApp.getContext(), entry.getValue()),
+                            matcher.start(), matcher.end(),
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                }
+            }
+        }
+
+        spannable.setSpan(new ForegroundColorSpan(MyApp.getContext().getResources()
+                .getColor(R.color.nick)), 0, length,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+    }
+
+
 }

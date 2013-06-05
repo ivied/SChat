@@ -2,8 +2,10 @@ package ivied.p001astreamchat.Sites.Twitch;
 
 import android.content.ContentValues;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.text.Spannable;
 import android.util.Log;
 
 import org.apache.http.client.methods.HttpGet;
@@ -16,6 +18,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -43,6 +48,14 @@ public class Twitch  extends Site {
     public static String twitchNick;
     ExecutorService es;
     IrcClientShow bot;
+    private static Map<String, Bitmap> smileMap = new HashMap<String, Bitmap>();
+    private static Map<String, String> unrecognizedSmiles = new HashMap<String, String>() ;
+    static {
+        Map<String, String> aMap = new HashMap<String, String>();
+        aMap.put("\\&lt\\;3", "<3");
+        aMap.put("\\&gt\\;\\(", ">\\(");
+        unrecognizedSmiles = Collections.unmodifiableMap(aMap);
+    }
 
     @Override
     public Drawable getLogo() {
@@ -127,6 +140,26 @@ public class Twitch  extends Site {
     @Override
     public FactorySite.SiteName getSiteEnum() {
         return FactorySite.SiteName.TWITCH;
+    }
+
+    @Override
+    public Spannable getSmiledText(String text, String nick) {
+        text = getLinks(text);
+        Spannable spannable = spannableFactory.newSpannable(nick + ": " + text);
+        int length = nick.length() + 1;
+        getLinkedSpan(spannable, length);
+        addSmiles( spannable, length, "");
+        return spannable;
+    }
+
+    @Override
+    protected Map<String, Bitmap> getSmileMapLink() {
+        return smileMap;
+    }
+
+    @Override
+    public Map<String, Bitmap> getSmileMap() {
+        return smileMap;
     }
 
     public class IrcClientShow extends PircBot {
@@ -228,7 +261,7 @@ public class Twitch  extends Site {
 
         HttpGet httpGet = new HttpGet(getSmileAddress());
         StringBuilder builderJson = jsonRequest(httpGet);
-        JSONArray jsonArray = new JSONArray();
+        JSONArray jsonArray ;
         try {
             JSONObject jsonObj = new JSONObject(builderJson.toString());
 
@@ -244,6 +277,9 @@ public class Twitch  extends Site {
                 String width = image.getString("width");
                 String height = image.getString("height");
                 String regex = smile.getString("regex");
+                Log.i(MainActivity.LOG_TAG, regex);
+                if (unrecognizedSmiles.containsKey(regex)) regex = unrecognizedSmiles.get(regex);
+
                 putSmile(imageAddress,regex,width,height);
                 Log.i (MainActivity.LOG_TAG, "regex = " + regex + ", i = " + i + "   " + jsonArray.length());}
             }
@@ -269,6 +305,11 @@ public class Twitch  extends Site {
             cv.put(MyContentProvider.SMILES_HEIGHT, getSmileSubstring(smileArray, SC2TV_SMILE_FIELD_HEIGHT));
             MyApp.getContext().getContentResolver().insert(MyContentProvider.SMILE_INSERT_URI, cv);
         }*/
+    }
+
+    @Override
+    public int getMiniLogo() {
+        return R.drawable.twitch_small;
     }
 
 

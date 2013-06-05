@@ -6,7 +6,7 @@
         android:title="Show links"
         android:showAsAction="ifRoom"
         android:icon="@android:drawable/ic_menu_agenda" 
-         android:actionProviderClass="ivied.p001astreamchat.ActionProviderLink"/>
+         android:actionProviderClass="ivied.p001astreamchat.ChatView.ActionProviderLink"/>
      <item
         android:id="@+id/action_add_to_clipboard"
         android:title="Add message to clipboard"
