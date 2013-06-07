@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -29,22 +30,24 @@ import com.actionbarsherlock.view.MenuItem;
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.VideoView.AddVideoStream;
 
 public class AddChat extends SherlockFragmentActivity implements OnClickListener, OnItemClickListener{
-	 static final int TASK_ADD = 1;
-	 static final int TASK_EDIT = 2;
-     static final int SAVE_CHAT_NAME_EXIST = 0;
-     static final int SAVE_CHAT_ADD_COMPLETE = 1;
-     static final int SAVE_CHAT_NAME_EMPTY = 2;
-     static final int SAVE_CHAT_NEED_CHANNELS = 3;
-     static final int BTN_LOAD_CHAT = 2;
-     static final int BTN_CLOSE_CHAT = 3;
-	 static final String CHANNEL = "channel";
-	 static final String COLOR = "color";
-	 static final String PERSONAL_NAME = "personal";
-	 final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
-	Button closeChat,loadSavedChats,setChat;
-	LinearLayout mLayout;
+    static final int TASK_ADD = 1;
+    static final int TASK_EDIT = 2;
+    static final int TASK_ADD_VIDEO = 3;
+    static final int SAVE_CHAT_NAME_EXIST = 0;
+    static final int SAVE_CHAT_ADD_COMPLETE = 1;
+    static final int SAVE_CHAT_NAME_EMPTY = 2;
+    static final int SAVE_CHAT_NEED_CHANNELS = 3;
+    static final int BTN_LOAD_CHAT = 2;
+    static final int BTN_CLOSE_CHAT = 3;
+    static final String CHANNEL = "channel";
+    static final String COLOR = "color";
+    static final String PERSONAL_NAME = "personal";
+    final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
+    Button closeChat,loadSavedChats,setChat;
+    LinearLayout mLayout;
 	private EditText setName;
 	private ImageButton addChannel;
 	DialogChoiceSite dialogChoice;
@@ -101,7 +104,7 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.btnAddChannel:
-			dialogChoice = new DialogChoiceSite();
+			dialogChoice = DialogChoiceSite.newInstance(channels);
 			dialogChoice.show(getSupportFragmentManager(), "Smile");
 			break;
 		case R.id.setChat:
@@ -155,33 +158,41 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
 
-		Log.d("myLogs", "requestCode = " + requestCode + ", resultCode = "
-				+ resultCode);
 
-		if (resultCode == RESULT_OK) {
-				String channel =data.getStringExtra("channelId");
-				int color = data.getIntExtra("color", 0);
-				String personalName = data.getStringExtra("name");
-				FactorySite.SiteName site = (FactorySite.SiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
-				Log.i("myLogs", channel + " " +color + " " + personalName + " " + site );
-			switch (requestCode) {
-			case TASK_ADD:
-				
-				channels.add( new AddChatChannel(channel,color,personalName,site));
-				
-				
-				
-				break;
-			case TASK_EDIT:
-				channels.set(_id, new AddChatChannel(channel,color,personalName,site));
-				
-				break;
-			}
-			adapter.notifyDataSetChanged();
-		}
-	}
+        Log.d("myLogs", "requestCode = " + requestCode + ", resultCode = " + resultCode);
+        String channel =data.getStringExtra("channelId");
+        int color = data.getIntExtra("color", Color.MAGENTA);
+        String personalName = data.getStringExtra("name");
+        if (resultCode == RESULT_OK) {
+
+            switch (requestCode) {
+                case TASK_ADD_VIDEO:
+                    AddVideoStream.VideoSiteName siteVideo = (AddVideoStream.VideoSiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
+                    channels.add ( new AddChatChannel(channel,color,personalName,siteVideo));
+                    break;
+
+                case TASK_ADD:
+
+                    FactorySite.SiteName site = (FactorySite.SiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
+
+                    channels.add( new AddChatChannel(channel,color,personalName,site));
+
+                    break;
+
+                case TASK_EDIT:
+
+                    site = (FactorySite.SiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
+
+                    channels.set(_id, new AddChatChannel(channel,color,personalName,site));
+
+                    break;
+            }
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+
 	
 	
 	

@@ -68,4 +68,8 @@
     <string name="dialog_title_show_sc2tv_by_api">Channels running now</string>
     <string name="dialog_title_check_twitch_channel">Check twitch channel</string>
     <string name="dialog_title_select_smile_site">Select site</string>
+    <string name="loading_video">Loading video</string>
+    <string name="dialog_field_add_video">Add video stream</string>
+    <string name="btn_add_twitch_video">Add Twitch video</string>
+    <string name="toast_add_stream_first">Add stream first</string>
 </resources>

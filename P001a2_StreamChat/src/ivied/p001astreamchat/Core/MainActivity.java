@@ -40,6 +40,7 @@ import ivied.p001astreamchat.ChatView.DialogChoiceSmile;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.VideoView.FragmentWebView;
 
 
 public class MainActivity extends SherlockFragmentActivity {
@@ -231,8 +232,17 @@ public class MainActivity extends SherlockFragmentActivity {
     	if  (messageDelete)     textOfMessage.setText("");  
     	
     }
-    
-  
+
+    /*public void addStreamTab () {
+        mTabHost.setup();
+        mTabsAdapter.addTab(mTabHost.newTabSpec("VideoView").setIndicator("VideoView"), FragmentWebView.class, null);
+        indexOfChats.add("VideoView");
+        final TextView label = (TextView) mTabHost.getTabWidget().getChildTabViewAt(indexOfChats.indexOf("VideoView"))
+                .findViewById(android.R.id.title);
+        // label.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(android.R.drawable.radiobutton_off_background), null, null, null);
+        indexOfHeaders.add(label);
+
+    }*/
     
    
     @Override

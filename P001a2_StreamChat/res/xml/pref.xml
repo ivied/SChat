@@ -5,6 +5,12 @@
     <PreferenceCategory
         android:key="showPrefs"
         android:title="Show preferences" >
+    <EditTextPreference
+                android:inputType="number"
+                android:key="videoPixels"
+                android:summary="Height of video in Pixels, when use with chat"
+                android:title="Height of video" >
+    </EditTextPreference>
      <EditTextPreference
         android:inputType="number"
         android:key="count"

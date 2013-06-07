@@ -59,7 +59,7 @@ public class SmileHelper  {
 
             site = factorySite.getSite(params[0]);
 
-            site.setSmileMaps();
+//            site.setSmileMaps();
             HttpGet httpGet = new HttpGet(site.getSmileAddress());
 
             HttpResponse response = site.getResponse(httpGet);
@@ -75,6 +75,7 @@ public class SmileHelper  {
                 if (c.moveToNext()){
                     if (c.getString(3).equalsIgnoreCase(header)) {
                         c.close();
+                        publishProgress(true);
                         return null;
 
                     }else{

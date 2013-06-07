@@ -1,86 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <LinearLayout android:id="@+id/progressContainer"
-            android:orientation="vertical"
-            android:layout_width="match_parent" 
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            android:gravity="center">
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:visibility="gone"
+                  android:gravity="center">
 
         <ProgressBar style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content" />
         <TextView android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:paddingTop="4dip"
-                android:singleLine="true" />
+                  android:layout_height="wrap_content"
+                  android:textAppearance="?android:attr/textAppearanceSmall"
+                  android:text=""
+                  android:paddingTop="4dip"
+                  android:singleLine="true" />
 
     </LinearLayout>
 
     <FrameLayout android:id="@+id/listContainer"
-            android:layout_width="match_parent" 
-            android:layout_height="match_parent">
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent">
 
-      <RelativeLayout 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000000"
-    android:orientation="vertical" >
+        <RelativeLayout
+                android:id="@+id/chatLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000000"
+                android:orientation="vertical" >
 
-   <ImageButton
-        android:id="@+id/enter"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:onClick="pressEnter"
-        android:text="Enter" 
-        android:textSize="12sp"
-        android:background="@drawable/btn_enter_message" />
-   
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/enter"
-        android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll" />
+            <ImageButton
+                    android:id="@+id/enter"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:onClick="pressEnter"
+                    android:text="Enter"
+                    android:textSize="12sp"
+                    android:background="@drawable/btn_enter_message" />
 
-    <ImageButton
-        android:id="@+id/smiles"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-       
-        android:background="@drawable/btn_send_smile"
-        android:contentDescription="Smile"
-        android:onClick="addSmile"
-        android:textSize="12sp" />
+            <ListView
+                    android:id="@android:id/list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/enter"
+                    android:stackFromBottom="true"
+                    android:transcriptMode="alwaysScroll" />
 
-    <EditText
-        android:id="@+id/textOfMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        
-        android:layout_toLeftOf="@+id/enter"
-        android:layout_toRightOf="@+id/smiles"
-        android:ems="10" />
+            <ImageButton
+                    android:id="@+id/smiles"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
 
-</RelativeLayout>
+                    android:background="@drawable/btn_send_smile"
+                    android:contentDescription="Smile"
+                    android:onClick="addSmile"
+                    android:textSize="12sp" />
+
+            <EditText
+                    android:id="@+id/textOfMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_alignParentBottom="true"
+
+                    android:layout_toLeftOf="@+id/enter"
+                    android:layout_toRightOf="@+id/smiles"
+                    android:ems="10" />
+
+            <!--   <fragment
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:name="ivied.p001astreamchat.VideoView.FragmentWebView"
+                       android:id="@+id/fragment"
+                       android:layout_alignParentTop="true"
+                       android:layout_alignParentLeft="true"
+                       tools:layout="@layout/custom_screen"/>-->
+
+        </RelativeLayout>
     </FrameLayout>
 
     <TextView
-        android:id="@+id/internalEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:id="@+id/internalEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </FrameLayout>

@@ -21,6 +21,8 @@ import ivied.p001astreamchat.Core.MainActivity.TabInfo;
 import ivied.p001astreamchat.Core.MyContentProvider;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.VideoView.FragmentWebView;
+import ivied.p001astreamchat.VideoView.HTML5WebView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,9 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -41,10 +45,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -114,41 +121,64 @@ public class ChatList extends SherlockFragmentActivity {
 		View mProgressContainer;
 		View mListContainer;
 		String chatName;
-		static int tagNumber;
+		public static int tagNumber=0;
 		SendMessageService SendService;
+        FrameLayout streamLayout;
+        WebView streamView;
 
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			String tag = this.getTag();
-			String delims = "[:]";
-			String[] tokens = tag.split(delims);
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            String tag = this.getTag();
+            String delims = "[:]";
+            String[] tokens = tag.split(delims);
 
-			tagNumber = Integer.parseInt(tokens[3]);
+            tagNumber = Integer.parseInt(tokens[3]);
 
-			int INTERNAL_EMPTY_ID = 0x00ff0001;
-			View root = inflater.inflate(R.layout.list_content, container,
-					false);
-			if (!MainActivity.messageStringShow) {
-				(root.findViewById(R.id.smiles)).setVisibility(View.GONE);
-				(root.findViewById(R.id.enter)).setVisibility(View.GONE);
-				(root.findViewById(R.id.textOfMessage))
-						.setVisibility(View.GONE);
-			}
-			
-			(root.findViewById(R.id.internalEmpty)).setId(INTERNAL_EMPTY_ID);
-			Log.i(MainActivity.LOG_TAG, "id textOfMessage = " + tagNumber);
-			(root.findViewById(R.id.textOfMessage)).setId(tagNumber+1);
-			// (root.findViewById(android.R.id.list)).setId(android.R.id.list);
+            int INTERNAL_EMPTY_ID = 0x00ff0001;
+            View root = inflater.inflate(R.layout.list_content, container,
+                    false);
+            if (!MainActivity.messageStringShow) {
+                (root.findViewById(R.id.smiles)).setVisibility(View.GONE);
+                (root.findViewById(R.id.enter)).setVisibility(View.GONE);
+                (root.findViewById(R.id.textOfMessage))
+                        .setVisibility(View.GONE);
+            }
 
-			mList = (ListView) root.findViewById(android.R.id.list);
+            (root.findViewById(R.id.internalEmpty)).setId(INTERNAL_EMPTY_ID);
+            Log.i(MainActivity.LOG_TAG, "id textOfMessage = " + tagNumber);
+            (root.findViewById(R.id.textOfMessage)).setId(tagNumber + 1);
 
-			mListContainer = root.findViewById(R.id.listContainer);
-			mProgressContainer = root.findViewById(R.id.progressContainer);
-			mListShown = true;
 
-			return root;
-		}
+            mList = (ListView) root.findViewById(android.R.id.list);
+
+            mListContainer = root.findViewById(R.id.listContainer);
+            mProgressContainer = root.findViewById(R.id.progressContainer);
+            mListShown = true;
+            TabInfo tab = new TabInfo(tagNumber);
+            chatName = tab.findTag();
+            RelativeLayout chatLayout = (RelativeLayout) root.findViewById(R.id.chatLayout);
+            streamLayout = getStreamLayout();
+
+
+            chatLayout.addView(streamLayout);
+
+      /*    Fragment fragmentVideo = new FragmentWebView();
+            FrameLayout mWebView = (FrameLayout )fragmentVideo.getView().findViewById(R.id.fullscreen_custom_content);
+          FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams (
+                    100,100);
+
+           mWebView.setLayoutParams(lp);
+            FragmentTransaction fTrans = getFragmentManager().beginTransaction();
+
+                      fTrans.add(R.id.chatLayout, fragmentVideo);
+
+            fTrans.commit();*/
+
+
+            //HTML5WebView mWebView = (HTML5WebView ) root.findViewById(tagNumber+1);*/
+            return root;
+        }
 		
 
 		public void setListShown(boolean shown, boolean animate) {
@@ -163,9 +193,11 @@ public class ChatList extends SherlockFragmentActivity {
 									android.R.anim.fade_out));
 					mListContainer.startAnimation(AnimationUtils.loadAnimation(
 							getActivity(), android.R.anim.fade_in));
+
 				}
 				mProgressContainer.setVisibility(View.GONE);
 				mListContainer.setVisibility(View.VISIBLE);
+
 			} else {
 				if (animate) {
 					mProgressContainer.startAnimation(AnimationUtils
@@ -173,9 +205,11 @@ public class ChatList extends SherlockFragmentActivity {
 									android.R.anim.fade_in));
 					mListContainer.startAnimation(AnimationUtils.loadAnimation(
 							getActivity(), android.R.anim.fade_out));
+
 				}
 				mProgressContainer.setVisibility(View.VISIBLE);
 				mListContainer.setVisibility(View.INVISIBLE);
+
 			}
 		}
 
@@ -190,9 +224,15 @@ public class ChatList extends SherlockFragmentActivity {
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
+            /*streamView = new HTML5WebView(getActivity());
 
-			TabInfo tab = new TabInfo(tagNumber);
-			chatName = tab.findTag();
+            if (savedInstanceState != null) {
+                streamView.restoreState(savedInstanceState);
+            } else {
+                streamView.loadUrl("http://goodgame.ru/player3?peptar");
+
+            }*/
+
 
 			// Give some text to display if there is no data. In a real
 			// application this would come from a resource.
@@ -229,6 +269,8 @@ public class ChatList extends SherlockFragmentActivity {
 			// or start a new one.
 
 			getLoaderManager().initLoader(tagNumber, null, this);
+
+
 		}
 		@Override
 	    public void setMenuVisibility(final boolean visible) {
@@ -416,7 +458,7 @@ public class ChatList extends SherlockFragmentActivity {
 
 		@Override
 		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-			
+
 
 			TabInfo tab = new TabInfo(id);
 			
@@ -493,6 +535,27 @@ public class ChatList extends SherlockFragmentActivity {
 			return false;
 		}
 
-	}
+        public FrameLayout getStreamLayout() {
+            HTML5WebView mWebView = new HTML5WebView(getSherlockActivity());
+            mWebView.loadUrl("http://goodgame.ru/player3?pomi");
+
+
+            FrameLayout streamLayout = mWebView.getLayout();
+
+            String[] selectionArgs = new String[]{chatName};
+            FrameLayout.LayoutParams layoutParams;
+            Cursor c = getSherlockActivity().getContentResolver().query
+                    (ADD_URI, null, "chat = ?", selectionArgs, null);
+
+            if (c.getCount() == 0) {
+                layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+            } else {
+                layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 100);
+            }
+            c.close();
+            streamLayout.setLayoutParams(layoutParams);
+            return streamLayout;
+        }
+    }
 
 }
