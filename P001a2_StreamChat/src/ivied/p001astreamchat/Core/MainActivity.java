@@ -61,6 +61,7 @@ public class MainActivity extends SherlockFragmentActivity {
     public static boolean showChannelsInfo;
     public static boolean showSiteLogo;
     public static boolean showNotifySystem;
+    public static int HEIGHT_OF_VIDEO;
     static boolean showNotifyHeaders;
 	public final static int EDIT = 2;
 	public static final String CHANNEL = "channel";
@@ -465,6 +466,7 @@ public class MainActivity extends SherlockFragmentActivity {
         showSiteLogo = prefs.getBoolean("showSiteLogo", true);
         showNotifyHeaders = prefs.getBoolean("notifHeaders", true);
         showNotifySystem = prefs.getBoolean("notifSystem", true);
+        HEIGHT_OF_VIDEO = Integer.parseInt( prefs.getString("videoPixels", "250"));
     }
 	 
 	

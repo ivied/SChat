@@ -49,8 +49,11 @@ public class AddVideoStream extends SherlockFragmentActivity implements View.OnC
             case R.id.btnTwitchAddVideo:
                 FrameLayout addShowVideo = (FrameLayout) findViewById(R.id.frame_add_show_video);
                 mWebView = new HTML5WebView(this);
-                mWebView.loadUrl("http://goodgame.ru/player3?pomi");
+               String url = "<video x-webkit-airplay=\"allow\" controls=\"\" alt=\"Live Stream\" width=\"100%\" height=\"100%\" src=\"http://moxa.no-ip.biz/some_shit.m3u8\"></video>";
 
+               mWebView.loadData(url,"text/html", "UTF-8");
+               //mWebView.loadUrl("http://moxa.no-ip.biz/video.htm");
+               // mWebView.loadUrl("http://goodgame.ru/player3?1053");
                 FrameLayout frameLayout = mWebView.getLayout();
                 FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
 

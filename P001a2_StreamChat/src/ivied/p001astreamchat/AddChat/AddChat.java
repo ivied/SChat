@@ -248,9 +248,16 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 	
 	void editChannel (int id) {
 		AddChatChannel channel = channels.get(id);
-		Intent intent = new Intent( this, AddChannel.class);
-		intent.putExtra(DialogChoiceSite.FOR, "edit");
-		intent.putExtra(DialogChoiceSite.SITE, channel.siteInt);
+
+        Intent intent;
+        if (channel.siteInt != null){
+            intent = new Intent( this, AddChannel.class);
+            intent.putExtra(DialogChoiceSite.SITE, channel.siteInt);
+        }else {
+            intent = new Intent( this, AddVideoStream.class);
+            intent.putExtra(DialogChoiceSite.SITE, channel.siteVideoInt);
+        }
+        intent.putExtra(DialogChoiceSite.FOR, "edit");
 		intent.putExtra(CHANNEL, channel.channelId);
 		intent.putExtra(COLOR, channel.color);
 		intent.putExtra(PERSONAL_NAME, channel.name);
@@ -277,15 +284,10 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 				cv.put("channel", channel.channelId);
 				cv.put("color", channel.color);
 				cv.put("personal", channel.name);
-				
-				String[] channelExist = { chatName , channel.channelId };
-				Cursor q = getContentResolver().query(ADD_URI, null, "chat = ? AND channel = ?", channelExist,
-						null);
-				if (q.getCount() == 0) {getContentResolver().insert(ADD_URI, cv);
+
+				getContentResolver().insert(ADD_URI, cv);
 				}
-
-
-			}
+            c.close();
             return SAVE_CHAT_ADD_COMPLETE;
 		} else {
 			return SAVE_CHAT_NAME_EXIST ;

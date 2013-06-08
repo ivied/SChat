@@ -18,9 +18,11 @@ package ivied.p001astreamchat.ChatView;
 
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MainActivity.TabInfo;
+import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.MyContentProvider;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.VideoView.AddVideoStream;
 import ivied.p001astreamchat.VideoView.FragmentWebView;
 import ivied.p001astreamchat.VideoView.HTML5WebView;
 
@@ -160,8 +162,7 @@ public class ChatList extends SherlockFragmentActivity {
             RelativeLayout chatLayout = (RelativeLayout) root.findViewById(R.id.chatLayout);
             streamLayout = getStreamLayout();
 
-
-            chatLayout.addView(streamLayout);
+            if (streamLayout != null)  chatLayout.addView(streamLayout);
 
       /*    Fragment fragmentVideo = new FragmentWebView();
             FrameLayout mWebView = (FrameLayout )fragmentVideo.getView().findViewById(R.id.fullscreen_custom_content);
@@ -236,7 +237,7 @@ public class ChatList extends SherlockFragmentActivity {
 
 			// Give some text to display if there is no data. In a real
 			// application this would come from a resource.
-			setEmptyText(getResources().getText(R.string.default_message));
+			//setEmptyText(getResources().getText(R.string.default_message));
 
 			// We have a menu iteóm to show in action bar.
 			setHasOptionsMenu(true);
@@ -536,24 +537,38 @@ public class ChatList extends SherlockFragmentActivity {
 		}
 
         public FrameLayout getStreamLayout() {
-            HTML5WebView mWebView = new HTML5WebView(getSherlockActivity());
-            mWebView.loadUrl("http://goodgame.ru/player3?pomi");
+
+            Cursor query = MyApp.getContext().getContentResolver().query(ADD_URI,
+                    new String[]{"site", "channel"}, "chat = ?",
+                    new String[]{chatName}, null);
+            for (query.moveToFirst(); !query.isAfterLast(); query.moveToNext() ){
+                try {
+                AddVideoStream.VideoSiteName.valueOf(query.getString(0));
+                    HTML5WebView mWebView = new HTML5WebView(getSherlockActivity());
+                    mWebView.loadUrl(query.getString(1));
 
 
-            FrameLayout streamLayout = mWebView.getLayout();
+                    streamLayout = mWebView.getLayout();
 
-            String[] selectionArgs = new String[]{chatName};
-            FrameLayout.LayoutParams layoutParams;
-            Cursor c = getSherlockActivity().getContentResolver().query
-                    (ADD_URI, null, "chat = ?", selectionArgs, null);
+                    String[] selectionArgs = new String[]{chatName};
+                    FrameLayout.LayoutParams layoutParams;
+                    Cursor cursor = getSherlockActivity().getContentResolver().query
+                            (ADD_URI, null, "chat = ?", selectionArgs, null);
 
-            if (c.getCount() == 0) {
-                layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-            } else {
-                layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 100);
+                    if (cursor.getCount() == 1) {
+                        layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+                    } else {
+                        layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, MainActivity.HEIGHT_OF_VIDEO);
+                    }
+                    cursor.close();
+                    streamLayout.setLayoutParams(layoutParams);
+                }catch (IllegalArgumentException e){
+
+                }
+
             }
-            c.close();
-            streamLayout.setLayoutParams(layoutParams);
+            query.close();
+
             return streamLayout;
         }
     }

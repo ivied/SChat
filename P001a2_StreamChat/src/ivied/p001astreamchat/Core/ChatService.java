@@ -127,7 +127,9 @@ public class ChatService extends Service {
                 new String[]{chatName}, null);
 
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            try{
             FactorySite.SiteName site = FactorySite.SiteName.valueOf(c.getString(0).toUpperCase());
+
             String fullChannelName = c.getString(0) + " " + c.getString(1);
 
             if (!channelCount.containsKey(fullChannelName)) {
@@ -136,6 +138,9 @@ public class ChatService extends Service {
                 Site siteClass = factorySite.getSite(site);
                 siteCount.put(fullChannelName, siteClass);
                 siteClass.prepareThread(siteClass, c.getString(1));
+
+            }
+            }catch (IllegalArgumentException e) {
 
             }
 

@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.VideoView.AddVideoStream;
 
 public class DialogLoadSavedChat extends DialogFragment {
 	final Uri SERVICE_URI = Uri.parse("content://ivied.p001astreamchat/channels/service");
@@ -56,7 +57,11 @@ public class DialogLoadSavedChat extends DialogFragment {
 					int color = c.getInt(2);
 					String personalName = c.getString(3);
 					String siteName = c.getString(0);
+                    try{
 					channels.add(new AddChatChannel(channelId,color,personalName, FactorySite.SiteName.valueOf(siteName.toUpperCase())));
+                    } catch ( IllegalArgumentException e) {
+                        channels.add(new AddChatChannel(channelId,color,personalName, AddVideoStream.VideoSiteName.valueOf(siteName)));
+                    }
 
 				}
 				AddChat callingActivity = (AddChat) getActivity();
