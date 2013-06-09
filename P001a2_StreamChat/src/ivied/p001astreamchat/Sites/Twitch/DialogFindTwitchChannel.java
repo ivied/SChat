@@ -26,7 +26,7 @@ import android.widget.EditText;
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.R;
 
-public class DialogTwitchChannels extends DialogFragment implements
+public class DialogFindTwitchChannel extends DialogFragment implements
 		OnClickListener {
 	EditText input;
 	CheckTwitchChannel checkTwitch;

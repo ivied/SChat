@@ -1,32 +1,49 @@
 package ivied.p001astreamchat.VideoView;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-import ivied.p001astreamchat.Core.MainActivity;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.Sites.Site;
+import ivied.p001astreamchat.Sites.Twitch.DialogTwitchChannelByGame;
+import ivied.p001astreamchat.Sites.Twitch.DialogTwitchTopGames;
+import ivied.p001astreamchat.Sites.Twitch.Twitch;
 
 /**
  * Created by Serv on 07.06.13.
  */
-public class AddVideoStream extends SherlockFragmentActivity implements View.OnClickListener {
+public class AddVideoStream extends SherlockFragmentActivity implements View.OnClickListener, DialogTwitchChannelByGame.TwitchSelectedListener {
 
 
     private Button btnAddTwitchVideo;
     HTML5WebView mWebView;
     EditText streamName;
     VideoSiteName site;
+
+    @Override
+    public void pasteTwitchChannel(String channel) {
+        streamName.setText(channel);
+    }
+
     public enum VideoSiteName {
         TWITCHStream
     }
@@ -34,7 +51,7 @@ public class AddVideoStream extends SherlockFragmentActivity implements View.OnC
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.add_video_stream);
+        setContentView (R.layout.add_video_stream);
         btnAddTwitchVideo = (Button) findViewById(R.id.btnTwitchAddVideo);
         btnAddTwitchVideo.setOnClickListener(this);
         streamName = (EditText) findViewById(R.id.editNameVideoStream);
@@ -47,7 +64,7 @@ public class AddVideoStream extends SherlockFragmentActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnTwitchAddVideo:
-                FrameLayout addShowVideo = (FrameLayout) findViewById(R.id.frame_add_show_video);
+              /*  FrameLayout addShowVideo = (FrameLayout) findViewById(R.id.frame_add_show_video);
                 mWebView = new HTML5WebView(this);
                String url = "<video x-webkit-airplay=\"allow\" controls=\"\" alt=\"Live Stream\" width=\"100%\" height=\"100%\" src=\"http://moxa.no-ip.biz/some_shit.m3u8\"></video>";
 
@@ -59,7 +76,11 @@ public class AddVideoStream extends SherlockFragmentActivity implements View.OnC
 
                 frameLayout.setLayoutParams(layoutParams);
                 addShowVideo.addView(frameLayout);
-                site = VideoSiteName.TWITCHStream;
+                site = VideoSiteName.TWITCHStream;*/
+                DialogTwitchTopGames dialogSelectTwitch = new DialogTwitchTopGames();
+                dialogSelectTwitch.show(getSupportFragmentManager(),"Show Twitch games");
+             /*   TwitchFindChannelPlaylist twitchFindChannelPlaylist = new TwitchFindChannelPlaylist();
+                twitchFindChannelPlaylist.execute("");*/
                 break;
         }
     }
@@ -88,4 +109,35 @@ public class AddVideoStream extends SherlockFragmentActivity implements View.OnC
 
 
     }
+
+  /*  class TwitchFindChannelPlaylist extends AsyncTask <String,Void,String> {
+
+        StringBuilder builder;
+        @Override
+        protected String doInBackground(String... params) {
+            Site site = new Twitch();
+            HttpGet get = new HttpGet( "http://www.twitch.tv/dandinh");
+            HttpResponse response = site.getResponse(get);
+
+            HttpEntity entity = response.getEntity();
+            InputStream content = null;
+            try {
+                content = entity.getContent();
+
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(content));
+                String line;
+            builder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                builder.append(line);
+            }
+                int i =0;
+                i++;
+            } catch (IOException e) {
+            e.printStackTrace();
+        }
+            String resp =builder.toString();
+            return resp;
+        }
+    }*/
 }

@@ -30,7 +30,7 @@ public class FragmentFindChannelTwitch extends FragmentAddChannelStandard implem
 	public void onClick(View v) {
 		switch (v.getId()){
 		case (R.id.btnChekChannelTwitch):
-			dlgTwitchChannels = new DialogTwitchChannels();
+			dlgTwitchChannels = new DialogFindTwitchChannel();
 			dlgTwitchChannels.show(getFragmentManager(), "Check twitch");
 			break;
 		}
