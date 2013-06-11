@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -12,7 +11,6 @@ import android.widget.ProgressBar;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
-import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,13 +18,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.Sites.Site;
+import ivied.p001astreamchat.Sites.AsyncDownloadJson;
 
 /**
  * Created by Serv on 09.06.13.
  */
-public class DialogTwitchChannelByGame extends SherlockDialogFragment implements DialogInterface.OnClickListener {
+public class DialogTwitchChannelByGame extends SherlockDialogFragment implements DialogInterface.OnClickListener, AsyncDownloadJson.GetJson {
     TwitchSelectedListener mCallback;
+
+
+
     public  interface TwitchSelectedListener {
         abstract public void pasteTwitchChannel(String channel);
     }
@@ -61,7 +62,7 @@ public class DialogTwitchChannelByGame extends SherlockDialogFragment implements
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         game =  getArguments().getString("game");
         game = game.replace(" ", "+");
-        downloadTwitchJson();
+        renewAdapter();
 
         adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.select_dialog_item, list);
@@ -85,53 +86,39 @@ public class DialogTwitchChannelByGame extends SherlockDialogFragment implements
         mCallback.pasteTwitchChannel(list.get(which));
     }
 
-    private void downloadTwitchJson() {
-        DownloadTwitchApi downloadApi = new DownloadTwitchApi( );
-        downloadApi.execute();
+    private void renewAdapter() {
+        AsyncDownloadJson.CustomDownloadJson downloadJson =
+                new AsyncDownloadJson.CustomDownloadJson(TWITCH_API_BY_GAME + game + HLS_TRUE, this);
+        AsyncDownloadJson asyncDownloadJson = new AsyncDownloadJson();
+        asyncDownloadJson.execute(downloadJson);
 
     }
 
-
-    class DownloadTwitchApi extends AsyncTask<Void,String,Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            HttpGet httpGet = new HttpGet( TWITCH_API_BY_GAME + game + HLS_TRUE  );
-            Site site = new Twitch();
-            StringBuilder builderJson =  site.jsonRequest(httpGet);
-            try {
-                JSONObject jsonObj = new JSONObject(builderJson.toString());
-                JSONArray jsonStreams = jsonObj.getJSONArray("streams");
-                String [] list = new String[jsonStreams.length()];
-                for (int i = 0;  i < jsonStreams.length(); i++) {
-                    JSONObject stream = (JSONObject) jsonStreams.get(i);
-                    JSONObject channel = stream.getJSONObject("channel");
-                    list[i] = channel.getString("display_name");
-
-                }
-                publishProgress(list);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
+    @Override
+    public void afterGetJson(String json) {
+        try {
+            JSONObject jsonObj = new JSONObject(json);
+            JSONArray jsonStreams = jsonObj.getJSONArray("streams");
+            String [] list = new String[jsonStreams.length()];
+            for (int i = 0;  i < jsonStreams.length(); i++) {
+                JSONObject stream = (JSONObject) jsonStreams.get(i);
+                JSONObject channel = stream.getJSONObject("channel");
+                list[i] = channel.getString("display_name");
+                pb.setVisibility(View.GONE);
+                adapter.clear();
+                for(String game : list){ adapter.add(game);}
+                adapter.notifyDataSetChanged();
             }
 
 
-            return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            super.onProgressUpdate(values);
-            pb.setVisibility(View.GONE);
-            adapter.clear();
-            for(String game : values){ adapter.add(game);}
-            adapter.notifyDataSetChanged();
-
-        }
-
 
     }
+
+
+
 
 
 }
