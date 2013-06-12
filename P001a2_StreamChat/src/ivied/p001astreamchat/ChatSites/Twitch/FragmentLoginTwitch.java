@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Sites.Twitch;
+package ivied.p001astreamchat.ChatSites.Twitch;
 
 import android.graphics.drawable.Drawable;
 
@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.ChatSites.FactorySite;
 
 /**
  * Created by Serv on 01.06.13.

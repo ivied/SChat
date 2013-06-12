@@ -1,8 +1,8 @@
 package ivied.p001astreamchat.AddChat;
 
-import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.ChatSites.FactorySite;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.VideoView.AddVideoStream;
+import ivied.p001astreamchat.VideoView.FactoryVideoViewSetter;
 
 public class AddChatChannel {
 	 String site;
@@ -11,7 +11,7 @@ public class AddChatChannel {
 	 String channelId;
 	 int drawable;
 	FactorySite.SiteName siteInt;
-    AddVideoStream.VideoSiteName siteVideoInt;
+    FactoryVideoViewSetter.VideoSiteName siteVideoInt;
 	 AddChatChannel (String channelId, int color, String name , FactorySite.SiteName site) {
 		this.channelId = channelId;
 		this.color = color;
@@ -30,7 +30,7 @@ public class AddChatChannel {
 		}
 	}
 
-    AddChatChannel (String channelId, int color, String name , AddVideoStream.VideoSiteName site) {
+    AddChatChannel (String channelId, int color, String name , FactoryVideoViewSetter.VideoSiteName site) {
         this.channelId = channelId;
         this.color = color;
         this.name = name;

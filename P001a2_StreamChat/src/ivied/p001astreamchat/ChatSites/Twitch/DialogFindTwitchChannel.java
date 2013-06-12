@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Sites.Twitch;
+package ivied.p001astreamchat.ChatSites.Twitch;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,10 +20,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.widget.EditText;
 
-import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.R;
 
 public class DialogFindTwitchChannel extends DialogFragment implements

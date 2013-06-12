@@ -22,9 +22,10 @@ import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.MyContentProvider;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.VideoView.AddVideoStream;
-import ivied.p001astreamchat.VideoView.FragmentWebView;
+import ivied.p001astreamchat.VideoView.FactoryVideoViewSetter;
 import ivied.p001astreamchat.VideoView.HTML5WebView;
+import ivied.p001astreamchat.VideoView.TwitchVideoSetter;
+import ivied.p001astreamchat.VideoView.VideoViewSetter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +36,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -88,14 +87,7 @@ public class ChatList extends SherlockFragmentActivity {
 
 	public static class CursorLoaderListFragment extends SherlockListFragment
 			implements LoaderManager.LoaderCallbacks<Cursor>,
-			OnItemClickListener, OnMenuItemClickListener {
-		
-		
-		
-		
-			  
-			  
-			  
+			OnItemClickListener, OnMenuItemClickListener, VideoViewSetter.SetVideoView {
 
 		private ListView listView;
 		private ActionMode mMode;
@@ -127,6 +119,7 @@ public class ChatList extends SherlockFragmentActivity {
 		SendMessageService SendService;
         FrameLayout streamLayout;
         WebView streamView;
+        RelativeLayout chatLayout;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -159,10 +152,8 @@ public class ChatList extends SherlockFragmentActivity {
             mListShown = true;
             TabInfo tab = new TabInfo(tagNumber);
             chatName = tab.findTag();
-            RelativeLayout chatLayout = (RelativeLayout) root.findViewById(R.id.chatLayout);
-            streamLayout = getStreamLayout();
-
-            if (streamLayout != null)  chatLayout.addView(streamLayout);
+            chatLayout = (RelativeLayout) root.findViewById(R.id.chatLayout);
+            getStreamLayout();
 
       /*    Fragment fragmentVideo = new FragmentWebView();
             FrameLayout mWebView = (FrameLayout )fragmentVideo.getView().findViewById(R.id.fullscreen_custom_content);
@@ -536,32 +527,19 @@ public class ChatList extends SherlockFragmentActivity {
 			return false;
 		}
 
-        public FrameLayout getStreamLayout() {
+        public void getStreamLayout() {
 
             Cursor query = MyApp.getContext().getContentResolver().query(ADD_URI,
                     new String[]{"site", "channel"}, "chat = ?",
                     new String[]{chatName}, null);
             for (query.moveToFirst(); !query.isAfterLast(); query.moveToNext() ){
                 try {
-                AddVideoStream.VideoSiteName.valueOf(query.getString(0));
-                    HTML5WebView mWebView = new HTML5WebView(getSherlockActivity());
-                    mWebView.loadUrl(query.getString(1));
+
+                    FactoryVideoViewSetter factory = new FactoryVideoViewSetter();
+                    VideoViewSetter videoViewSetter = factory.getVideoSite(FactoryVideoViewSetter.VideoSiteName.valueOf(query.getString(0)), getSherlockActivity(), this);
+                    videoViewSetter.getVideoView(query.getString(1));
 
 
-                    streamLayout = mWebView.getLayout();
-
-                    String[] selectionArgs = new String[]{chatName};
-                    FrameLayout.LayoutParams layoutParams;
-                    Cursor cursor = getSherlockActivity().getContentResolver().query
-                            (ADD_URI, null, "chat = ?", selectionArgs, null);
-
-                    if (cursor.getCount() == 1) {
-                        layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
-                    } else {
-                        layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, MainActivity.HEIGHT_OF_VIDEO);
-                    }
-                    cursor.close();
-                    streamLayout.setLayoutParams(layoutParams);
                 }catch (IllegalArgumentException e){
 
                 }
@@ -569,7 +547,26 @@ public class ChatList extends SherlockFragmentActivity {
             }
             query.close();
 
-            return streamLayout;
+
+        }
+
+        @Override
+        public void setVideoView(HTML5WebView html5WebView, String url, FactoryVideoViewSetter.VideoSiteName videoSiteName) {
+            streamLayout = html5WebView.getLayout();
+            String[] selectionArgs = new String[]{chatName};
+            FrameLayout.LayoutParams layoutParams;
+            Cursor cursor = getSherlockActivity().getContentResolver().query
+                    (ADD_URI, null, "chat = ?", selectionArgs, null);
+
+            if (cursor.getCount() == 1) {
+                layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
+            } else {
+                layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, MainActivity.HEIGHT_OF_VIDEO);
+            }
+            cursor.close();
+            streamLayout.setLayoutParams(layoutParams);
+            chatLayout.addView(streamLayout);
+
         }
     }
 

@@ -56,8 +56,8 @@ public class AdapterChannelList extends BaseAdapter {
 
 		TextView textChannel = (TextView) convertView
 				.findViewById(R.id.textChannelNames);
-		textChannel.setText(Html.fromHtml(channel.channelId + "<br>" + "<\br>"
-				+ channel.name + "<\br>"));
+		textChannel.setText(Html.fromHtml(channel.name + "<br>" + "<\br>"
+				+ channel.channelId + "<\br>"));
 
 		((ImageView) convertView.findViewById(R.id.imageSite))
 				.setImageResource(channel.drawable);

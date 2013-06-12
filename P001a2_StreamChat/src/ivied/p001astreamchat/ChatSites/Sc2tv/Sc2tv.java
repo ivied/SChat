@@ -1,10 +1,8 @@
-package ivied.p001astreamchat.Sites.Sc2tv;
+package ivied.p001astreamchat.ChatSites.Sc2tv;
 
-import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.Spannable;
@@ -13,16 +11,13 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
@@ -35,8 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,19 +44,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
-import ivied.p001astreamchat.ChatView.ActionProviderLink;
-import ivied.p001astreamchat.ChatView.AdapterChatCursor;
-import ivied.p001astreamchat.Core.MyContentProvider;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.ChatSites.FactorySite;
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
-import ivied.p001astreamchat.Sites.Site;
-import ivied.p001astreamchat.Sites.SmileHelper;
-
+import ivied.p001astreamchat.ChatSites.Site;
 
 
 /**

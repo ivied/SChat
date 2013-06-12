@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +16,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ivied.p001astreamchat.Core.MainActivity;
-import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.ChatSites.FactorySite;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.VideoView.AddVideoStream;
+import ivied.p001astreamchat.VideoView.FactoryVideoViewSetter;
 
 public class DialogChoiceSite extends DialogFragment implements  OnClickListener {
 	 public static final String SITE = "site";
@@ -33,7 +33,7 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
         DialogChoiceSite dlg = new DialogChoiceSite();
         Bundle args = new Bundle();
         for (AddChatChannel channel : channels){
-            for (AddVideoStream.VideoSiteName siteName : AddVideoStream.VideoSiteName.values()){
+            for (FactoryVideoViewSetter.VideoSiteName siteName : FactoryVideoViewSetter.VideoSiteName.values()){
                 if (channel.site.equalsIgnoreCase(siteName.name())) flag = 1;
             }
         }

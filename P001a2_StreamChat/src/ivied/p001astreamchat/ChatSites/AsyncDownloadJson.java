@@ -1,10 +1,10 @@
-package ivied.p001astreamchat.Sites;
+package ivied.p001astreamchat.ChatSites;
 
 import android.os.AsyncTask;
 
 import org.apache.http.client.methods.HttpGet;
 
-import ivied.p001astreamchat.Sites.Twitch.Twitch;
+import ivied.p001astreamchat.ChatSites.Twitch.Twitch;
 
 /**
  * Created by Serv on 09.06.13.

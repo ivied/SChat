@@ -2,7 +2,6 @@ package ivied.p001astreamchat.ChatView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +10,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +23,8 @@ import android.widget.ImageView;
 
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.Sites.FactorySite;
-import ivied.p001astreamchat.Sites.Site;
+import ivied.p001astreamchat.ChatSites.FactorySite;
+import ivied.p001astreamchat.ChatSites.Site;
 
 public class DialogSmilesBySite extends DialogFragment {
 	FactorySite.SiteName site;

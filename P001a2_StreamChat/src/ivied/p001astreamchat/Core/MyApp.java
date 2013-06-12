@@ -3,7 +3,7 @@ package ivied.p001astreamchat.Core;
 import android.app.Application;
 import android.content.Context;
 
-import ivied.p001astreamchat.Sites.SmileHelper;
+import ivied.p001astreamchat.ChatSites.SmileHelper;
 
 public class MyApp extends Application {
 	    private  static Context context;

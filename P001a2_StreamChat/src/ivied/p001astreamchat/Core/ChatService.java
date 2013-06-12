@@ -21,8 +21,8 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import ivied.p001astreamchat.Sites.FactorySite;
-import ivied.p001astreamchat.Sites.Site;
+import ivied.p001astreamchat.ChatSites.FactorySite;
+import ivied.p001astreamchat.ChatSites.Site;
 import ivied.p001astreamchat.R;
 
 /**

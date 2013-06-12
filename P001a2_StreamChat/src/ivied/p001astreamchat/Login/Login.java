@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.ChatSites.FactorySite;
 
 
 

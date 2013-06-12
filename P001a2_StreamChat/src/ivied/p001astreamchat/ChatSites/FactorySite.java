@@ -1,8 +1,7 @@
-package ivied.p001astreamchat.Sites;
+package ivied.p001astreamchat.ChatSites;
 
-import ivied.p001astreamchat.Sites.Site;
-import ivied.p001astreamchat.Sites.Sc2tv.Sc2tv;
-import ivied.p001astreamchat.Sites.Twitch.Twitch;
+import ivied.p001astreamchat.ChatSites.Sc2tv.Sc2tv;
+import ivied.p001astreamchat.ChatSites.Twitch.Twitch;
 
 /**
  * Created by Serv on 30.05.13.

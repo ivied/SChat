@@ -1,10 +1,5 @@
 package ivied.p001astreamchat.Core;
 
-import java.io.IOException;
-
-import org.jibble.pircbot.IrcException;
-import org.jibble.pircbot.NickAlreadyInUseException;
-
 import android.app.Service;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,9 +12,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.Sites.FactorySite;
-import ivied.p001astreamchat.Sites.Site;
-import ivied.p001astreamchat.Sites.Twitch.Twitch;
+import ivied.p001astreamchat.ChatSites.FactorySite;
+import ivied.p001astreamchat.ChatSites.Site;
+import ivied.p001astreamchat.ChatSites.Twitch.Twitch;
 
 public class SendMessageService extends Service {
 	private Handler handler = new Handler();

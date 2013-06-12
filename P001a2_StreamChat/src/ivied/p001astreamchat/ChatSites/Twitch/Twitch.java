@@ -1,6 +1,5 @@
-package ivied.p001astreamchat.Sites.Twitch;
+package ivied.p001astreamchat.ChatSites.Twitch;
 
-import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -27,14 +26,12 @@ import java.util.concurrent.Executors;
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
-import ivied.p001astreamchat.Core.MyContentProvider;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.Sites.FactorySite;
-import ivied.p001astreamchat.Sites.Site;
-import ivied.p001astreamchat.Sites.SmileHelper;
+import ivied.p001astreamchat.ChatSites.FactorySite;
+import ivied.p001astreamchat.ChatSites.Site;
 
 /**
  * Created by Serv on 30.05.13.

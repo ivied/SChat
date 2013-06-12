@@ -1,13 +1,11 @@
-package ivied.p001astreamchat.Sites;
+package ivied.p001astreamchat.ChatSites;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 
-import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -15,19 +13,11 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
 
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.MyContentProvider;
-import ivied.p001astreamchat.Sites.FactorySite;
-import ivied.p001astreamchat.Sites.Sc2tv.Sc2tv;
-import ivied.p001astreamchat.Sites.Site;
 
 /**
  * Created by Serv on 03.06.13.

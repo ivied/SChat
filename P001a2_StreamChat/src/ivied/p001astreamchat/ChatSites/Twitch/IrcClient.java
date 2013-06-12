@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.Sites.Twitch;
+package ivied.p001astreamchat.ChatSites.Twitch;
 
 import org.jibble.pircbot.PircBot;
 

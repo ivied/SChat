@@ -14,8 +14,7 @@ import android.widget.TextView;
 
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.Sites.FactorySite;
-import ivied.p001astreamchat.Sites.Site;
+import ivied.p001astreamchat.ChatSites.FactorySite;
 
 
 public class DialogChoiceSmile extends DialogFragment implements  OnClickListener {

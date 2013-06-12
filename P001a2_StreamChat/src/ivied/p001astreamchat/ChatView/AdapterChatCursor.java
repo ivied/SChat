@@ -1,26 +1,14 @@
 package ivied.p001astreamchat.ChatView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Spannable;
-import android.text.Spannable.Factory;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
-import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import ivied.p001astreamchat.Core.MainActivity;
-import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.ChatSites.FactorySite;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.Sites.Sc2tv.Sc2tv;
-import ivied.p001astreamchat.Sites.Site;
+import ivied.p001astreamchat.ChatSites.Site;
 
 
 public class AdapterChatCursor extends SimpleCursorAdapter {

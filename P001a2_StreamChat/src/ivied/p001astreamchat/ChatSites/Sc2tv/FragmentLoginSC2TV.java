@@ -1,29 +1,15 @@
-package ivied.p001astreamchat.Sites.Sc2tv;
+package ivied.p001astreamchat.ChatSites.Sc2tv;
 
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.widget.Toast;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
-import ivied.p001astreamchat.Login.Login;
 
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.ChatSites.FactorySite;
 
 /**
  * Created by Serv on 01.06.13.
