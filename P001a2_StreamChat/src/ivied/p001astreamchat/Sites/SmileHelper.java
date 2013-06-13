@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.ChatSites;
+package ivied.p001astreamchat.Sites;
 
 import android.content.ContentValues;
 import android.database.Cursor;

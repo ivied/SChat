@@ -33,7 +33,7 @@
         <activity android:name=".Core.Preference"></activity>
         <activity android:name=".AddChat.AddChat"></activity>
         <activity android:name=".AddChat.AddChannel"></activity>
-        <activity android:name=".VideoView.AddVideoStream"></activity>
+        <activity android:name=".AddChat.AddVideoStream"></activity>
         <activity android:name=".Core.Help"></activity>
        
     </application>

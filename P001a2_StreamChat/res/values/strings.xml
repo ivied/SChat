@@ -36,7 +36,7 @@
 	<string name="hint_type_personal_Name">Prefer name</string>
 	<string name="hint_type_sc2tv_code">sc2tv code</string>
 	<string name="hint_type_twitch_add">Type twitch channel name</string>
-	<string name="btn_chek_twitch_channel">Preess for check channel</string>
+
 	<string name="login_to_sc2tv">Login to sc2tv</string>
 	<string name="login_to_twitch">Login to twitch</string>
 	<string name="notify_channels_not_set">Set some channels for send message in menu or send private message</string>
@@ -72,4 +72,10 @@
     <string name="dialog_field_add_video">Add video stream</string>
     <string name="btn_add_twitch_video">Add Twitch video</string>
     <string name="toast_add_stream_first">Add stream first</string>
+    <string name="btn_find_Twitch_via_api">Find channel via Twitch API</string>
+    <string name="dialog_title_what_add">What you will add</string>
+    <string name="hint_type_gg_streamer">Type GG streamer</string>
+    <string name="btn_check_stream">Check Stream</string>
+
+
 </resources>

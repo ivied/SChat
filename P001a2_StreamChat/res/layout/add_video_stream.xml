@@ -31,17 +31,16 @@
                 android:layout_alignParentLeft="true"
                 android:layout_toLeftOf="@+id/imageSelectVideoStream"/>
     </RelativeLayout>
+    <FrameLayout
+            android:id="@+id/frameToVideoFragments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
+    </FrameLayout>
     <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-        <Button
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:text="@string/btn_add_twitch_video"
-                android:id="@+id/btnTwitchAddVideo"
-                />
 
     </LinearLayout>
 

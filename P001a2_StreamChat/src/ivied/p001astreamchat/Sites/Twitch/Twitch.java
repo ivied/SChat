@@ -1,5 +1,6 @@
-package ivied.p001astreamchat.ChatSites.Twitch;
+package ivied.p001astreamchat.Sites.Twitch;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.util.Log;
 
+import org.apache.commons.codec.binary.Hex;
 import org.apache.http.client.methods.HttpGet;
 import org.jibble.pircbot.IrcException;
 import org.jibble.pircbot.NickAlreadyInUseException;
@@ -17,21 +19,29 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
+import ivied.p001astreamchat.Sites.AsyncDownloadJson;
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.ChatSites.FactorySite;
-import ivied.p001astreamchat.ChatSites.Site;
+import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.Sites.Site;
+import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
+import ivied.p001astreamchat.VideoView.HTML5WebView;
+import ivied.p001astreamchat.Sites.VideoViewSetter;
 
 /**
  * Created by Serv on 30.05.13.

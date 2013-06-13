@@ -1,8 +1,8 @@
 package ivied.p001astreamchat.AddChat;
 
-import ivied.p001astreamchat.ChatSites.FactorySite;
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.VideoView.FactoryVideoViewSetter;
+import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 
 public class AddChatChannel {
 	 String site;

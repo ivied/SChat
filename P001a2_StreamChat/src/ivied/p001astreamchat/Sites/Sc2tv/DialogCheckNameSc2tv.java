@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.ChatSites.Sc2tv;
+package ivied.p001astreamchat.Sites.Sc2tv;
 
 import java.io.BufferedReader;
 import java.io.IOException;

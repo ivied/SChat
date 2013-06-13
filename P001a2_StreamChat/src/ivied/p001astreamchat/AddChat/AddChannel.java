@@ -1,6 +1,6 @@
 package ivied.p001astreamchat.AddChat;
 
-import ivied.p001astreamchat.ChatSites.FactorySite;
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
 
 import android.content.Intent;
@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class AddChannel extends SherlockFragmentActivity implements
-		OnClickListener, DialogColorPicker.OnColorChangedListener {
+		OnClickListener, DialogColorPicker.OnColorChangedListener, SelectedListener {
 
 	FragmentTransaction fTrans;
 	TextView textColor;
@@ -118,4 +118,8 @@ public class AddChannel extends SherlockFragmentActivity implements
 
 	}
 
+    @Override
+    public void pasteChannel(String channel) {
+        channelId.setText(channel.toLowerCase());
+    }
 }

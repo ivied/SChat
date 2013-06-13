@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.ChatSites.Sc2tv;
+package ivied.p001astreamchat.Sites.Sc2tv;
 
 import java.net.URL;
 import java.util.ArrayList;

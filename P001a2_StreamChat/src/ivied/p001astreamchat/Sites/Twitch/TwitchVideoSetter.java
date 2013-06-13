@@ -1,6 +1,7 @@
-package ivied.p001astreamchat.VideoView;
+package ivied.p001astreamchat.Sites.Twitch;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 import org.apache.commons.codec.binary.Hex;
 import org.json.JSONException;
@@ -12,7 +13,13 @@ import java.net.URLEncoder;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-import ivied.p001astreamchat.ChatSites.AsyncDownloadJson;
+import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
+import ivied.p001astreamchat.Core.MyApp;
+import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.Sites.AsyncDownloadJson;
+import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
+import ivied.p001astreamchat.Sites.VideoViewSetter;
+import ivied.p001astreamchat.VideoView.HTML5WebView;
 
 /**
  * Created by Serv on 12.06.13.
@@ -28,23 +35,34 @@ public class TwitchVideoSetter extends VideoViewSetter implements AsyncDownloadJ
     HTML5WebView mWebView;
     String channel;
 
-    public TwitchVideoSetter(Context context, SetVideoView setVideoView) {
+    /*public TwitchVideoSetter(Context context, SetVideoView setVideoView) {
         super(context, setVideoView);
-    }
+    }*/
 
 
     @Override
-    public void getVideoView(String channel) {
+    public void getVideoView(String channel, Context context, SetVideoView setVideoView) {
         this.channel = channel.toLowerCase();
         AsyncDownloadJson.CustomDownloadJson downloadJson =
                 new AsyncDownloadJson.CustomDownloadJson(TOKEN_ADDRESS_1 +channel + TOKEN_ADDRESS_2 , this);
         AsyncDownloadJson asyncDownloadJson = new AsyncDownloadJson();
         asyncDownloadJson.execute(downloadJson);
+        this.setVideoView = setVideoView;
+        this.context = context;
 
 
 
     }
 
+    @Override
+    public Drawable getLogo() {
+        return MyApp.getContext().getResources().getDrawable(R.drawable.twitch);
+    }
+
+    @Override
+    public FragmentAddChannelStandard getFragmentAddChannel() {
+        return new FragmentFindChannelTwitch();
+    }
 
 
     public static String hmacSha1(String value, String key) {
@@ -90,6 +108,9 @@ public class TwitchVideoSetter extends VideoViewSetter implements AsyncDownloadJ
             e.printStackTrace();
         }
     }
+
+
+    @Override
 
     public FactoryVideoViewSetter.VideoSiteName getEnum() {
         return FactoryVideoViewSetter.VideoSiteName.TWITCHStream;

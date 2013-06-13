@@ -1,64 +1,68 @@
-package ivied.p001astreamchat.VideoView;
+package ivied.p001astreamchat.AddChat;
+
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
-import ivied.p001astreamchat.ChatSites.Twitch.DialogTwitchChannelByGame;
-import ivied.p001astreamchat.ChatSites.Twitch.DialogTwitchTopGames;
 import ivied.p001astreamchat.R;
-
+import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
+import ivied.p001astreamchat.VideoView.HTML5WebView;
+import ivied.p001astreamchat.Sites.VideoViewSetter;
+import android.support.v4.app.FragmentTransaction;
 /**
  * Created by Serv on 07.06.13.
  */
-public class AddVideoStream extends SherlockFragmentActivity implements View.OnClickListener, DialogTwitchChannelByGame.TwitchSelectedListener, VideoViewSetter.SetVideoView {
+public class AddVideoStream extends SherlockFragmentActivity implements SelectedListener, VideoViewSetter.SetVideoView {
 
-    private Button btnAddTwitchVideo;
 
+    FactoryVideoViewSetter factorySite = new FactoryVideoViewSetter();
     EditText streamName;
     FactoryVideoViewSetter.VideoSiteName site;
     String  channel;
+    FragmentAddChannelStandard fragment;
+    EditText channelId;
+    FactoryVideoViewSetter factoryVideoViewSetter = new FactoryVideoViewSetter();
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView (R.layout.add_video_stream);
-        btnAddTwitchVideo = (Button) findViewById(R.id.btnTwitchAddVideo);
-        btnAddTwitchVideo.setOnClickListener(this);
+        Intent intent = getIntent();
+
+       site = (FactoryVideoViewSetter.VideoSiteName) intent.getSerializableExtra(DialogChoiceSite.SITE);
+        FragmentTransaction fTrans = getSupportFragmentManager().beginTransaction();
+
+       fragment = factorySite.getVideoSite(site).getFragmentAddChannel();
+        fTrans.add(R.id.frameToVideoFragments, fragment);
+        fTrans.commit();
+
         streamName = (EditText) findViewById(R.id.editNameVideoStream);
 
 
     }
 
 
-
     @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btnTwitchAddVideo:
-
-                DialogFragment dialogSelectTwitch = new DialogTwitchTopGames();
-                dialogSelectTwitch.show(getSupportFragmentManager(),"Show Twitch games");
-
-                break;
-        }
+    public void onResume() {
+        super.onResume();
+        channelId = fragment.getEditTextChannel();
     }
 
 
     @Override
-    public void pasteTwitchChannel(String channel) {
+    public void pasteChannel(String channel) {
 
         streamName.setText(channel);
+        channelId.setText(channel.toLowerCase());
 
-        TwitchVideoSetter videoSetter = new TwitchVideoSetter( this ,this);
-        videoSetter.getVideoView(channel.toLowerCase());
+        VideoViewSetter videoSetter = factoryVideoViewSetter.getVideoSite(site);
+        videoSetter.getVideoView(channel.toLowerCase(), this, this);
 
 
 
@@ -89,7 +93,7 @@ public class AddVideoStream extends SherlockFragmentActivity implements View.OnC
 
             if(!channel.equalsIgnoreCase("")){
 
-                i.putExtra("channelId", channel);
+                i.putExtra("channelId", channelId.getText().toString());
 
                 i.putExtra("color", Color.BLACK);
                 i.putExtra("name", streamName.getText().toString());

@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.ChatSites.Twitch;
+package ivied.p001astreamchat.Sites.Twitch;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -22,13 +23,30 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.EditText;
 
+import ivied.p001astreamchat.AddChat.SelectedListener;
 import ivied.p001astreamchat.R;
 
 public class DialogFindTwitchChannel extends DialogFragment implements
 		OnClickListener {
 	EditText input;
 	CheckTwitchChannel checkTwitch;
+    SelectedListener mCallback;
     final static String CHECK_CHANNEL = "http://api.justin.tv/api/stream/list.json?channel=";
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (SelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement SelectedListener ");
+        }
+    }
+
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 		input = new EditText(getActivity());
@@ -39,6 +57,7 @@ public class DialogFindTwitchChannel extends DialogFragment implements
 		return adb.create();
 
 	}
+
 
 	@Override
 	public void onClick(DialogInterface arg0, int arg1) {
@@ -59,7 +78,7 @@ public class DialogFindTwitchChannel extends DialogFragment implements
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				((EditText) getActivity().findViewById(R.id.editChannelTwitch)).setText(channel);
+                mCallback.pasteChannel(channel);
 			}
 		}
 	}

@@ -22,10 +22,9 @@ import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.MyContentProvider;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.VideoView.FactoryVideoViewSetter;
+import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 import ivied.p001astreamchat.VideoView.HTML5WebView;
-import ivied.p001astreamchat.VideoView.TwitchVideoSetter;
-import ivied.p001astreamchat.VideoView.VideoViewSetter;
+import ivied.p001astreamchat.Sites.VideoViewSetter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -536,8 +535,8 @@ public class ChatList extends SherlockFragmentActivity {
                 try {
 
                     FactoryVideoViewSetter factory = new FactoryVideoViewSetter();
-                    VideoViewSetter videoViewSetter = factory.getVideoSite(FactoryVideoViewSetter.VideoSiteName.valueOf(query.getString(0)), getSherlockActivity(), this);
-                    videoViewSetter.getVideoView(query.getString(1));
+                    VideoViewSetter videoViewSetter = factory.getVideoSite(FactoryVideoViewSetter.VideoSiteName.valueOf(query.getString(0)));
+                    videoViewSetter.getVideoView(query.getString(1), getSherlockActivity(), this);
 
 
                 }catch (IllegalArgumentException e){

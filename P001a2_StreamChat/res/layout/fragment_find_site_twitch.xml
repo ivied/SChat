@@ -4,11 +4,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btnChekChannelTwitch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_chek_twitch_channel" />
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+        <Button
+
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:text="@string/btn_find_Twitch_via_api"
+                android:id="@+id/btnTwitchViaApi"
+                android:layout_weight="1"
+                />
+
+        <Button
+            android:id="@+id/btnCheckChannelTwitch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Check Twitch channel"
+            android:layout_weight="1"/>
+    </LinearLayout>
 
     <EditText
         android:id="@+id/editChannelTwitch"

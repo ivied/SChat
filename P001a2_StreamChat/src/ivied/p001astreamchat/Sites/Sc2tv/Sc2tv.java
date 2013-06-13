@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.ChatSites.Sc2tv;
+package ivied.p001astreamchat.Sites.Sc2tv;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -48,10 +48,10 @@ import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.ChatSites.FactorySite;
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
-import ivied.p001astreamchat.ChatSites.Site;
+import ivied.p001astreamchat.Sites.Site;
 
 
 /**

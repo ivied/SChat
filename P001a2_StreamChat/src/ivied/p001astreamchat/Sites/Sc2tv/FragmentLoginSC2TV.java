@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.ChatSites.Sc2tv;
+package ivied.p001astreamchat.Sites.Sc2tv;
 
 import android.graphics.drawable.Drawable;
 
@@ -9,7 +9,7 @@ import org.apache.http.client.methods.HttpPost;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.ChatSites.FactorySite;
+import ivied.p001astreamchat.Sites.FactorySite;
 
 /**
  * Created by Serv on 01.06.13.

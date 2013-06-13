@@ -28,10 +28,9 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
 import ivied.p001astreamchat.Core.MainActivity;
-import ivied.p001astreamchat.ChatSites.FactorySite;
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.VideoView.AddVideoStream;
-import ivied.p001astreamchat.VideoView.FactoryVideoViewSetter;
+import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 
 public class AddChat extends SherlockFragmentActivity implements OnClickListener, OnItemClickListener{
     static final int TASK_ADD = 1;

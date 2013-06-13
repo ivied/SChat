@@ -23,8 +23,8 @@ import android.widget.ImageView;
 
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.ChatSites.FactorySite;
-import ivied.p001astreamchat.ChatSites.Site;
+import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.Sites.Site;
 
 public class DialogSmilesBySite extends DialogFragment {
 	FactorySite.SiteName site;

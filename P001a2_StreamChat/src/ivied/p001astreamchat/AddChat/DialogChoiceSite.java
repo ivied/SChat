@@ -16,10 +16,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ivied.p001astreamchat.Core.MainActivity;
-import ivied.p001astreamchat.ChatSites.FactorySite;
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.VideoView.AddVideoStream;
-import ivied.p001astreamchat.VideoView.FactoryVideoViewSetter;
+import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 
 public class DialogChoiceSite extends DialogFragment implements  OnClickListener {
 	 public static final String SITE = "site";
@@ -44,7 +43,7 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getDialog().setTitle(getResources().getString(R.string.dialog_select_site));
+        getDialog().setTitle(getResources().getString(R.string.dialog_title_what_add));
 
 
 
@@ -56,7 +55,7 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
         for(FactorySite.SiteName siteName : FactorySite.SiteName.values()){
 
 
-            String text = "Add " + siteName.name() + " channel";
+            String text = "Add " + siteName.name() + " chat channel";
             Drawable drawable =  mFactorySite.getSite(siteName).getLogo();
             int id = MainActivity.ID_SITE_SELECT + siteName.ordinal();
             TextView chatChannel =  createTextView(drawable, text, id);
@@ -82,11 +81,9 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
             if (siteName.ordinal() == id) sendResult(siteName);
         }
         if (v.getId() == 25) {
+            DialogFragment dlgSelectStreamSite = new DialogSelectStreamSite();
+            dlgSelectStreamSite.show(getFragmentManager(),"Select stream site");
 
-            Intent intent = new Intent(getActivity(), AddVideoStream.class);
-
-            intent.putExtra(FOR, "add");
-            getActivity().startActivityForResult(intent, AddChat.TASK_ADD_VIDEO);
         }
 
     }

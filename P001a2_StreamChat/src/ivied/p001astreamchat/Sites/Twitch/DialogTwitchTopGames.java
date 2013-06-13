@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.ChatSites.Twitch;
+package ivied.p001astreamchat.Sites.Twitch;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.ChatSites.AsyncDownloadJson;
+import ivied.p001astreamchat.Sites.AsyncDownloadJson;
 
 /**
  * Created by Serv on 09.06.13.

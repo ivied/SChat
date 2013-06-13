@@ -1,4 +1,4 @@
-package ivied.p001astreamchat.ChatSites.Sc2tv;
+package ivied.p001astreamchat.Sites.Sc2tv;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;

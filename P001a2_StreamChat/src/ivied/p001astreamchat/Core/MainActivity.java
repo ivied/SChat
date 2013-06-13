@@ -37,7 +37,7 @@ import com.actionbarsherlock.view.MenuItem;
 import ivied.p001astreamchat.AddChat.AddChat;
 import ivied.p001astreamchat.ChatView.ChatList;
 import ivied.p001astreamchat.ChatView.DialogChoiceSmile;
-import ivied.p001astreamchat.ChatSites.FactorySite;
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
 

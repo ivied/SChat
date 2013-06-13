@@ -12,8 +12,8 @@ import android.support.v4.app.DialogFragment;
 import android.widget.ListView;
 
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.ChatSites.FactorySite;
-import ivied.p001astreamchat.VideoView.FactoryVideoViewSetter;
+import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 
 public class DialogLoadSavedChat extends DialogFragment {
 	final Uri SERVICE_URI = Uri.parse("content://ivied.p001astreamchat/channels/service");
