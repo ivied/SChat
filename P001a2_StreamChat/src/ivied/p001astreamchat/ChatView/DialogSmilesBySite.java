@@ -51,27 +51,27 @@ public class DialogSmilesBySite extends DialogFragment {
 		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
 		int width = display.getWidth(); 
 		int x = (int) Math.round((double)width/ 80);
-		GridView sc2tvSmile =(GridView) v.findViewById(R.id.gridChannelList);
-		sc2tvSmile.setNumColumns(x);
+		GridView gridSmile =(GridView) v.findViewById(R.id.gridChannelList);
+		gridSmile.setNumColumns(x);
 		
-		sc2tvSmile.setAdapter(new ImageAdapter(getActivity()));
+		gridSmile.setAdapter(new ImageAdapter(getActivity()));
 	
-		sc2tvSmile.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View v,
-				int position, long id) {
-				onDismiss(getDialog());
+		gridSmile.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                onDismiss(getDialog());
 
                 String emo = "null";
-				EditText message = (EditText) getActivity().findViewById(MainActivity.focus+1);
-                for (Map.Entry<String, Bitmap> smile : smileMap.entrySet()){
-                   if (smile.getValue().equals(idMap.get(position))) emo = smile.getKey();
+                EditText message = (EditText) getActivity().findViewById(MainActivity.focus + 1);
+                for (Map.Entry<String, Bitmap> smile : smileMap.entrySet()) {
+                    if (smile.getValue().equals(idMap.get(position))) emo = smile.getKey();
                 }
+                if( siteClass.getSiteName().equalsIgnoreCase("sc2tv")) emo = ":s"+emo;
+                message.setText(Html.fromHtml(message.getText().toString() + " " + emo));
 
-					 message.setText(Html.fromHtml(message.getText().toString() + " " + emo));
-					 
-					
-			}
-		});
+
+            }
+        });
 				
 		
 

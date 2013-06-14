@@ -59,10 +59,10 @@ public class AddVideoStream extends SherlockFragmentActivity implements Selected
     public void pasteChannel(String channel) {
 
         streamName.setText(channel);
-        channelId.setText(channel.toLowerCase());
+        channelId.setText(channel);
 
         VideoViewSetter videoSetter = factoryVideoViewSetter.getVideoSite(site);
-        videoSetter.getVideoView(channel.toLowerCase(), this, this);
+        videoSetter.getVideoView(channel, this, this);
 
 
 
@@ -70,7 +70,8 @@ public class AddVideoStream extends SherlockFragmentActivity implements Selected
 
     @Override
     public void setVideoView(HTML5WebView html5WebView, String url, FactoryVideoViewSetter.VideoSiteName videoSiteName) {
-        channel = url;
+        channelId.setText(url);
+
         site = videoSiteName;
         FrameLayout addShowVideo = (FrameLayout) findViewById(R.id.frame_add_show_video);
         FrameLayout frameLayout = html5WebView.getLayout();
@@ -87,24 +88,14 @@ public class AddVideoStream extends SherlockFragmentActivity implements Selected
     public void onClickBtnAddStreamVideo(View v) {
 
         Intent i =new Intent() ;
-        try {
 
+        i.putExtra("channelId", channelId.getText().toString());
 
-
-            if(!channel.equalsIgnoreCase("")){
-
-                i.putExtra("channelId", channelId.getText().toString());
-
-                i.putExtra("color", Color.BLACK);
-                i.putExtra("name", streamName.getText().toString());
-                i.putExtra("site", site);
-                setResult(RESULT_OK, i);
-                finish();
-            }
-        }catch (Exception e){
-            Toast.makeText(this, getString(R.string.toast_add_stream_first), Toast.LENGTH_SHORT).show();
-        }
-
+        i.putExtra("color", Color.BLACK);
+        i.putExtra("name", streamName.getText().toString());
+        i.putExtra("site", site);
+        setResult(RESULT_OK, i);
+        finish();
 
     }
 

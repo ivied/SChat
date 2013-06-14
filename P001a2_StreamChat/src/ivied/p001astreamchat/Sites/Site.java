@@ -66,12 +66,15 @@ public abstract class Site {
     abstract public void getLogin();
     abstract public String getSmileAddress();
     abstract public String getSmileModifyHeader();
-    abstract public void getSiteSmiles();
+    abstract public void getSiteSmiles(String header);
     abstract public int getMiniLogo();
     abstract public  FactorySite.SiteName getSiteEnum();
     abstract public  Spannable getSmiledText(String text, String nick);
     abstract protected  Map<String,Bitmap> getSmileMapLink();
     abstract public  Map<String,Bitmap> getSmileMap();
+
+    public  int smileFlag =0;
+    public  int numberOfSmiles=0;
     protected static final Spannable.Factory spannableFactory = Spannable.Factory
             .getInstance();
 
@@ -242,20 +245,60 @@ public abstract class Site {
         return color;
     }
 
-    protected void putSmile ( String smile ,String regexp, String width, String height) {
-        ContentValues cv = new ContentValues();
-        cv.put(MyContentProvider.SMILES_SITE, getSiteName());
-        try {
-            byte[] smileByte = SmileHelper.urlToImageBLOB(smile);
-            cv.put(MyContentProvider.SMILES_SMILE, smileByte );
-        } catch (IOException e) {
-            e.printStackTrace();
+    public class  PutSmile implements Runnable {
+        String header;
+        Site site;
+        String smile;
+        String regexp;
+        String width;
+        String height;
+
+
+        public PutSmile ( String smile ,String regexp, String width, String height, Site site, String header) {
+            this.smile =smile;
+            this.regexp = regexp;
+            this.width = width;
+            this.height = height;
+            this.site =site;
+            this.header = header;
         }
-        cv.put(MyContentProvider.SMILES_REGEXP, regexp);
-        cv.put(MyContentProvider.SMILES_WIDTH, width);
-        cv.put(MyContentProvider.SMILES_HEIGHT, height);
-        MyApp.getContext().getContentResolver().insert(MyContentProvider.SMILE_INSERT_URI, cv);
+
+        public void run() {
+            ContentValues cv = new ContentValues();
+            cv.put(MyContentProvider.SMILES_SITE, getSiteName());
+            try {
+                byte[] smileByte = SmileHelper.urlToImageBLOB(smile);
+                cv.put(MyContentProvider.SMILES_SMILE, smileByte );
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            cv.put(MyContentProvider.SMILES_REGEXP, regexp);
+            cv.put(MyContentProvider.SMILES_WIDTH, width);
+            cv.put(MyContentProvider.SMILES_HEIGHT, height);
+            smileFlag++;
+
+            MyApp.getContext().getContentResolver().insert(MyContentProvider.SMILE_INSERT_URI, cv);
+            synchronized (site){
+                final int flag = site.getSmileFlag();
+                if (flag == numberOfSmiles ){
+                    cv.clear();
+                    cv.put(MyContentProvider.SMILES_SITE, site.getSiteName()+ "header");
+                    cv.put(MyContentProvider.SMILES_REGEXP, header);
+                    MyApp.getContext().getContentResolver().insert(MyContentProvider.SMILE_INSERT_URI, cv);
+                    site.setSmileMaps();
+                }
+            }
+        }
     }
+
+
+    protected int getSmileFlag() {
+        return smileFlag;
+    }
+
+
+
+
 
     public void setSmileMaps() {
          Map<String, Bitmap> smileMap = getSmileMapLink();

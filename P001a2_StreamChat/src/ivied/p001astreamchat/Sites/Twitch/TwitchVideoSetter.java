@@ -44,7 +44,7 @@ public class TwitchVideoSetter extends VideoViewSetter implements AsyncDownloadJ
     public void getVideoView(String channel, Context context, SetVideoView setVideoView) {
         this.channel = channel.toLowerCase();
         AsyncDownloadJson.CustomDownloadJson downloadJson =
-                new AsyncDownloadJson.CustomDownloadJson(TOKEN_ADDRESS_1 +channel + TOKEN_ADDRESS_2 , this);
+                new AsyncDownloadJson.CustomDownloadJson(TOKEN_ADDRESS_1 +channel.toLowerCase() + TOKEN_ADDRESS_2 , this);
         AsyncDownloadJson asyncDownloadJson = new AsyncDownloadJson();
         asyncDownloadJson.execute(downloadJson);
         this.setVideoView = setVideoView;

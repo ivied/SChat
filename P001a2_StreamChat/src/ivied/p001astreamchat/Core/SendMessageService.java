@@ -52,7 +52,7 @@ public class SendMessageService extends Service {
 
 	public void onDestroy() {
 	
-		Twitch.botSend.disconnect();
+
 		super.onDestroy();
 		Log.d(MainActivity.LOG_TAG, "MyService onDestroy");
 	}

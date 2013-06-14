@@ -29,7 +29,8 @@
                 android:inputType="textCapCharacters|text|textCapWords"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/imageSelectVideoStream"/>
+                android:layout_toLeftOf="@+id/imageSelectVideoStream"
+                android:hint="@string/hint_add_video_prefer_name"/>
     </RelativeLayout>
     <FrameLayout
             android:id="@+id/frameToVideoFragments"

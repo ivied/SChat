@@ -76,6 +76,7 @@
     <string name="dialog_title_what_add">What you will add</string>
     <string name="hint_type_gg_streamer">Type GG streamer</string>
     <string name="btn_check_stream">Check Stream</string>
+    <string name="hint_add_video_prefer_name">Prefer Name</string>
 
 
 </resources>

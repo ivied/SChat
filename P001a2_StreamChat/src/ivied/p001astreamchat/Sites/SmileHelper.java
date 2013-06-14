@@ -38,8 +38,7 @@ public class SmileHelper  {
     }
 
 
-    static
-    class SmileParser extends AsyncTask<FactorySite.SiteName, Boolean, Void> {
+    static class SmileParser extends AsyncTask<FactorySite.SiteName, Boolean, Void> {
         FactorySite factorySite = new FactorySite();
 
         ContentValues cv = new ContentValues();
@@ -75,11 +74,8 @@ public class SmileHelper  {
                 c.close();
                 MyApp.getContext().getContentResolver().delete(MyContentProvider.SMILE_INSERT_URI
                         , selection, new String[]{site.getSiteName()});
-                site.getSiteSmiles();
-                cv.put(MyContentProvider.SMILES_SITE, headerName);
-                cv.put(MyContentProvider.SMILES_REGEXP, header);
-                MyApp.getContext().getContentResolver().insert(MyContentProvider.SMILE_INSERT_URI, cv);
-                publishProgress(true);
+                site.getSiteSmiles(header);
+
             }
             return null;
         }

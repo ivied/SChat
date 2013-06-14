@@ -16,6 +16,7 @@ import android.support.v4.app.DialogFragment;
 import android.util.Log;
 
 import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.Sites.FactorySite;
 
 
 public class DialogSendChannels extends DialogFragment implements
@@ -44,19 +45,30 @@ public class DialogSendChannels extends DialogFragment implements
 		 c = getActivity().getContentResolver().query(ADD_URI, projection, selection, selectionArgs, null);
 		
 
-		String[] data = new String[c.getCount()];
-		boolean[] chkd = new boolean[c.getCount()];
 
-		int i = 0;
+
+		ArrayList<Integer> strings = new ArrayList<Integer>();
 		for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-			data[i]=c.getString(0)+ " " + c.getString(1);
-			
-			chkd[i]=c.getString(2).equalsIgnoreCase("true");
+            for(FactorySite.SiteName siteName : FactorySite.SiteName.values()){
+                if (siteName.name().equalsIgnoreCase(c.getString(0))){
+                    strings.add(c.getPosition());
 
-			i++;
+                }
+            }
+
 		}
-	
-		
+        String[] data = new String[strings.size()];
+        boolean[] chkd = new boolean[strings.size()];
+        int a =0;
+        for (int i : strings){
+            c.moveToPosition(i);
+            data[a] = c.getString(0)+ " " + c.getString(1);
+
+            chkd[a] = c.getString(2).equalsIgnoreCase("true");
+            a++;
+        }
+
+
 
 		AlertDialog.Builder adb = new AlertDialog.Builder(getActivity())
 				.setTitle("Set channels for message")
@@ -85,6 +97,7 @@ public class DialogSendChannels extends DialogFragment implements
 
 		switch (which) {
 		case Dialog.BUTTON_POSITIVE:
+            c.close();
 			onCancel(dialog);
 			break;
 

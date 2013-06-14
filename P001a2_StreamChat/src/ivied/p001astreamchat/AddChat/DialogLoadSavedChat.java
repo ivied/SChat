@@ -29,6 +29,7 @@ public class DialogLoadSavedChat extends DialogFragment {
 			names.add(chatName);
 			
 		}
+        c.close();
 		String chatNames []= new String [ names.size()];
 		chatNames = names.toArray(chatNames);
     	AlertDialog.Builder adb = new AlertDialog.Builder(getActivity());
@@ -41,36 +42,37 @@ public class DialogLoadSavedChat extends DialogFragment {
 	}
 	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			
-			
-			ListView lv = ((AlertDialog) dialog).getListView();
-			if (which == Dialog.BUTTON_POSITIVE) {
-				if (lv.getCheckedItemPosition()>=0){
-					
-				
-				String[] projection = new String[] { "site", "channel","color","personal" };
-				String[] selectionArgs = new String[] { names.get(lv.getCheckedItemPosition())};
-				Cursor c = getActivity().getContentResolver()	.query(ADD_URI, projection,	" chat = ?", selectionArgs, null);
 
-				for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-					String channelId =c.getString(1);
-					int color = c.getInt(2);
-					String personalName = c.getString(3);
-					String siteName = c.getString(0);
-                    try{
-					channels.add(new AddChatChannel(channelId,color,personalName, FactorySite.SiteName.valueOf(siteName.toUpperCase())));
-                    } catch ( IllegalArgumentException e) {
-                        channels.add(new AddChatChannel(channelId,color,personalName, FactoryVideoViewSetter.VideoSiteName.valueOf(siteName)));
+
+            ListView lv = ((AlertDialog) dialog).getListView();
+            if (which == Dialog.BUTTON_POSITIVE) {
+                if (lv.getCheckedItemPosition()>=0){
+
+
+                    String[] projection = new String[] { "site", "channel","color","personal" };
+                    String[] selectionArgs = new String[] { names.get(lv.getCheckedItemPosition())};
+                    Cursor c = getActivity().getContentResolver()	.query(ADD_URI, projection,	" chat = ?", selectionArgs, null);
+
+                    for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+                        String channelId =c.getString(1);
+                        int color = c.getInt(2);
+                        String personalName = c.getString(3);
+                        String siteName = c.getString(0);
+                        try{
+                            channels.add(new AddChatChannel(channelId,color,personalName, FactorySite.SiteName.valueOf(siteName.toUpperCase())));
+                        } catch ( IllegalArgumentException e) {
+                            channels.add(new AddChatChannel(channelId,color,personalName, FactoryVideoViewSetter.VideoSiteName.valueOf(siteName)));
+                        }
+
                     }
+                    c.close();
+                    AddChat callingActivity = (AddChat) getActivity();
+                    callingActivity.loadSavedChat(channels, names.get(lv.getCheckedItemPosition()));
 
-				}
-				AddChat callingActivity = (AddChat) getActivity();
-				callingActivity.loadSavedChat(channels, names.get(lv.getCheckedItemPosition())); 
-				
-				}
-				 dialog.dismiss();
-				 
-			}
+                }
+                dialog.dismiss();
+
+            }
 
 			
 		}

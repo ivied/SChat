@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,6 +64,8 @@ public class Twitch  extends Site {
         aMap.put("\\&gt\\;\\(", ">\\(");
         unrecognizedSmiles = Collections.unmodifiableMap(aMap);
     }
+
+
 
     @Override
     public Drawable getLogo() {
@@ -169,6 +172,8 @@ public class Twitch  extends Site {
         return smileMap;
     }
 
+
+
     public class IrcClientShow extends PircBot {
         public IrcClientShow(String name) {
             this.setName(name);
@@ -264,31 +269,42 @@ public class Twitch  extends Site {
     }
 
     @Override
-    public void getSiteSmiles() {
-
+    public void getSiteSmiles(String header) {
+        JSONObject smile ;
+        JSONObject image ;
+        JSONArray imageList;
         HttpGet httpGet = new HttpGet(getSmileAddress());
         StringBuilder builderJson = jsonRequest(httpGet);
         JSONArray jsonArray ;
         try {
             JSONObject jsonObj = new JSONObject(builderJson.toString());
 
-
             jsonArray = jsonObj.getJSONArray("emoticons");
 
             for(int i = 0 ; i < jsonArray.length(); i++ ){
-                JSONObject smile = jsonArray.getJSONObject(i);
-                JSONArray imageList = smile.getJSONArray("images");
-                JSONObject image = imageList.getJSONObject(0);
+                smile = jsonArray.getJSONObject(i);
+                imageList = smile.getJSONArray("images");
+                image = imageList.getJSONObject(0);
                 if(image.getString("emoticon_set").equalsIgnoreCase("null")){
-                String imageAddress = image.getString("url");
-                String width = image.getString("width");
-                String height = image.getString("height");
-                String regex = smile.getString("regex");
-                Log.i(MainActivity.LOG_TAG, regex);
-                if (unrecognizedSmiles.containsKey(regex)) regex = unrecognizedSmiles.get(regex);
+                    numberOfSmiles++;
 
-                putSmile(imageAddress,regex,width,height);
-                Log.i (MainActivity.LOG_TAG, "regex = " + regex + ", i = " + i + "   " + jsonArray.length());}
+                }
+            }
+            for(int i = 0 ; i < jsonArray.length(); i++ ){
+                smile = jsonArray.getJSONObject(i);
+                imageList = smile.getJSONArray("images");
+                image = imageList.getJSONObject(0);
+                if(image.getString("emoticon_set").equalsIgnoreCase("null")){
+
+                    String imageAddress = image.getString("url");
+                    String width = image.getString("width");
+                    String height = image.getString("height");
+                    String regex = smile.getString("regex");
+                    Log.i(MainActivity.LOG_TAG, regex);
+                    if (unrecognizedSmiles.containsKey(regex)) regex = unrecognizedSmiles.get(regex);
+                    PutSmile putSmile = new PutSmile(imageAddress,regex,width,height,this,header);
+                    putSmile.run();
+                    Log.i (MainActivity.LOG_TAG, "regex = " + regex + ", i = " + i + "   " + jsonArray.length());}
             }
         } catch (JSONException e) {
             e.printStackTrace();

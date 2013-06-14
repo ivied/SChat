@@ -5,6 +5,7 @@ package ivied.p001astreamchat.Core;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -23,6 +24,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -42,7 +44,9 @@ import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
 
 
-public class MainActivity extends SherlockFragmentActivity {
+public class MainActivity extends SherlockFragmentActivity implements MenuItem.OnMenuItemClickListener {
+    public static final int MENU_ITEM_ID_CUTDOWN = 8;
+    public static final int MENU_ITEM_ID_REFRESH = 9;
     public static Integer focus=0;
 	TabHost mTabHost;
     ViewPager  mViewPager;
@@ -81,7 +85,9 @@ public class MainActivity extends SherlockFragmentActivity {
  	
  	  public static List<String> indexOfChats = new ArrayList<String>();
  	  static List<TextView> indexOfHeaders = new ArrayList<TextView>();
- //	 private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+
+
+    //	 private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 
  	 
     public static final class TabInfo {
@@ -209,7 +215,24 @@ public class MainActivity extends SherlockFragmentActivity {
     
 		
     }
-    
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK&& event.getRepeatCount() == 0) {
+            // do something on back.
+
+
+            finish();
+
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+
+
     public void addSmile (View v) {
     	dlgChoiceSmile = new DialogChoiceSmile();
     	dlgChoiceSmile.show(getSupportFragmentManager(), "Smile");
@@ -270,12 +293,14 @@ public class MainActivity extends SherlockFragmentActivity {
 	}
 	
 	public void stopServiceSend() {
+
 		  stopService(new Intent(this,SendMessageService.class));
 	  }
 	
  
 	
 	public void stopService() {
+
 		  stopService(new Intent(this,ChatService.class));
 		 
 	  }
@@ -322,24 +347,19 @@ public class MainActivity extends SherlockFragmentActivity {
         if (!bound) return;
 	    Log.i(LOG_TAG, "here");
 	   chatService.startChatThread(chatName);
-       
-      
-      
-       
-       
-    	
+
     }
    
     public void restartApp () {
-    	Intent i;
-    	stopService();
-		stopServiceSend();
-		
-		MyApp.factoryReset();
-		i = new Intent(MyApp.getContext(), MainActivity.class);
-		i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		MyApp.getContext().startActivity(i);
+        Intent i;
+        stopService(new Intent(this,SendMessageService.class));
+        stopService(new Intent(this,ChatService.class));
+        MyApp.factoryReset();
+        i = new Intent(MyApp.getContext(), MainActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        MyApp.getContext().startActivity(i);
+
 		
 	
     }
@@ -349,7 +369,7 @@ public class MainActivity extends SherlockFragmentActivity {
 		
 		// çàïèøåì â ëîã çíà÷åíèÿ requestCode è resultCode
 		Log.d("myLogs", "requestCode = " + requestCode + ", resultCode = "
-				+ resultCode);
+                + resultCode);
 		// åñëè ïðèøëî ÎÊ
 		if (resultCode == RESULT_OK) {
 			switch (requestCode) {
@@ -397,59 +417,87 @@ public class MainActivity extends SherlockFragmentActivity {
 		} 
 		
 	}
- 
-	 public boolean onCreateOptionsMenu(Menu menu) {
-		    menu.add(0, 1, 1, "Preferences");
-		    menu.add(0,2,0, "Channels");
-		    menu.add(0,3,2, "Add chat");
-		    menu.add(0,4,3, "Edit chat");
-		    menu.add(0,5,4, "Login");
-		    menu.add(0,6,5, "Stop App");
-		    menu.add(0,7,6, "Help");
-		    return super.onCreateOptionsMenu(menu);
-		  }
-	 @Override
-	 public boolean onOptionsItemSelected(MenuItem item) {
-	 // TODO Auto-generated method stub
-	 super.onOptionsItemSelected(item);
 
-	 switch(item.getItemId())
-	 {
-	 case 1:
-		 Intent intent = new Intent(this, Preference.class);
-         startActivity(intent);
-	 break;
-	 case 2:
-		 dlgChoseChannels= DialogSendChannels.newInstance( mTabHost.getCurrentTabTag());
-			dlgChoseChannels.show(getSupportFragmentManager(),  mTabHost.getCurrentTabTag());
-		 
-	 break;
-	 case 3:
-		 intent = new Intent(this, AddChat.class);
-			intent.putExtra("button", "Add");
-			startActivityForResult(intent, 2);
-		 break;
-	 case 4:
-		 Intent intentEdit = new Intent(this, AddChat.class);
-			intentEdit.putExtra("button", "Edit");
-			startActivityForResult(intentEdit, 1);
-		 break;
-	 case 5:
-		 Intent intentLogin = new Intent(this, Login.class);
-		 startActivityForResult(intentLogin, 3);
-		 break;
-	 case 6:
-		 dlgStopService = new DialogStopService();
-		 dlgStopService.show(getSupportFragmentManager(), "Stop service");
-		 break;
-	 case 7:
-		 intent = new Intent (this, Help.class);
-		 startActivity(intent);
-		 break;
-		
-	 }
-	 return true;
-	 }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem cutDown = menu.add(1, MENU_ITEM_ID_CUTDOWN, 0, "Cut down");
+        cutDown.setIcon(android.R.drawable.arrow_down_float);
+        cutDown.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        cutDown.setOnMenuItemClickListener(this);
+
+        MenuItem refresh = menu.add(1, MENU_ITEM_ID_REFRESH,0,"Refresh");
+        refresh.setIcon(android.R.drawable.stat_notify_sync);
+        refresh.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        refresh.setOnMenuItemClickListener(this);
+
+        menu.add(0, 1, 1, "Preferences");
+        menu.add(0, 2, 0, "Channels");
+        menu.add(0,3,2, "Add chat");
+        menu.add(0,4,3, "Edit chat");
+        menu.add(0,5,4, "Login");
+        menu.add(0,6,5, "Stop App");
+        menu.add(0,7,6, "Help");
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        switch(item.getItemId())
+        {
+            case MENU_ITEM_ID_REFRESH:
+                restartApp();
+                break;
+            case MENU_ITEM_ID_CUTDOWN:
+                Intent i = new Intent(Intent.ACTION_MAIN);
+                i.addCategory(Intent.CATEGORY_HOME);
+                startActivity(i);
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // TODO Auto-generated method stub
+        super.onOptionsItemSelected(item);
+
+        switch(item.getItemId())
+        {
+            case 1:
+                Intent intent = new Intent(this, Preference.class);
+                startActivity(intent);
+                break;
+            case 2:
+                dlgChoseChannels= DialogSendChannels.newInstance( mTabHost.getCurrentTabTag());
+                dlgChoseChannels.show(getSupportFragmentManager(),  mTabHost.getCurrentTabTag());
+
+                break;
+            case 3:
+                intent = new Intent(this, AddChat.class);
+                intent.putExtra("button", "Add");
+                startActivityForResult(intent, 2);
+                break;
+            case 4:
+                Intent intentEdit = new Intent(this, AddChat.class);
+                intentEdit.putExtra("button", "Edit");
+                startActivityForResult(intentEdit, 1);
+                break;
+            case 5:
+                Intent intentLogin = new Intent(this, Login.class);
+                startActivityForResult(intentLogin, 3);
+                break;
+            case 6:
+                dlgStopService = new DialogStopService();
+                dlgStopService.show(getSupportFragmentManager(), "Stop service");
+                break;
+            case 7:
+                intent = new Intent (this, Help.class);
+                startActivity(intent);
+                break;
+
+        }
+        return true;
+    }
 
     private void getPrefs() {
         // Get the xml/preferences.xml preferences
@@ -483,11 +531,11 @@ public class MainActivity extends SherlockFragmentActivity {
 	 
 	 @Override
 	    public void onDestroy(){
-	    	
-	    	unbindService(sConn);
-	    	unbindService(sendConn);
-	    	stopServiceSend();
-	    	
+
+	    	//unbindService(sConn);
+	    	//unbindService(sendConn);
+	    	//stopServiceSend();
+	    	//stopService();
 	    	super.onDestroy();
 	    }
 	 

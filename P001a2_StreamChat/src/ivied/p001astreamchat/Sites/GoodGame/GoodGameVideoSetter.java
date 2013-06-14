@@ -71,6 +71,7 @@ public class GoodGameVideoSetter extends VideoViewSetter implements AsyncDownloa
                  url = matcher.group(1);
             }
 
+
             HTML5WebView mWebView = new HTML5WebView(context);
             mWebView.loadUrl(url);
             setVideoView.setVideoView(mWebView, channel, getEnum());

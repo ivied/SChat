@@ -154,20 +154,6 @@ public class ChatList extends SherlockFragmentActivity {
             chatLayout = (RelativeLayout) root.findViewById(R.id.chatLayout);
             getStreamLayout();
 
-      /*    Fragment fragmentVideo = new FragmentWebView();
-            FrameLayout mWebView = (FrameLayout )fragmentVideo.getView().findViewById(R.id.fullscreen_custom_content);
-          FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams (
-                    100,100);
-
-           mWebView.setLayoutParams(lp);
-            FragmentTransaction fTrans = getFragmentManager().beginTransaction();
-
-                      fTrans.add(R.id.chatLayout, fragmentVideo);
-
-            fTrans.commit();*/
-
-
-            //HTML5WebView mWebView = (HTML5WebView ) root.findViewById(tagNumber+1);*/
             return root;
         }
 		
@@ -215,14 +201,6 @@ public class ChatList extends SherlockFragmentActivity {
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
-            /*streamView = new HTML5WebView(getActivity());
-
-            if (savedInstanceState != null) {
-                streamView.restoreState(savedInstanceState);
-            } else {
-                streamView.loadUrl("http://goodgame.ru/player3?peptar");
-
-            }*/
 
 
 			// Give some text to display if there is no data. In a real
@@ -406,11 +384,7 @@ public class ChatList extends SherlockFragmentActivity {
 
 		@Override
 		public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-			
-			MenuItem item = menu.add("Close");
-			item.setIcon(R.drawable.btn_close_app);
-			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-			item.setOnMenuItemClickListener(this);
+
 			// Place an action bar item for searching.
 			/*MenuItem item = menu.add("Search");
 			item.setIcon(android.R.drawable.ic_menu_search);
@@ -518,11 +492,7 @@ public class ChatList extends SherlockFragmentActivity {
 
 		@Override
 		public boolean onMenuItemClick(MenuItem item) {
-		
 
-			((MainActivity)getSherlockActivity()).stopService();
-			((MainActivity) getSherlockActivity()).stopServiceSend(); 
-			getActivity().finish();
 			return false;
 		}
 

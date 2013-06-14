@@ -60,7 +60,7 @@ public class AdapterChannelList extends BaseAdapter {
 				+ channel.channelId + "<\br>"));
 
 		((ImageView) convertView.findViewById(R.id.imageSite))
-				.setImageResource(channel.drawable);
+				.setImageDrawable(channel.drawable);
 
 		return convertView;
 	}

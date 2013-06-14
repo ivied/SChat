@@ -79,6 +79,7 @@ public class Sc2tv extends Site {
     ScheduledExecutorService sEs;
     private static Map<String, Bitmap> smileMap = new HashMap<String, Bitmap>();
 
+
     @Override
     public Drawable getLogo() {
         return MyApp.getContext().getResources().getDrawable(R.drawable.sc2tv);
@@ -184,21 +185,22 @@ public class Sc2tv extends Site {
     }
 
     @Override
-    public void getSiteSmiles() {
+    public void getSiteSmiles(String header) {
 
         HttpGet httpGet = new HttpGet(getSmileAddress());
         StringBuilder builderJson = jsonRequest(httpGet);
         String [] sc2tvSmileJson = parseSc2tv(builderJson.toString());
-
+        numberOfSmiles = sc2tvSmileJson.length;
 
         String smileAddress;
 
         for (String smile: sc2tvSmileJson){
             String [] smileArray = smile.split(": '");
             smileAddress = getSmileSubstring (smileArray, SC2TV_SMILE_FIELD_ADDRESS);
-            putSmile(SC2TV_STANDARD_SMILE_WAY + smileAddress, getSmileSubstring(smileArray, SC2TV_SMILE_FIELD_REGEXP),
+            PutSmile putSmile = new PutSmile(SC2TV_STANDARD_SMILE_WAY + smileAddress, getSmileSubstring(smileArray, SC2TV_SMILE_FIELD_REGEXP),
                     getSmileSubstring(smileArray, SC2TV_SMILE_FIELD_WIDTH),
-                    getSmileSubstring(smileArray, SC2TV_SMILE_FIELD_HEIGHT));
+                    getSmileSubstring(smileArray, SC2TV_SMILE_FIELD_HEIGHT), this, header);
+            putSmile.run();
 
         }
     }
@@ -334,6 +336,8 @@ public class Sc2tv extends Site {
     }
 
 
+
+
     @Override
     public int sendMessage(String channel, String message) {
         if (Sc2tv.sc2tvNick.equalsIgnoreCase(""))
@@ -366,7 +370,7 @@ public class Sc2tv extends Site {
                 try {
                        post2.setEntity(new UrlEncodedFormEntity(
                        nameValuePairs, HTTP.UTF_8));
-                   Sc2tv.client.execute(post2);
+                   client.execute(post2);
                 } catch (ClientProtocolException e) {
 
                     e.printStackTrace();
@@ -374,7 +378,7 @@ public class Sc2tv extends Site {
 
                     e.printStackTrace();
                 }
-                client.getConnectionManager().shutdown();
+
                 return SendMessageService.MESSAGE_DELIVER_OK;
             }else{
                 return SendMessageService.TOO_MUCH_SMILES_SC2TV;

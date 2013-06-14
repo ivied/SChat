@@ -141,7 +141,7 @@ public class ChatService extends Service {
 
             }
             }catch (IllegalArgumentException e) {
-
+                e.printStackTrace();
             }
 
         }
