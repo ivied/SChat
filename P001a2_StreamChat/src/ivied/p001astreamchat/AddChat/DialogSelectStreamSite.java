@@ -68,11 +68,11 @@ public class DialogSelectStreamSite extends DialogFragment implements View.OnCli
         for(FactoryVideoViewSetter.VideoSiteName siteName : FactoryVideoViewSetter.VideoSiteName.values()){
             if (siteName.ordinal() == id) {
 
-                Intent intent = new Intent(getActivity(), AddVideoStream.class);
+                Intent intent = new Intent(getActivity(), ViewAddVideoChannel.class);
 
                 intent.putExtra(DialogChoiceSite.FOR, "add");
                 intent.putExtra(DialogChoiceSite.SITE, siteName);
-                getActivity().startActivityForResult(intent, AddChat.TASK_ADD_VIDEO);
+                getActivity().startActivityForResult(intent, ViewAddChat.TASK_ADD_VIDEO);
             }
         }
     }

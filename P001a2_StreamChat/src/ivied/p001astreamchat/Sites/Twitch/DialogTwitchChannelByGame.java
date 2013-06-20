@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import ivied.p001astreamchat.AddChat.SelectedListener;
+import ivied.p001astreamchat.AddChat.ChannelIdSelectedListener;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.AsyncDownloadJson;
 
@@ -25,7 +25,7 @@ import ivied.p001astreamchat.Sites.AsyncDownloadJson;
  * Created by Serv on 09.06.13.
  */
 public class DialogTwitchChannelByGame extends SherlockDialogFragment implements DialogInterface.OnClickListener, AsyncDownloadJson.GetJson {
-    SelectedListener mCallback;
+    ChannelIdSelectedListener mCallback;
     private static final String TWITCH_API_BY_GAME = "https://api.twitch.tv/kraken/streams?game=";
     private static final String HLS_TRUE = "&hls=true";
     ArrayList<String> list = new ArrayList<String>();
@@ -40,7 +40,7 @@ public class DialogTwitchChannelByGame extends SherlockDialogFragment implements
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (SelectedListener) activity;
+            mCallback = (ChannelIdSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement SelectedListener ");
@@ -79,7 +79,7 @@ public class DialogTwitchChannelByGame extends SherlockDialogFragment implements
     @Override
     public void onClick(DialogInterface dialog, int which) {
 
-        mCallback.pasteChannel(list.get(which));
+        mCallback.pasteIdChannel(list.get(which));
     }
 
     private void renewAdapter() {

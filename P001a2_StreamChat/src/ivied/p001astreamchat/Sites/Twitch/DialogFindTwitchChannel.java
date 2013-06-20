@@ -1,18 +1,5 @@
 package ivied.p001astreamchat.Sites.Twitch;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.concurrent.ExecutionException;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,14 +10,27 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.EditText;
 
-import ivied.p001astreamchat.AddChat.SelectedListener;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.concurrent.ExecutionException;
+
+import ivied.p001astreamchat.AddChat.ChannelIdSelectedListener;
 import ivied.p001astreamchat.R;
 
 public class DialogFindTwitchChannel extends DialogFragment implements
 		OnClickListener {
 	EditText input;
 	CheckTwitchChannel checkTwitch;
-    SelectedListener mCallback;
+    ChannelIdSelectedListener mCallback;
     final static String CHECK_CHANNEL = "http://api.justin.tv/api/stream/list.json?channel=";
 
     @Override
@@ -40,10 +40,10 @@ public class DialogFindTwitchChannel extends DialogFragment implements
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (SelectedListener) activity;
+            mCallback = (ChannelIdSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement SelectedListener ");
+                    + " must implement ChannelIdSelectedListener ");
         }
     }
 
@@ -78,7 +78,7 @@ public class DialogFindTwitchChannel extends DialogFragment implements
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-                mCallback.pasteChannel(channel);
+                mCallback.pasteIdChannel(channel);
 			}
 		}
 	}

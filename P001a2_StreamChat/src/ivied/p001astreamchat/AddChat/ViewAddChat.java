@@ -31,7 +31,7 @@ import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 
-public class AddChat extends SherlockFragmentActivity implements OnClickListener, OnItemClickListener{
+public class ViewAddChat extends SherlockFragmentActivity implements OnClickListener, OnItemClickListener{
     static final int TASK_ADD = 1;
     static final int TASK_EDIT = 2;
     static final int TASK_ADD_VIDEO = 3;
@@ -56,8 +56,8 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 	private ActionMode mMode;
 	protected static int _id;
 	String button;
-	 ArrayList<AddChatChannel> channels =new ArrayList<AddChatChannel>();
-	 AdapterChannelList adapter;
+	 ArrayList<Channel> channels =new ArrayList<Channel>();
+	 AdapterChannelToListView adapter;
 	protected void onCreate(Bundle savedInstanceState ) {
 		super.onCreate(savedInstanceState);
 		Intent i = getIntent();
@@ -70,7 +70,7 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 		mLayout = (LinearLayout) findViewById(R.id.layoutControlEdit);
 		setName = (EditText) findViewById(R.id.chatName);
 		channelList = (ListView) findViewById(R.id.listChannels);
-		 adapter = new AdapterChannelList(this, channels);
+		 adapter = new AdapterChannelToListView(this, channels);
 		 channelList.setAdapter(adapter);
 		 channelList.setOnItemClickListener(this);
 		
@@ -113,7 +113,7 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 				(ADD_URI, "chat = ?", new String [] {  setName.getText().toString()});
 				intent.putExtra("action", MainActivity.EDIT);
 			}
-			//Add "action"   "edit" in intent  	
+			//Add "action"   "edit" in configData
 			switch (saveChat()) {
 			
 			case SAVE_CHAT_NAME_EXIST :
@@ -166,18 +166,18 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
             switch (requestCode) {
                 case TASK_ADD_VIDEO:
                     FactoryVideoViewSetter.VideoSiteName siteVideo = (FactoryVideoViewSetter.VideoSiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
-                    channels.add ( new AddChatChannel(channel,color,personalName,siteVideo));
+                    channels.add ( new Channel(channel,color,personalName,siteVideo));
                     break;
                 case TASK_EDIT_VIDEO:
                     siteVideo = (FactoryVideoViewSetter.VideoSiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
-                    channels.set (_id, new AddChatChannel(channel,color,personalName,siteVideo));
+                    channels.set (_id, new Channel(channel,color,personalName,siteVideo));
                     break;
 
                 case TASK_ADD:
 
                     FactorySite.SiteName site = (FactorySite.SiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
 
-                    channels.add( new AddChatChannel(channel,color,personalName,site));
+                    channels.add( new Channel(channel,color,personalName,site));
 
                     break;
 
@@ -185,7 +185,7 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 
                     site = (FactorySite.SiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
 
-                    channels.set(_id, new AddChatChannel(channel,color,personalName,site));
+                    channels.set(_id, new Channel(channel,color,personalName,site));
 
                     break;
             }
@@ -248,15 +248,15 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 	};
 	
 	void editChannel (int id) {
-		AddChatChannel channel = channels.get(id);
+		Channel channel = channels.get(id);
         int task;
         Intent intent;
         if (channel.siteInt != null){
-            intent = new Intent( this, AddChannel.class);
+            intent = new Intent( this, ViewAddChannel.class);
             intent.putExtra(DialogChoiceSite.SITE, channel.siteInt);
             task = TASK_EDIT;
         }else {
-            intent = new Intent( this, AddVideoStream.class);
+            intent = new Intent( this, ViewAddVideoChannel.class);
             intent.putExtra(DialogChoiceSite.SITE, channel.siteVideoInt);
             task = TASK_EDIT_VIDEO;
         }
@@ -282,7 +282,7 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 			cv.put("chat", chatName);
 
             if (channels.isEmpty()) return SAVE_CHAT_NEED_CHANNELS;
-			for (AddChatChannel channel : channels) {
+			for (Channel channel : channels) {
                 if (channel.site.contains("tream")){
                     cv.put("flag", "false");
                 }else{
@@ -304,10 +304,10 @@ public class AddChat extends SherlockFragmentActivity implements OnClickListener
 
 	}
 	
-	void loadSavedChat( ArrayList<AddChatChannel> channels_,String chatName){
+	void loadSavedChat( ArrayList<Channel> channels_,String chatName){
 		channels = channels_;
 
-		adapter= new AdapterChannelList(this, channels);
+		adapter= new AdapterChannelToListView(this, channels);
 		 channelList.setAdapter(adapter);
 		 channelList.setOnItemClickListener(this);
 		setName.setText(chatName);

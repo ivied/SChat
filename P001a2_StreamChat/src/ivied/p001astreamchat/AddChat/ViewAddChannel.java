@@ -16,30 +16,30 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 
-public class AddChannel extends SherlockFragmentActivity implements
-		OnClickListener, DialogColorPicker.OnColorChangedListener, SelectedListener {
+public class ViewAddChannel extends SherlockFragmentActivity implements
+		OnClickListener, DialogColorPicker.OnColorChangedListener, ChannelIdSelectedListener {
 
-	FragmentTransaction fTrans;
+	FragmentTransaction fragmentTransaction;
 	TextView textColor;
 	RadioButton radioStandardColor, radioPersonalColor;
 	Button setChannel;
-	EditText channelId, personalName;
+	EditText editTextChannelId, personalName;
 	int color;
     FactorySite.SiteName site;
     FactorySite factorySite = new FactorySite();
-   	Intent intent =new Intent();
+   	Intent configData =new Intent();
     FragmentAddChannelStandard fragment;
 
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_channel);
-		intent = getIntent();
+		configData = getIntent();
 
-        site = (FactorySite.SiteName) intent.getSerializableExtra(DialogChoiceSite.SITE);
-		fTrans = getSupportFragmentManager().beginTransaction();
+        site = (FactorySite.SiteName) configData.getSerializableExtra(DialogChoiceSite.SITE);
+		fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragment = factorySite.getSite(site).getFragmentAddChannel();
-        fTrans.add(R.id.frameToFragments, fragment);
-		fTrans.commit();
+        fragmentTransaction.add(R.id.frameToFragments, fragment);
+		fragmentTransaction.commit();
 		textColor = (TextView) findViewById(R.id.textColor);
 		radioStandardColor = (RadioButton) findViewById(R.id.radioStandartColor);
 		radioStandardColor.setOnClickListener(this);
@@ -50,18 +50,19 @@ public class AddChannel extends SherlockFragmentActivity implements
 		setChannel.setOnClickListener(this);
 		
 	}
+
 	@Override
 	public void onResume() {
 		super.onResume();
-		channelId = fragment.getEditTextChannel();
-		String action = intent.getStringExtra(DialogChoiceSite.FOR); 
+        editTextChannelId = fragment.getEditTextChannel();
+		String action = configData.getStringExtra(DialogChoiceSite.FOR);
 		if(action.equalsIgnoreCase("edit")){
-			String name= intent.getStringExtra(AddChat.PERSONAL_NAME);
+			String name= configData.getStringExtra(ViewAddChat.PERSONAL_NAME);
 			personalName.setText(name);
-			color = intent.getIntExtra(AddChat.COLOR, 0);
+			color = configData.getIntExtra(ViewAddChat.COLOR, 0);
 			textColor.setBackgroundColor(color);
 
-			channelId.setText(intent.getStringExtra(AddChat.CHANNEL));
+            editTextChannelId.setText(configData.getStringExtra(ViewAddChat.CHANNEL));
 
 		}
 	}
@@ -83,7 +84,7 @@ public class AddChannel extends SherlockFragmentActivity implements
 		case R.id.btnSetChannel:
 			
 			Intent i =new Intent() ;
-			String [] channel = channelId.getText().toString().trim().split("\\s+");
+			String [] channel = editTextChannelId.getText().toString().trim().split("\\s+");
 			
 			if(!channel[0].equalsIgnoreCase("")){
 			
@@ -103,8 +104,8 @@ public class AddChannel extends SherlockFragmentActivity implements
 
 	
 	private int getStandardColor(){
-		int length = channelId.getText().toString().length();
-		String channel = channelId.getText().toString();
+		int length = editTextChannelId.getText().toString().length();
+		String channel = editTextChannelId.getText().toString();
 		color = factorySite.getSite(site).getColorForAdd(channel,length,color);
 		textColor.setBackgroundColor(color);
 		return color;
@@ -119,7 +120,7 @@ public class AddChannel extends SherlockFragmentActivity implements
 	}
 
     @Override
-    public void pasteChannel(String channel) {
-        channelId.setText(channel.toLowerCase());
+    public void pasteIdChannel(String channel) {
+        editTextChannelId.setText(channel.toLowerCase());
     }
 }

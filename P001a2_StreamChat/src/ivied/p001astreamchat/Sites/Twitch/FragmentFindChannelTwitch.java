@@ -4,16 +4,16 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import ivied.p001astreamchat.AddChat.ChannelIdSelectedListener;
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
-import ivied.p001astreamchat.AddChat.SelectedListener;
 import ivied.p001astreamchat.R;
 
-public class FragmentFindChannelTwitch extends FragmentAddChannelStandard implements OnClickListener, SelectedListener {
+public class FragmentFindChannelTwitch extends FragmentAddChannelStandard implements OnClickListener, ChannelIdSelectedListener {
 	
 	DialogFragment dlgTwitchChannels;
 	EditText channel;
@@ -52,7 +52,7 @@ public class FragmentFindChannelTwitch extends FragmentAddChannelStandard implem
     }
 
     @Override
-    public void pasteChannel(String channel) {
+    public void pasteIdChannel(String channel) {
         this.channel.setText(channel);
     }
 }

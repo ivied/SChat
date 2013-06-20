@@ -1,7 +1,5 @@
 package ivied.p001astreamchat.AddChat;
 
-import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -11,6 +9,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
@@ -19,7 +19,7 @@ public class DialogLoadSavedChat extends DialogFragment {
 	final Uri SERVICE_URI = Uri.parse("content://ivied.p001astreamchat/channels/service");
 	final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
 	ArrayList <String> names = new ArrayList<String>();
-	ArrayList<AddChatChannel> channels =new ArrayList<AddChatChannel>();
+	ArrayList<Channel> channels =new ArrayList<Channel>();
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Cursor c = getActivity().getContentResolver().query(SERVICE_URI, new String[] { "chat" }, null, null, null);
 		for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -59,14 +59,14 @@ public class DialogLoadSavedChat extends DialogFragment {
                         String personalName = c.getString(3);
                         String siteName = c.getString(0);
                         try{
-                            channels.add(new AddChatChannel(channelId,color,personalName, FactorySite.SiteName.valueOf(siteName.toUpperCase())));
+                            channels.add(new Channel(channelId,color,personalName, FactorySite.SiteName.valueOf(siteName.toUpperCase())));
                         } catch ( IllegalArgumentException e) {
-                            channels.add(new AddChatChannel(channelId,color,personalName, FactoryVideoViewSetter.VideoSiteName.valueOf(siteName)));
+                            channels.add(new Channel(channelId,color,personalName, FactoryVideoViewSetter.VideoSiteName.valueOf(siteName)));
                         }
 
                     }
                     c.close();
-                    AddChat callingActivity = (AddChat) getActivity();
+                    ViewAddChat callingActivity = (ViewAddChat) getActivity();
                     callingActivity.loadSavedChat(channels, names.get(lv.getCheckedItemPosition()));
 
                 }

@@ -27,11 +27,11 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
        private static final int ID_ADD_VIDEO = 25;
     public static final int TEXT_VIEW_TOP_MARGINS = 20;
      FactorySite mFactorySite = new FactorySite();
-    public static DialogChoiceSite newInstance(ArrayList<AddChatChannel> channels) {
+    public static DialogChoiceSite newInstance(ArrayList<Channel> channels) {
         int flag = 0;
         DialogChoiceSite dlg = new DialogChoiceSite();
         Bundle args = new Bundle();
-        for (AddChatChannel channel : channels){
+        for (Channel channel : channels){
             for (FactoryVideoViewSetter.VideoSiteName siteName : FactoryVideoViewSetter.VideoSiteName.values()){
                 if (channel.site.equalsIgnoreCase(siteName.name())) flag = 1;
             }
@@ -89,10 +89,10 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
     }
 
     private void sendResult (FactorySite.SiteName site){
-        Intent intent = new Intent(getActivity(), AddChannel.class);
+        Intent intent = new Intent(getActivity(), ViewAddChannel.class);
         intent.putExtra(SITE, site);
         intent.putExtra(FOR, "add");
-        getActivity().startActivityForResult(intent, AddChat.TASK_ADD);
+        getActivity().startActivityForResult(intent, ViewAddChat.TASK_ADD);
     }
 
     private TextView createTextView (Drawable logo, String text , int id){

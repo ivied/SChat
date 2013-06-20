@@ -9,15 +9,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import ivied.p001astreamchat.AddChat.ChannelIdSelectedListener;
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
-import ivied.p001astreamchat.AddChat.SelectedListener;
 import ivied.p001astreamchat.R;
 
 /**
  * Created by Serv on 13.06.13.
  */
 public class FragmentCheckGG extends FragmentAddChannelStandard implements View.OnClickListener {
-    SelectedListener mCallback;
+    ChannelIdSelectedListener mCallback;
     DialogFragment dlgTwitchChannels;
     EditText channel;
 
@@ -28,10 +28,10 @@ public class FragmentCheckGG extends FragmentAddChannelStandard implements View.
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (SelectedListener) activity;
+            mCallback = (ChannelIdSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement SelectedListener ");
+                    + " must implement ChannelIdSelectedListener ");
         }
     }
 
@@ -50,7 +50,7 @@ public class FragmentCheckGG extends FragmentAddChannelStandard implements View.
     public void onClick(View v) {
         switch (v.getId()){
             case (R.id.btnCheckGGStream):
-                mCallback.pasteChannel(channel.getText().toString());
+                mCallback.pasteIdChannel(channel.getText().toString());
                 break;
 
         }

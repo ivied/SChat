@@ -7,7 +7,7 @@ import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 import ivied.p001astreamchat.Sites.Site;
 import ivied.p001astreamchat.Sites.VideoViewSetter;
 
-public class AddChatChannel {
+public class Channel {
     String site;
     String name;
     int color;
@@ -15,7 +15,8 @@ public class AddChatChannel {
     Drawable drawable;
     FactorySite.SiteName siteInt;
     FactoryVideoViewSetter.VideoSiteName siteVideoInt;
-    AddChatChannel (String channelId, int color, String name , FactorySite.SiteName site) {
+
+    Channel(String channelId, int color, String name, FactorySite.SiteName site) {
         FactorySite factorySite = new FactorySite();
         Site mSite = factorySite.getSite(site);
         this.channelId = channelId;
@@ -26,7 +27,7 @@ public class AddChatChannel {
         this.drawable = mSite.getLogo();
     }
 
-    AddChatChannel (String channelId, int color, String name , FactoryVideoViewSetter.VideoSiteName site) {
+    Channel(String channelId, int color, String name, FactoryVideoViewSetter.VideoSiteName site) {
         FactoryVideoViewSetter factoryVideoViewSetter = new FactoryVideoViewSetter();
         VideoViewSetter viewSetter = factoryVideoViewSetter.getVideoSite(site);
         this.channelId = channelId;

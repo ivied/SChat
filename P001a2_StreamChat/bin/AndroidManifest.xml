@@ -29,8 +29,8 @@
         <activity android:name=".Login.Login"></activity>
         <service android:name=".Core.SendMessageService"></service>
         <activity android:name=".Core.Preference"></activity>
-        <activity android:name=".AddChat.AddChat"></activity>
-        <activity android:name=".AddChat.AddChannel"></activity>
+        <activity android:name=".AddChat.ViewAddChat"></activity>
+        <activity android:name=".AddChat.ViewAddChannel"></activity>
         <activity android:name=".Core.Help"></activity>
        
     </application>

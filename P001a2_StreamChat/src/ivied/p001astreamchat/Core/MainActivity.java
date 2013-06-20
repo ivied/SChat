@@ -34,7 +34,7 @@ import com.actionbarsherlock.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import ivied.p001astreamchat.AddChat.AddChat;
+import ivied.p001astreamchat.AddChat.ViewAddChat;
 import ivied.p001astreamchat.ChatView.ChatList;
 import ivied.p001astreamchat.ChatView.DialogChoiceSmile;
 import ivied.p001astreamchat.Login.Login;
@@ -165,7 +165,7 @@ public class MainActivity extends SherlockFragmentActivity implements MenuItem.O
 
 		Cursor c = getContentResolver().query(SERVICE_URI, null, null, null, null);
 		if (c.getCount() ==  0){
-			intent = new Intent(this, AddChat.class);
+			intent = new Intent(this, ViewAddChat.class);
 			intent.putExtra("button", "Add");
 			startActivityForResult(intent, 2);
 		}
@@ -471,12 +471,12 @@ public class MainActivity extends SherlockFragmentActivity implements MenuItem.O
 
                 break;
             case 3:
-                intent = new Intent(this, AddChat.class);
+                intent = new Intent(this, ViewAddChat.class);
                 intent.putExtra("button", "Add");
                 startActivityForResult(intent, 2);
                 break;
             case 4:
-                Intent intentEdit = new Intent(this, AddChat.class);
+                Intent intentEdit = new Intent(this, ViewAddChat.class);
                 intentEdit.putExtra("button", "Edit");
                 startActivityForResult(intentEdit, 1);
                 break;

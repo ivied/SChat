@@ -18,7 +18,7 @@ import ivied.p001astreamchat.VideoView.HTML5WebView;
 /**
  * Created by Serv on 07.06.13.
  */
-public class AddVideoStream extends SherlockFragmentActivity implements SelectedListener, VideoViewSetter.SetVideoView {
+public class ViewAddVideoChannel extends SherlockFragmentActivity implements ChannelIdSelectedListener, VideoViewSetter.SetVideoView {
 
 
     FactoryVideoViewSetter factorySite = new FactoryVideoViewSetter();
@@ -55,7 +55,7 @@ public class AddVideoStream extends SherlockFragmentActivity implements Selected
 
 
     @Override
-    public void pasteChannel(String channel) {
+    public void pasteIdChannel(String channel) {
 
         streamName.setText(channel);
         channelId.setText(channel);
