@@ -1,9 +1,5 @@
 package ivied.p001astreamchat.ChatView;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,9 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
 import ivied.p001astreamchat.Core.MainActivity;
-import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.Site;
 
 

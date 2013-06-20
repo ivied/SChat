@@ -3,7 +3,6 @@ package ivied.p001astreamchat.AddChat;
 import android.graphics.drawable.Drawable;
 
 import ivied.p001astreamchat.Sites.FactorySite;
-import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 import ivied.p001astreamchat.Sites.Site;
 import ivied.p001astreamchat.Sites.VideoViewSetter;

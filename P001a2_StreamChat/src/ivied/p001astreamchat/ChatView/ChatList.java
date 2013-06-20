@@ -16,19 +16,6 @@
 
 package ivied.p001astreamchat.ChatView;
 
-import ivied.p001astreamchat.Core.MainActivity;
-import ivied.p001astreamchat.Core.MainActivity.TabInfo;
-import ivied.p001astreamchat.Core.MyApp;
-import ivied.p001astreamchat.Core.MyContentProvider;
-import ivied.p001astreamchat.Core.SendMessageService;
-import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
-import ivied.p001astreamchat.VideoView.HTML5WebView;
-import ivied.p001astreamchat.Sites.VideoViewSetter;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -39,6 +26,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -61,6 +49,21 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import ivied.p001astreamchat.Core.MainActivity;
+import ivied.p001astreamchat.Core.MainActivity.TabInfo;
+import ivied.p001astreamchat.Core.MyApp;
+import ivied.p001astreamchat.Core.MyContentProvider;
+import ivied.p001astreamchat.Core.SendMessageService;
+import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
+import ivied.p001astreamchat.Sites.VideoViewSetter;
+import ivied.p001astreamchat.VideoView.HTML5WebView;
 
 /**
  * Demonstration of the use of a CursorLoader to load and display contacts data
@@ -142,6 +145,18 @@ public class ChatList extends SherlockFragmentActivity {
             (root.findViewById(R.id.internalEmpty)).setId(INTERNAL_EMPTY_ID);
             Log.i(MainActivity.LOG_TAG, "id textOfMessage = " + tagNumber);
             (root.findViewById(R.id.textOfMessage)).setId(tagNumber + 1);
+
+
+
+    /*        String path="http://usher.twitch.tv/stream/multi_playlist/hail9.m3u8?allow_cdn=true&token=a7b5781edab4256f5f1781d1d4dfc87db5a03735%3A272320e78c29de3866fbdfa923773906b2af06af%3A%7B%22expiration%22%3A%201371563311.483093%2C%20%22channel%22%3A%20%22hail9%22%2C%20%22user_agent%22%3A%20%22.*%22%7D&hd=true";
+            String path1="http://commonsware.com/misc/test2.3gp";
+
+            Uri uri=Uri.parse(path);
+
+            VideoView video=(VideoView) root.findViewById(R.id.videoView);
+            video.setVideoURI(uri);
+            video.start();*/
+
 
 
             mList = (ListView) root.findViewById(android.R.id.list);
@@ -490,6 +505,51 @@ public class ChatList extends SherlockFragmentActivity {
 		}
 
 
+        @Override
+        public void onStop() {
+            clearCache(MyApp.getContext(),0);
+           super.onStop();
+        }
+
+        static int clearCacheFolder(final File dir, final int numDays) {
+
+            int deletedFiles = 0;
+            if (dir!= null && dir.isDirectory()) {
+                try {
+                    for (File child:dir.listFiles()) {
+
+                        //first delete subdirectories recursively
+                        if (child.isDirectory()) {
+                            deletedFiles += clearCacheFolder(child, numDays);
+                        }
+
+                        //then delete the files and subdirectories in this dir
+                        //only empty directories can be deleted, so subdirs have been done first
+                        if (child.lastModified() < new Date().getTime() - numDays * DateUtils.DAY_IN_MILLIS) {
+                            if (child.delete()) {
+                                deletedFiles++;
+                            }
+                        }
+                    }
+                }
+                catch(Exception e) {
+                    Log.e(MainActivity.LOG_TAG, String.format("Failed to clean the cache, error %s", e.getMessage()));
+                }
+            }
+            return deletedFiles;
+        }
+
+        /*
+         * Delete the files older than numDays days from the application cache
+         * 0 means all files.
+         */
+        public static void clearCache(final Context context, final int numDays) {
+          //  MyApp.getContext().deleteDatabase("webview.db");
+          //  MyApp.getContext().deleteDatabase("webviewCache.db");
+            Log.i(MainActivity.LOG_TAG, String.format("Starting cache prune, deleting files older than %d days", numDays));
+            int numDeletedFiles = clearCacheFolder(context.getCacheDir(), numDays);
+            Log.i(MainActivity.LOG_TAG, String.format("Cache pruning completed, %d files deleted", numDeletedFiles));
+        }
 		@Override
 		public boolean onMenuItemClick(MenuItem item) {
 

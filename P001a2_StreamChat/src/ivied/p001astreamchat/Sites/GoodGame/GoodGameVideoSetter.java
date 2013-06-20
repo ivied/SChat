@@ -3,19 +3,15 @@ package ivied.p001astreamchat.Sites.GoodGame;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 
-import org.apache.http.client.methods.HttpGet;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
 import ivied.p001astreamchat.Core.MyApp;
-import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.AsyncDownloadJson;
 import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 import ivied.p001astreamchat.Sites.VideoViewSetter;

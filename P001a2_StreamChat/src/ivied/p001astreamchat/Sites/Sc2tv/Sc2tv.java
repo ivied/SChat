@@ -44,13 +44,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
+import ivied.p001astreamchat.Core.MainActivity;
+import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
-import ivied.p001astreamchat.Core.MainActivity;
-import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Sites.Site;
 
 
@@ -241,6 +241,7 @@ public class Sc2tv extends Site {
             if (c.getCount() == 0) {
 
                 i++;
+                c.close();
                 insertSc2tv(jsonArray, i, channel);
                 i--;
                 String nick = jsonObject.getString("name");
@@ -266,8 +267,8 @@ public class Sc2tv extends Site {
                     }
 
                 }
-            }
-            c.close();
+            }else {
+            c.close();}
         } catch (Exception e) {
             e.printStackTrace();
         }

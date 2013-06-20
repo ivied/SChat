@@ -4,18 +4,17 @@ package ivied.p001astreamchat.AddChat;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
-import ivied.p001astreamchat.VideoView.HTML5WebView;
 import ivied.p001astreamchat.Sites.VideoViewSetter;
-import android.support.v4.app.FragmentTransaction;
+import ivied.p001astreamchat.VideoView.HTML5WebView;
 /**
  * Created by Serv on 07.06.13.
  */

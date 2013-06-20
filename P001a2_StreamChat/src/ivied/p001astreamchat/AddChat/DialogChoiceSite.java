@@ -7,8 +7,8 @@ import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,8 +16,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ivied.p001astreamchat.Core.MainActivity;
-import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 
 public class DialogChoiceSite extends DialogFragment implements  OnClickListener {

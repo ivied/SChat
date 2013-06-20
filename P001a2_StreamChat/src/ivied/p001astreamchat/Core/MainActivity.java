@@ -1,11 +1,6 @@
 package ivied.p001astreamchat.Core;
 
 
-
-import java.util.ArrayList;
-import java.util.List;
-
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -36,12 +31,15 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ivied.p001astreamchat.AddChat.AddChat;
 import ivied.p001astreamchat.ChatView.ChatList;
 import ivied.p001astreamchat.ChatView.DialogChoiceSmile;
-import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.Sites.FactorySite;
 
 
 public class MainActivity extends SherlockFragmentActivity implements MenuItem.OnMenuItemClickListener {

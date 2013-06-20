@@ -1,8 +1,5 @@
 package ivied.p001astreamchat.ChatView;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,6 +13,9 @@ import android.widget.Spinner;
 
 import com.actionbarsherlock.view.ActionProvider;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import ivied.p001astreamchat.R;
 
 public class ActionProviderLink extends ActionProvider implements  OnItemSelectedListener {
@@ -23,7 +23,7 @@ public class ActionProviderLink extends ActionProvider implements  OnItemSelecte
 	final Uri INSERT_URI = Uri.parse("content://ivied.p001astreamchat/chats/insert");
 	public final static Pattern URL = Pattern.compile("(http|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+" +
 			"([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?");
-			//+"|(\\w+\\.)+(ru|com|org|tv|net|ua|at|edu|gov|int|mil|biz|ðô)+[^ ]*"
+			//+"|(\\w+\\.)+(ru|com|org|tv|net|ua|at|edu|gov|int|mil|biz|ï¿½ï¿½)+[^ ]*"
 	Context mContext;
     public ActionProviderLink(Context context) {
         super(context);

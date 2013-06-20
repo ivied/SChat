@@ -84,7 +84,7 @@ public class DialogTwitchChannelByGame extends SherlockDialogFragment implements
 
     private void renewAdapter() {
         AsyncDownloadJson.CustomDownloadJson downloadJson =
-                new AsyncDownloadJson.CustomDownloadJson(TWITCH_API_BY_GAME + game/*+ HLS_TRUE*/, this);
+                new AsyncDownloadJson.CustomDownloadJson(TWITCH_API_BY_GAME + game+ HLS_TRUE, this);
         AsyncDownloadJson asyncDownloadJson = new AsyncDownloadJson();
         asyncDownloadJson.execute(downloadJson);
 

@@ -1,8 +1,5 @@
 package ivied.p001astreamchat.AddChat;
 
-import ivied.p001astreamchat.Sites.FactorySite;
-import ivied.p001astreamchat.R;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,6 +12,9 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+
+import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.Sites.FactorySite;
 
 public class AddChannel extends SherlockFragmentActivity implements
 		OnClickListener, DialogColorPicker.OnColorChangedListener, SelectedListener {

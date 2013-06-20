@@ -1,7 +1,5 @@
 package ivied.p001astreamchat.AddChat;
 
-import java.util.ArrayList;
-
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,7 +7,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -27,9 +24,11 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 
+import java.util.ArrayList;
+
 import ivied.p001astreamchat.Core.MainActivity;
-import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.R;
+import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 
 public class AddChat extends SherlockFragmentActivity implements OnClickListener, OnItemClickListener{

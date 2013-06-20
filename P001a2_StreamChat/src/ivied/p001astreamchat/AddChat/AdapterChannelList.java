@@ -1,7 +1,5 @@
 package ivied.p001astreamchat.AddChat;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -11,7 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import ivied.p001astreamchat.AddChat.AddChatChannel;
+import java.util.ArrayList;
+
 import ivied.p001astreamchat.R;
 
 public class AdapterChannelList extends BaseAdapter {

@@ -12,8 +12,6 @@ import android.widget.EditText;
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
 import ivied.p001astreamchat.AddChat.SelectedListener;
 import ivied.p001astreamchat.R;
-import ivied.p001astreamchat.Sites.Twitch.DialogFindTwitchChannel;
-import ivied.p001astreamchat.Sites.Twitch.DialogTwitchTopGames;
 
 /**
  * Created by Serv on 13.06.13.

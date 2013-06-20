@@ -1,9 +1,5 @@
 package ivied.p001astreamchat.Core;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -15,7 +11,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
 
-import ivied.p001astreamchat.Core.MainActivity;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class MyContentProvider extends ContentProvider {
@@ -182,7 +180,7 @@ public class MyContentProvider extends ContentProvider {
                     idFrom = cursor.getString(0);
                 }
 
-
+               cursor.close();
 
                 selection = "( " + selection + " )" + " AND " + " _id > ?";
 

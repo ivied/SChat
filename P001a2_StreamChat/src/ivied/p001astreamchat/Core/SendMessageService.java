@@ -14,7 +14,6 @@ import android.widget.Toast;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.Site;
-import ivied.p001astreamchat.Sites.Twitch.Twitch;
 
 public class SendMessageService extends Service {
 	private Handler handler = new Handler();

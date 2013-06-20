@@ -1,16 +1,15 @@
 package ivied.p001astreamchat.Core;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.text.InputFilter;
 import android.view.KeyEvent;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
+
+import java.util.List;
 
 import ivied.p001astreamchat.R;
 
