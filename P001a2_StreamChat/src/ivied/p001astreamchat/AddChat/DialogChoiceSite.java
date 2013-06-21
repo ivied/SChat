@@ -15,18 +15,20 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import ivied.p001astreamchat.AddChat.ViewQRReader.ViewQRReader;
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 
 public class DialogChoiceSite extends DialogFragment implements  OnClickListener {
-	 public static final String SITE = "site";
-	 public static final String FOR = "for";
+    public static final String SITE = "site";
+    public static final String FOR = "for";
 
-       private static final int ID_ADD_VIDEO = 25;
+    private static final int ID_ADD_VIDEO = 25;
+    private static final  int ID_ADD_QR_CODE = 26;
     public static final int TEXT_VIEW_TOP_MARGINS = 20;
-     FactorySite mFactorySite = new FactorySite();
+    FactorySite mFactorySite = new FactorySite();
     public static DialogChoiceSite newInstance(ArrayList<Channel> channels) {
         int flag = 0;
         DialogChoiceSite dlg = new DialogChoiceSite();
@@ -52,6 +54,9 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(new LinearLayout.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.MATCH_PARENT));
 
+        TextView textViewQRReader = createTextView(getResources().getDrawable(R.drawable.qr_code), "Add by QR code", ID_ADD_QR_CODE );
+        layout.addView(textViewQRReader);
+
         for(FactorySite.SiteName siteName : FactorySite.SiteName.values()){
 
 
@@ -73,22 +78,30 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
 
 
     @Override
-	public void onClick(View v) {
-		onDismiss(getDialog());
+    public void onClick(View v) {
+        onDismiss(getDialog());
         int id= v.getId() - MainActivity.ID_SITE_SELECT;
 
         for(FactorySite.SiteName siteName : FactorySite.SiteName.values()){
-            if (siteName.ordinal() == id) sendResult(siteName);
+            if (siteName.ordinal() == id) startActivityForResult(siteName);
         }
-        if (v.getId() == 25) {
-            DialogFragment dlgSelectStreamSite = new DialogSelectStreamSite();
-            dlgSelectStreamSite.show(getFragmentManager(),"Select stream site");
+        switch (v.getId()){
 
+            case ID_ADD_VIDEO:
+                DialogFragment dlgSelectStreamSite = new DialogSelectStreamSite();
+                dlgSelectStreamSite.show(getFragmentManager(),"Select stream site");
+                break;
+
+            case ID_ADD_QR_CODE:
+                Intent intent = new Intent(getActivity(),ViewQRReader.class);
+
+                getActivity().startActivityForResult(intent, ViewAddChat.TASK_ADD);
+                break;
         }
 
     }
 
-    private void sendResult (FactorySite.SiteName site){
+    private void startActivityForResult(FactorySite.SiteName site){
         Intent intent = new Intent(getActivity(), ViewAddChannel.class);
         intent.putExtra(SITE, site);
         intent.putExtra(FOR, "add");

@@ -9,33 +9,36 @@ import ivied.p001astreamchat.Sites.VideoViewSetter;
 
 public class Channel {
     String site;
-    String name;
+    String preferName;
     int color;
     String channelId;
     Drawable drawable;
     FactorySite.SiteName siteInt;
     FactoryVideoViewSetter.VideoSiteName siteVideoInt;
 
-    Channel(String channelId, int color, String name, FactorySite.SiteName site) {
+   public Channel(String channelId, int color, String preferName, FactorySite.SiteName site) {
         FactorySite factorySite = new FactorySite();
         Site mSite = factorySite.getSite(site);
         this.channelId = channelId;
         this.color = color;
-        this.name = name;
+        this.preferName = preferName;
         this.siteInt = site;
         this.site = site.name();
         this.drawable = mSite.getLogo();
     }
 
-    Channel(String channelId, int color, String name, FactoryVideoViewSetter.VideoSiteName site) {
+   public Channel(String channelId, int color, String preferName, FactoryVideoViewSetter.VideoSiteName site) {
         FactoryVideoViewSetter factoryVideoViewSetter = new FactoryVideoViewSetter();
         VideoViewSetter viewSetter = factoryVideoViewSetter.getVideoSite(site);
         this.channelId = channelId;
         this.color = color;
-        this.name = name;
+        this.preferName = preferName;
         this.siteVideoInt = site;
         this.site =site.name();
         this.drawable = viewSetter.getLogo();
     }
+
+
+
 
 }

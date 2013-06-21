@@ -24,6 +24,15 @@
     <orderEntry type="module" module-name="actionbarsherlock" />
     <orderEntry type="library" name="org.apache.commons.codec" level="project" />
     <orderEntry type="library" name="pircbot" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/zbar.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

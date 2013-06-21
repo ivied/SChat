@@ -51,7 +51,7 @@ public class AdapterChannelToListView extends BaseAdapter {
                 viewParent, false);
         viewChanging.setBackgroundColor(channel.color);
         TextView textViewChannelNames = (TextView) viewChanging.findViewById(R.id.textChannelNames);
-        textViewChannelNames.setText(Html.fromHtml(channel.name + "<br>" + "<\br>"
+        textViewChannelNames.setText(Html.fromHtml(channel.preferName + "<br>" + "<\br>"
                 + channel.channelId + "<\br>"));
         ((ImageView) viewChanging.findViewById(R.id.imageSite)).setImageDrawable(channel.drawable);
         return viewChanging;

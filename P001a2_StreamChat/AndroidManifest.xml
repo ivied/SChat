@@ -9,7 +9,9 @@
             android:targetSdkVersion="15" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
     <application
             android:allowBackup="true"
             android:icon="@drawable/ic_launcher"
@@ -35,6 +37,7 @@
         <activity android:name=".AddChat.ViewAddChat"></activity>
         <activity android:name=".AddChat.ViewAddChannel"></activity>
         <activity android:name=".AddChat.ViewAddVideoChannel"></activity>
+        <activity android:name=".AddChat.ViewQRReader.ViewQRReader"></activity>
         <activity android:name=".Core.Help"></activity>
 
     </application>

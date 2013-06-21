@@ -24,7 +24,7 @@ public class ViewAddVideoChannel extends SherlockFragmentActivity implements Cha
     FactoryVideoViewSetter factorySite = new FactoryVideoViewSetter();
     EditText streamName;
     FactoryVideoViewSetter.VideoSiteName site;
-    String  channel;
+
     FragmentAddChannelStandard fragment;
     EditText channelId;
     FactoryVideoViewSetter factoryVideoViewSetter = new FactoryVideoViewSetter();

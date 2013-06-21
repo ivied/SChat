@@ -26,6 +26,7 @@ import com.actionbarsherlock.view.MenuItem;
 
 import java.util.ArrayList;
 
+import ivied.p001astreamchat.AddChat.ViewQRReader.ViewQRReader;
 import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
@@ -42,13 +43,14 @@ public class ViewAddChat extends SherlockFragmentActivity implements OnClickList
     static final int SAVE_CHAT_NEED_CHANNELS = 3;
     static final int BTN_LOAD_CHAT = 2;
     static final int BTN_CLOSE_CHAT = 3;
+
     static final String CHANNEL = "channel";
     static final String COLOR = "color";
     static final String PERSONAL_NAME = "personal";
     final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
     Button closeChat,loadSavedChats,setChat;
     LinearLayout mLayout;
-	private EditText setName;
+	private EditText setNameEditText;
 	private ImageButton addChannel;
 	DialogChoiceSite dialogChoice;
 	DialogFragment dlgLoadSavedChat;
@@ -68,7 +70,7 @@ public class ViewAddChat extends SherlockFragmentActivity implements OnClickList
 		addChannel = (ImageButton) findViewById(R.id.btnAddChannel);
 		addChannel.setOnClickListener(this);
 		mLayout = (LinearLayout) findViewById(R.id.layoutControlEdit);
-		setName = (EditText) findViewById(R.id.chatName);
+		setNameEditText = (EditText) findViewById(R.id.chatName);
 		channelList = (ListView) findViewById(R.id.listChannels);
 		 adapter = new AdapterChannelToListView(this, channels);
 		 channelList.setAdapter(adapter);
@@ -110,7 +112,7 @@ public class ViewAddChat extends SherlockFragmentActivity implements OnClickList
 		case R.id.setChat:
 			if (button.equalsIgnoreCase("Edit")){
 				getContentResolver().delete
-				(ADD_URI, "chat = ?", new String [] {  setName.getText().toString()});
+				(ADD_URI, "chat = ?", new String [] {  setNameEditText.getText().toString()});
 				intent.putExtra("action", MainActivity.EDIT);
 			}
 			//Add "action"   "edit" in configData
@@ -124,7 +126,7 @@ public class ViewAddChat extends SherlockFragmentActivity implements OnClickList
 				Toast.makeText(this, getString(R.string.toast_chat_saved), Toast.LENGTH_SHORT).show();
 				
 				  intent.putExtra("name",
-				  setName.getText().toString()); setResult(RESULT_OK, intent);
+                          setNameEditText.getText().toString()); setResult(RESULT_OK, intent);
 				  finish();
 
 				break;
@@ -144,8 +146,8 @@ public class ViewAddChat extends SherlockFragmentActivity implements OnClickList
 			break;
 		case BTN_CLOSE_CHAT:
 			getContentResolver().delete
-			(ADD_URI, "chat = ?", new String [] {  setName.getText().toString()});
-			intent.putExtra("name", setName.getText().toString());
+			(ADD_URI, "chat = ?", new String [] {  setNameEditText.getText().toString()});
+			intent.putExtra("name", setNameEditText.getText().toString());
 			intent.putExtra("action", MainActivity.DELETE);	
 			
 			setResult(RESULT_OK, intent);
@@ -159,38 +161,47 @@ public class ViewAddChat extends SherlockFragmentActivity implements OnClickList
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (resultCode == RESULT_OK) {
-            String channel =data.getStringExtra("channelId");
-            int color = data.getIntExtra("color", Color.MAGENTA);
-            String personalName = data.getStringExtra("name");
-            switch (requestCode) {
-                case TASK_ADD_VIDEO:
-                    FactoryVideoViewSetter.VideoSiteName siteVideo = (FactoryVideoViewSetter.VideoSiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
-                    channels.add ( new Channel(channel,color,personalName,siteVideo));
-                    break;
-                case TASK_EDIT_VIDEO:
-                    siteVideo = (FactoryVideoViewSetter.VideoSiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
-                    channels.set (_id, new Channel(channel,color,personalName,siteVideo));
-                    break;
+        switch (resultCode){
+            case RESULT_OK:
+                String channel =data.getStringExtra("channelId");
+                int color = data.getIntExtra("color", Color.MAGENTA);
+                String personalName = data.getStringExtra("name");
+                switch (requestCode) {
+                    case TASK_ADD_VIDEO:
+                        FactoryVideoViewSetter.VideoSiteName siteVideo = (FactoryVideoViewSetter.VideoSiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
+                        channels.add ( new Channel(channel,color,personalName,siteVideo));
+                        break;
+                    case TASK_EDIT_VIDEO:
+                        siteVideo = (FactoryVideoViewSetter.VideoSiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
+                        channels.set (_id, new Channel(channel,color,personalName,siteVideo));
+                        break;
 
-                case TASK_ADD:
+                    case TASK_ADD:
 
-                    FactorySite.SiteName site = (FactorySite.SiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
+                        FactorySite.SiteName site = (FactorySite.SiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
 
-                    channels.add( new Channel(channel,color,personalName,site));
+                        channels.add( new Channel(channel,color,personalName,site));
 
-                    break;
+                        break;
 
-                case TASK_EDIT:
+                    case TASK_EDIT:
 
-                    site = (FactorySite.SiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
+                        site = (FactorySite.SiteName) data.getSerializableExtra(DialogChoiceSite.SITE);
 
-                    channels.set(_id, new Channel(channel,color,personalName,site));
+                        channels.set(_id, new Channel(channel,color,personalName,site));
 
-                    break;
-            }
-            adapter.notifyDataSetChanged();
+                        break;
+
+                }
+            case RESULT_FIRST_USER:
+                setNameEditText.setText(data.getStringExtra(ViewQRReader.CHAT_NAME));
+                for (Channel channelFromQR: ViewQRReader.channels){
+                    channels.add(channelFromQR);
+                }
+                break;
+
         }
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -263,7 +274,7 @@ public class ViewAddChat extends SherlockFragmentActivity implements OnClickList
         intent.putExtra(DialogChoiceSite.FOR, "edit");
 		intent.putExtra(CHANNEL, channel.channelId);
 		intent.putExtra(COLOR, channel.color);
-		intent.putExtra(PERSONAL_NAME, channel.name);
+		intent.putExtra(PERSONAL_NAME, channel.preferName);
 		
 		startActivityForResult(intent, task);
 		
@@ -271,7 +282,7 @@ public class ViewAddChat extends SherlockFragmentActivity implements OnClickList
 	
 	public int saveChat() {
 
-		String chatName = setName.getText().toString();
+		String chatName = setNameEditText.getText().toString();
 		if (chatName.equalsIgnoreCase(""))
 			return SAVE_CHAT_NAME_EMPTY;
 		String[] name = { chatName };
@@ -291,7 +302,7 @@ public class ViewAddChat extends SherlockFragmentActivity implements OnClickList
 				cv.put("site", channel.site);
 				cv.put("channel", channel.channelId);
 				cv.put("color", channel.color);
-				cv.put("personal", channel.name);
+				cv.put("personal", channel.preferName);
 
 				getContentResolver().insert(ADD_URI, cv);
 				}
@@ -310,7 +321,7 @@ public class ViewAddChat extends SherlockFragmentActivity implements OnClickList
 		adapter= new AdapterChannelToListView(this, channels);
 		 channelList.setAdapter(adapter);
 		 channelList.setOnItemClickListener(this);
-		setName.setText(chatName);
+		setNameEditText.setText(chatName);
 		
 	}
 
