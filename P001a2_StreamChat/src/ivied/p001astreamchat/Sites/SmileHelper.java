@@ -1,6 +1,5 @@
 package ivied.p001astreamchat.Sites;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,7 +31,7 @@ public class SmileHelper  {
             SmileParser smileParser = new SmileParser();
             smileParser.execute(siteName);
 
-       }
+        }
 
 
     }
@@ -41,7 +40,7 @@ public class SmileHelper  {
     static class SmileParser extends AsyncTask<FactorySite.SiteName, Boolean, Void> {
         FactorySite factorySite = new FactorySite();
 
-        ContentValues cv = new ContentValues();
+
         Site site;
         @Override
         protected Void doInBackground(FactorySite.SiteName... params) {
@@ -50,33 +49,34 @@ public class SmileHelper  {
 
 //            site.setSmileMaps();
             HttpGet httpGet = new HttpGet(site.getSmileAddress());
-
             HttpResponse response = site.getResponse(httpGet);
+            if (response == null) return null;
+
             StatusLine statusLine = response.getStatusLine();
             int statusCode = statusLine.getStatusCode();
-            if (statusCode == 200) {
-                String header = response.getFirstHeader(site.getSmileModifyHeader()).getValue();
-                String selection = "site = ?";
-                String headerName = site.getSiteName()+ "header";
-                String [] selectionArgs =  new String []{headerName};
-                Cursor c = MyApp.getContext().getContentResolver()
-                        .query(MyContentProvider.SMILE_INSERT_URI, null, selection, selectionArgs, null );
-                if (c.moveToNext()){
-                    if (c.getString(3).equalsIgnoreCase(header)) {
-                        c.close();
-                        publishProgress(true);
-                        return null;
+            if (!(statusCode == 200)) return null;
 
-                    }else{
-                        MyApp.getContext().getContentResolver().delete(MyContentProvider.SMILE_INSERT_URI, selection, selectionArgs );
-                    }
+            String header = response.getFirstHeader(site.getSmileModifyHeader()).getValue();
+            String selection = "site = ?";
+            String headerName = site.getSiteName()+ "header";
+            String [] selectionArgs =  new String []{headerName};
+            Cursor c = MyApp.getContext().getContentResolver()
+                    .query(MyContentProvider.SMILE_INSERT_URI, null, selection, selectionArgs, null );
+            if (c.moveToNext()){
+                if (c.getString(3).equalsIgnoreCase(header)) {
+                    c.close();
+                    publishProgress(true);
+                    return null;
+
+                }else{
+                    MyApp.getContext().getContentResolver().delete(MyContentProvider.SMILE_INSERT_URI, selection, selectionArgs );
                 }
-                c.close();
-                MyApp.getContext().getContentResolver().delete(MyContentProvider.SMILE_INSERT_URI
-                        , selection, new String[]{site.getSiteName()});
-                site.getSiteSmiles(header);
-
             }
+            c.close();
+            MyApp.getContext().getContentResolver().delete(MyContentProvider.SMILE_INSERT_URI
+                    , selection, new String[]{site.getSiteName()});
+            site.getSiteSmiles(header);
+
             return null;
         }
 
