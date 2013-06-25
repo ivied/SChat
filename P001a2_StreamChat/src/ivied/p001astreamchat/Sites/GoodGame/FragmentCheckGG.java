@@ -38,7 +38,7 @@ public class FragmentCheckGG extends FragmentAddChannelStandard implements View.
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_check_gg, null);
+        View v = inflater.inflate(R.layout.fragment_check_goodgame_video, null);
 
         Button btnCheckChannelTwitch = (Button) v.findViewById(R.id.btnCheckGGStream);
         btnCheckChannelTwitch.setOnClickListener(this);

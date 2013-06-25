@@ -1,5 +1,6 @@
 package ivied.p001astreamchat.Sites;
 
+import ivied.p001astreamchat.Sites.GoodGame.GoodGame;
 import ivied.p001astreamchat.Sites.Sc2tv.Sc2tv;
 import ivied.p001astreamchat.Sites.Twitch.Twitch;
 
@@ -8,7 +9,7 @@ import ivied.p001astreamchat.Sites.Twitch.Twitch;
  */
 public class FactorySite {
     public enum SiteName {
-        SC2TV, TWITCH
+        SC2TV, TWITCH, GOODGAME
     }
 
 
@@ -17,9 +18,11 @@ public class FactorySite {
 
         switch (site){
             case SC2TV:
-            return new Sc2tv();
+                return new Sc2tv();
             case TWITCH:
-            return new Twitch();
+                return new Twitch();
+            case GOODGAME:
+                return new GoodGame();
         }
         return null;
     }

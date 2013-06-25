@@ -48,6 +48,8 @@ public class SmileHelper  {
             site = factorySite.getSite(params[0]);
 
 //            site.setSmileMaps();
+            if(site.getSmileAddress() == null) return null;
+
             HttpGet httpGet = new HttpGet(site.getSmileAddress());
             HttpResponse response = site.getResponse(httpGet);
             if (response == null) return null;
