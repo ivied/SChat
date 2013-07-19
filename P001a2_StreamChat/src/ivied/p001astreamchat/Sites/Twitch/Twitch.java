@@ -31,6 +31,7 @@ import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.Sites.Message;
 import ivied.p001astreamchat.Sites.Site;
 
 /**
@@ -170,10 +171,11 @@ public class Twitch  extends Site {
         }
 
         public void onMessage(String channel, String sender, String login,
-                              String hostname, String message) {
+                              String hostname, String text) {
             long unixTime = System.currentTimeMillis() / 1000L;
             channel = channel.substring(1);
-            insertMessage ( channel, sender, message, null, unixTime);
+            Message message = new Message(channel, sender, text, null, unixTime);
+            insertMessage ( message );
 
         }
     }

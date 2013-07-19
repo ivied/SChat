@@ -141,20 +141,20 @@ public abstract class Site {
         }
     };
 
-    protected void insertMessage ( String channel, String nick, String message, String id, long time) {
+    protected void insertMessage (Message message) {
         FactorySite.SiteName site= getSiteEnum();
         ContentValues cv = new ContentValues();
         cv.put("site", site.name());
-        cv.put("channel", channel);
-        cv.put("nick", nick);
-        cv.put("message", message);
-        cv.put("time", time);
+        cv.put("channel", message.channel);
+        cv.put("nick", message.nick);
+        cv.put("message", message.text);
+        cv.put("time", message.time);
 
-        cv.put("identificator", id);
+        cv.put("identificator", message.id);
         //TODO ?????? insert ignore
-        Cursor customCursor = getCursorFromChannelDB(site.name(), channel);
+        Cursor customCursor = getCursorFromChannelDB(site.name(), message.channel);
         String personal = personalSet(customCursor);
-        if (personal.equalsIgnoreCase("")) personal = channel;
+        if (personal.equalsIgnoreCase("")) personal = message.channel;
         cv.put("personal", personal);
 
         cv.put("color",colorSet(customCursor));

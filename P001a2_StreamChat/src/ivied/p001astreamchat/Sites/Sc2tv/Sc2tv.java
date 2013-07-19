@@ -51,6 +51,7 @@ import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.Sites.Message;
 import ivied.p001astreamchat.Sites.Site;
 
 
@@ -259,7 +260,8 @@ public class Sc2tv extends Site {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                insertMessage(  channel, nick, message, id, time);
+
+                insertMessage(new Message( channel, nick, message, id, time));
                 if (MainActivity.showNotifySystem){
                     if (privateMessage(message)){
                         message = message.replace("<b>", "").replace("</b>", "");

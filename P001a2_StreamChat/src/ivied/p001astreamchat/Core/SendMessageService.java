@@ -65,7 +65,7 @@ public class SendMessageService extends Service {
 	class LoadLogin extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... a) {
-			// TODO Auto-generated method stub\
+
 			for(FactorySite.SiteName siteName : FactorySite.SiteName.values()){
                 factorySite.getSite(siteName).getLogin();
             }
@@ -111,10 +111,7 @@ public class SendMessageService extends Service {
 	public void login() {
 		LoadLogin login = new LoadLogin();
 		login.execute();
-		
-		
-		
-		
+
 	}
 
 	public void sendMessage(String text, String currentTabTag) {

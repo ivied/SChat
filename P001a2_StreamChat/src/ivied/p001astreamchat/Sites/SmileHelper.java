@@ -28,8 +28,8 @@ public class SmileHelper  {
         for (FactorySite.SiteName siteName : FactorySite.SiteName.values()){
 
 
-            SmileParser smileParser = new SmileParser();
-            smileParser.execute(siteName);
+           // SmileParser smileParser = new SmileParser();
+           // smileParser.execute(siteName);
 
         }
 
