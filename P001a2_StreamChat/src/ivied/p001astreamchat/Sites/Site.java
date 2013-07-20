@@ -99,7 +99,7 @@ public abstract class Site {
     protected class ChannelRun implements Runnable {
 
         Site siteClass;
-        String channel;
+        public String channel;
         //	String message;
 
         public ChannelRun(Site site, String channel) {

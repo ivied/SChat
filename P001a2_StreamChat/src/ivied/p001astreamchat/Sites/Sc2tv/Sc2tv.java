@@ -144,10 +144,10 @@ public class Sc2tv extends Site {
         try {
             client = new DefaultHttpClient();
             HttpPost post = getSc2tvPost(name , pass);
-            HttpResponse response = client.execute(post);
+            client.execute(post);
             HttpGet httpGet = new HttpGet(GET_TOKEN );
 
-            response = Sc2tv.client.execute(httpGet);
+            HttpResponse response = client.execute(httpGet);
 
             HttpEntity entity = response.getEntity();
             InputStream content = entity.getContent();
@@ -411,28 +411,5 @@ public class Sc2tv extends Site {
 
 
 
-      /*private int getCountOfNew(JSONArray jsonArray) {
 
-        int i = 0 ;
-
-        Cursor c  ;
-        JSONObject jsonObj = new JSONObject();
-        try {
-
-
-            do{
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                String[] selectionArgs = new String[] { jsonObject.getString("id") };
-
-                c = MyApp.getContext().getContentResolver().query(
-                        INSERT_URI, null,
-                        "identificator = ?", selectionArgs, null);
-                if (c.getCount() == 0) i++;
-            }while ((c.getCount() == 0) && (jsonArray.length() != i));
-            c.close();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } return i;
-    }
-*/
 }

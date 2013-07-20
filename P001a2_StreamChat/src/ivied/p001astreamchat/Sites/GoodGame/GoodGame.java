@@ -25,29 +25,33 @@ import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import de.tavendo.autobahn.WebSocket;
+import de.tavendo.autobahn.WebSocketConnection;
 import de.tavendo.autobahn.WebSocketException;
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
-import ivied.p001astreamchat.Sites.Message;
 import ivied.p001astreamchat.Sites.Site;
 
 /**
  * Created by Serv on 24.06.13.
  */
 public class GoodGame extends Site {
+
+    public static String GGNick;
+    public static String GGPassWord;
     String channel;
     ExecutorService es;
     private final String domain = "goodgame.ru";
-    private final String CHAT_URL = "http://www." + domain + "/chat/";
+    final String CHAT_URL = "http://www." + domain + "/chat/";
     private final int maxServerNum = 0x1e3;
     private Random randomNum = new Random();
 
     private String channelWithoutBreakPoints;
     private List<BasicNameValuePair> headersList = new ArrayList<BasicNameValuePair>();
-    private WebSocketForGG connection = new WebSocketForGG(this);
+    private WebSocket webSocket;
 
     @Override
     public Drawable getLogo() {
@@ -58,12 +62,14 @@ public class GoodGame extends Site {
     public void readChannel(String channel) {
             this.channel = channel;
             this.channelWithoutBreakPoints = channel.replace(".","");
+
             connectToChannel();
     }
 
 
     @Override
     public void startThread(ChannelRun channelRun) {
+        webSocket = new WebSocketConnection();
         es = Executors.newSingleThreadExecutor();
         mFuture = es.submit(channelRun);
     }
@@ -133,12 +139,11 @@ public class GoodGame extends Site {
         return null;
     }
 
-    @Override
-    protected void insertMessage(Message message) {
-        super.insertMessage(message);
-    }
+
+
 
     private void connectToChannel() {
+        WebSocketForGG connection = new WebSocketForGG(this, webSocket);
         String connectUri = getConnectAddress();
         getHeadersList();
         try {
