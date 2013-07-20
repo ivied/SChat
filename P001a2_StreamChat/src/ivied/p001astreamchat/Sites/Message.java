@@ -10,7 +10,7 @@ public class Message {
     public long time;
     public String id;
 
-    public Message(String channel, String nick, String text, String id, long time){
+    public Message(String channel, String nick, String text, String messageID, long time){
         this.channel = channel;
         this.nick = nick;
         this.text = text;

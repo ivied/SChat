@@ -5,19 +5,8 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +22,7 @@ import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
+import ivied.p001astreamchat.Sites.Message;
 import ivied.p001astreamchat.Sites.Site;
 
 /**
@@ -43,6 +33,8 @@ public class GoodGame extends Site {
     public static String GGNick;
     public static String GGPassWord;
     String channel;
+    int channelID;
+
     ExecutorService es;
     private final String domain = "goodgame.ru";
     final String CHAT_URL = "http://www." + domain + "/chat/";
@@ -69,7 +61,7 @@ public class GoodGame extends Site {
 
     @Override
     public void startThread(ChannelRun channelRun) {
-        webSocket = new WebSocketConnection();
+        webSocket  = new WebSocketConnection();
         es = Executors.newSingleThreadExecutor();
         mFuture = es.submit(channelRun);
     }
@@ -126,7 +118,8 @@ public class GoodGame extends Site {
 
     @Override
     public Spannable getSmiledText(String text, String nick) {
-        return null;
+        Spannable spannable = spannableFactory.newSpannable(nick + ": " + text);
+        return spannable;
     }
 
     @Override
@@ -139,13 +132,15 @@ public class GoodGame extends Site {
         return null;
     }
 
-
-
+    @Override
+    protected void insertMessage(Message message) {
+        super.insertMessage(message);
+    }
 
     private void connectToChannel() {
         WebSocketForGG connection = new WebSocketForGG(this, webSocket);
         String connectUri = getConnectAddress();
-        getHeadersList();
+
         try {
             connection.connect(connectUri);
 
@@ -153,38 +148,6 @@ public class GoodGame extends Site {
             e.printStackTrace();
         }
 
-    }
-
-    private List<BasicNameValuePair> getHeadersList() {
-        headersList.clear();
-        Header[] headers = getGoodGameChannelHeaders();
-        BasicNameValuePair headerNameValuePair;
-        for( Header header: headers) {
-            headerNameValuePair = new BasicNameValuePair(header.getName(), header.getValue());
-
-            headersList.add(headerNameValuePair);
-
-        }
-        return headersList;
-    }
-
-    private Header[] getGoodGameChannelHeaders() {
-
-        CookieStore cookieStore = new BasicCookieStore();
-        HttpContext localContext = new BasicHttpContext();
-        localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-
-        HttpGet request = new HttpGet(CHAT_URL + channelWithoutBreakPoints);
-        HttpClient client = new DefaultHttpClient() ;
-        try {
-            HttpResponse response = client.execute(request, localContext);
-
-            return response.getAllHeaders();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
 

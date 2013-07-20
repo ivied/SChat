@@ -24,12 +24,9 @@ import ivied.p001astreamchat.Sites.Site;
 public class AdapterChatCursor extends SimpleCursorAdapter {
 	final public static Pattern bold = Pattern.compile("(\\<b\\>)(.*)(\\<\\/b\\>)");
 	final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
-	 // Span to set text BOLD
 
     FactorySite factorySite = new FactorySite();
 
-
-    //static Map<Integer, Integer> linkMap= new HashMap<Integer,Integer>();
 	public  static List<Integer> linkMap = new ArrayList<Integer>();
 	public AdapterChatCursor(Context context, int _layout, Cursor cursor,
 			String[] from, int[] to, int flags) {

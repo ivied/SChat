@@ -149,9 +149,7 @@ public abstract class Site {
         cv.put("nick", message.nick);
         cv.put("message", message.text);
         cv.put("time", message.time);
-
         cv.put("identificator", message.id);
-        //TODO ?????? insert ignore
         Cursor customCursor = getCursorFromChannelDB(site.name(), message.channel);
         String personal = personalSet(customCursor);
         if (personal.equalsIgnoreCase("")) personal = message.channel;

@@ -45,22 +45,6 @@ public class DialogSelectStreamSite extends DialogFragment implements View.OnCli
         return  layout;
     }
 
-
-
-    private TextView createTextView (Drawable logo, String text , int id){
-        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        llp.setMargins(0, DialogChoiceSite.TEXT_VIEW_TOP_MARGINS, 0, 0);
-        TextView textSite =new TextView(getActivity());
-        textSite.setText(text);
-        textSite.setCompoundDrawablesWithIntrinsicBounds(logo, null, null, null);
-        textSite.setGravity(Gravity.CENTER);
-        textSite.setLayoutParams(llp);
-        textSite.setId(id);
-        textSite.setOnClickListener(this);
-        return textSite;
-    }
-
     @Override
     public void onClick(View v) {
         onDismiss(getDialog());
@@ -76,4 +60,20 @@ public class DialogSelectStreamSite extends DialogFragment implements View.OnCli
             }
         }
     }
+
+    private TextView createTextView (Drawable logo, String text , int id){
+        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        llp.setMargins(0, DialogChoiceSite.TEXT_VIEW_TOP_MARGINS, 0, 0);
+        TextView textSite =new TextView(getActivity());
+        textSite.setText(text);
+        textSite.setCompoundDrawablesWithIntrinsicBounds(logo, null, null, null);
+        textSite.setGravity(Gravity.CENTER);
+        textSite.setLayoutParams(llp);
+        textSite.setId(id);
+        textSite.setOnClickListener(this);
+        return textSite;
+    }
+
+
 }

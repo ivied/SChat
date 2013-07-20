@@ -16,7 +16,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ivied.p001astreamchat.AddChat.ViewQRReader.ViewQRReader;
-import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
@@ -28,6 +27,7 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
     private static final int ID_ADD_VIDEO = 25;
     private static final  int ID_ADD_QR_CODE = 26;
     public static final int TEXT_VIEW_TOP_MARGINS = 20;
+    private static final int ID_ADD_CHAT_SITE = 27;
     FactorySite mFactorySite = new FactorySite();
     public static DialogChoiceSite newInstance(ArrayList<Channel> channels) {
         int flag = 0;
@@ -54,19 +54,11 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(new LinearLayout.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.MATCH_PARENT));
 
-        TextView textViewQRReader = createTextView(getResources().getDrawable(R.drawable.qr_code), "Add by QR code", ID_ADD_QR_CODE );
+        TextView textViewQRReader = createTextView(getResources().getDrawable(R.drawable.qr_code), getResources().getString(R.string.dialog_ad_qr_code), ID_ADD_QR_CODE );
         layout.addView(textViewQRReader);
+        TextView textViewChatSite = createTextView(getResources().getDrawable(R.drawable.ic_launcher), getResources().getString(R.string.dialog_add_chat_sites), ID_ADD_CHAT_SITE );
+        layout.addView(textViewChatSite);
 
-        for(FactorySite.SiteName siteName : FactorySite.SiteName.values()){
-
-
-            String text = "Add " + siteName.name() + " chat channel";
-            Drawable drawable =  mFactorySite.getSite(siteName).getLogo();
-            int id = MainActivity.ID_SITE_SELECT + siteName.ordinal();
-            TextView chatChannel =  createTextView(drawable, text, id);
-            layout.addView(chatChannel);
-
-        }
         if (getArguments().getInt("flag") == 0){
             TextView videoChannel = createTextView(getResources().getDrawable(R.drawable.default_video_poster), getResources().getString(R.string.dialog_field_add_video), ID_ADD_VIDEO );
             layout.addView(videoChannel);
@@ -80,18 +72,17 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
     @Override
     public void onClick(View v) {
         onDismiss(getDialog());
-        int id= v.getId() - MainActivity.ID_SITE_SELECT;
 
-        for(FactorySite.SiteName siteName : FactorySite.SiteName.values()){
-            if (siteName.ordinal() == id) startActivityForResult(siteName);
-        }
         switch (v.getId()){
 
             case ID_ADD_VIDEO:
                 DialogFragment dlgSelectStreamSite = new DialogSelectStreamSite();
                 dlgSelectStreamSite.show(getFragmentManager(),"Select stream site");
                 break;
-
+            case ID_ADD_CHAT_SITE:
+                DialogFragment dlgSelectChatSite = new DialogSelectChatSite();
+                dlgSelectChatSite.show(getFragmentManager(),"Select chat site");
+                break;
             case ID_ADD_QR_CODE:
                 Intent intent = new Intent(getActivity(),ViewQRReader.class);
 
@@ -101,14 +92,9 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
 
     }
 
-    private void startActivityForResult(FactorySite.SiteName site){
-        Intent intent = new Intent(getActivity(), ViewAddChannel.class);
-        intent.putExtra(SITE, site);
-        intent.putExtra(FOR, "add");
-        getActivity().startActivityForResult(intent, ViewAddChat.TASK_ADD);
-    }
 
-    private TextView createTextView (Drawable logo, String text , int id){
+
+    private  TextView createTextView (Drawable logo, String text , int id){
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         llp.setMargins(0, TEXT_VIEW_TOP_MARGINS, 0, 0);

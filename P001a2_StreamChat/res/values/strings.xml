@@ -74,6 +74,8 @@
     <string name="hint_type_gg_streamer">Type GG streamer</string>
     <string name="btn_check_stream">Check Stream</string>
     <string name="hint_add_video_prefer_name">Prefer Name</string>
+    <string name="dialog_ad_qr_code">Add by QR code</string>
+    <string name="dialog_add_chat_sites">Add chat</string>
 
 
 </resources>
