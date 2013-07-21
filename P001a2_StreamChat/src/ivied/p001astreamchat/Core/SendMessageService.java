@@ -120,16 +120,16 @@ public class SendMessageService extends Service {
 
 	}
 
-	private void sendToast(final String toast){
-		handler.post(new Runnable() {
+    private void sendToast(final String toast){
+        handler.post(new Runnable() {
             public void run() {
-          	  Toast.makeText(getApplicationContext(), toast , Toast.LENGTH_SHORT).show();
-               
+                Toast.makeText(getApplicationContext(), toast , Toast.LENGTH_SHORT).show();
+
             }
-	
-	
-	 });
-	}
+
+
+        });
+    }
 	
 
 }

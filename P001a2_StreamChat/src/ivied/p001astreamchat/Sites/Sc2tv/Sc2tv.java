@@ -4,7 +4,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -64,7 +63,6 @@ public class Sc2tv extends Site {
     public static String sc2tvNick;
     public static String token=null;
     static public HttpClient client = new DefaultHttpClient();
-    final Uri INSERT_URI = Uri.parse("content://ivied.p001astreamchat/chats/insert");
     private static final String CHANNEL_MESSAGES = "http://chat.sc2tv.ru/memfs/channel-";
     private static final String GET_TOKEN = "http://chat.sc2tv.ru/gate.php?task=GetUserInfo&ref=http://sc2tv.ru/";
     private static final String SC2TV_GATE =  "http://chat.sc2tv.ru/gate.php";

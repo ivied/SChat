@@ -1,5 +1,6 @@
 package ivied.p001astreamchat.Sites.GoodGame;
 
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -18,19 +19,26 @@ import java.util.regex.Pattern;
 import de.tavendo.autobahn.WebSocket;
 import de.tavendo.autobahn.WebSocketException;
 import ivied.p001astreamchat.Core.MainActivity;
+import ivied.p001astreamchat.Core.MyApp;
+import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.Message;
+import ivied.p001astreamchat.Sites.Site;
 
 /**
  * Created by Serv on 19.07.13.
  *
  */
-public class WebSocketForGG extends GoodGame {
+public class WebSocketForGG  {
 
+    public static final String GOODGAME_CHANNEL_STATUS_URL = "http://goodgame.ru/api/getchannelstatus?id=";
+    public static final String JSON_ID_MESSAGE_ID = "message_id";
+    public static final String JSON_ID_TEXT = "text";
+    public static final String JSON_ID_TIMESTAMP = "timestamp";
+    public static final String JSON_ID_USER_NAME = "user_name";
     private final GoodGame parent;
-    private WebSocket.ConnectionHandler webSocketHandler;
 
     private WebSocket connection;
-    private Pattern patternForChannelID = Pattern.compile("(channelId: )([0-9]*)");
+    private Pattern patternForChannelID = Pattern.compile("(stream id=\")([0-9]*)");
 
     public WebSocketForGG (GoodGame parent, WebSocket webSocket) {
         connection = webSocket;
@@ -41,7 +49,7 @@ public class WebSocketForGG extends GoodGame {
 
     public void connect(String wsUri) throws WebSocketException {
 
-        this.webSocketHandler = getWebSocketHandler();
+        WebSocket.ConnectionHandler webSocketHandler = getWebSocketHandler();
         connection.connect(wsUri, webSocketHandler);
     }
 
@@ -96,9 +104,9 @@ public class WebSocketForGG extends GoodGame {
     }
 
     private void getConnectIDs() {
-        HttpGet getIDs = new HttpGet(parent.CHAT_URL + parent.channel);
+        HttpGet getIDs = new HttpGet(GOODGAME_CHANNEL_STATUS_URL + parent.channel);
 
-        HttpResponse response = getResponse(getIDs);
+        HttpResponse response = parent.getResponse(getIDs);
         parseIDs(response);
     }
 
@@ -109,7 +117,7 @@ public class WebSocketForGG extends GoodGame {
                 HttpEntity entity = response.getEntity();
                 InputStream content = entity.getContent();
 
-                String line = convertStreamToString(content);
+                String line = parent.convertStreamToString(content);
                 Matcher lockForChannelID = patternForChannelID.matcher(line);
                 if(lockForChannelID.find()){
                     parent.channelID = Integer.parseInt(lockForChannelID.group(2));
@@ -117,18 +125,16 @@ public class WebSocketForGG extends GoodGame {
                 }
                 content.close();
             } else {
-                Log.e(MainActivity.LOG_TAG, "Failed to get GoodGame channel "+ parent.channel +" ID");
+                parent.sendToast(MyApp.getContext().getResources().getString(R.string.toast_failed_get_goodgame_id) + parent.channel +" ID");
             }
         } catch (IOException e) {
+            parent.sendToast(MyApp.getContext().getResources().getString(R.string.toast_failed_get_goodgame_id) + parent.channel +" ID");
             e.printStackTrace();
         }
 
     }
 
-/* DefaultHttpClient mHttpClient = new DefaultHttpClient();
-                BasicHttpContext mHttpContext = new BasicHttpContext();
-                CookieStore mCookieStore      = new BasicCookieStore();
-                mHttpContext.setAttribute(COOKIE_STORE, mCookieStore.addCookie(new BasicClientCookie("name", "value")));*/
+
 
     /*Pattern p = Pattern
             .compile(SC2_LOGIN_PATTERN );
@@ -160,6 +166,9 @@ public class WebSocketForGG extends GoodGame {
                     case "message":
                         insertMessage(messageData);
                         break;
+                    case "channel_history":
+                        saveChannelHistory(messageData);
+                        break;
                     default:
                         break;
                 }
@@ -171,24 +180,35 @@ public class WebSocketForGG extends GoodGame {
         }
     }
 
+    private void saveChannelHistory(JSONObject messageData) {
+        try {
+            JSONArray messages = messageData.getJSONArray("messages");
+            int countOfNew = getCountOfNew(messages);
+            for (int i = messages.length() - countOfNew ; i < messages.length(); i++) {
+                  insertMessage(messages.getJSONObject(i));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void insertMessage(JSONObject messageData) throws JSONException {
-        String user = messageData.getString("user_name");
-        long timeStamp = Long.parseLong(messageData.getString("timestamp"));
-        String text = messageData.getString("text");
-        Message message = new Message( parent.channel, user, text, null, timeStamp);
+        String user = messageData.getString(JSON_ID_USER_NAME);
+        long timeStamp = Long.parseLong(messageData.getString(JSON_ID_TIMESTAMP));
+        String text = messageData.getString(JSON_ID_TEXT);
+        String messageID = messageData.getString(JSON_ID_MESSAGE_ID);
+        Message message = new Message( parent.channel, user, text, messageID, timeStamp);
         parent.insertMessage(message);
 
     }
 
-    public static String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
-    }
+
 
     private void setAuthorization() {
-        int _userId = -1;
-        String _userToken = null;
-        String command = "[\"{\\\"type\\\":\\\"auth\\\",\\\"data\\\":{\\\"user_id\\\":\\\"" + _userId + "\\\",\\\"token\\\":\\\"" + _userToken + "\\\"}}\"]";
+        parent.getLogin();
+
+
+        String command = "[\"{\\\"type\\\":\\\"auth\\\",\\\"data\\\":{\\\"user_id\\\":\\\"" + parent.GGUserID + "\\\",\\\"token\\\":\\\"" + parent.GGUserToken + "\\\"}}\"]";
         connection.sendTextMessage(command);
     }
 
@@ -204,6 +224,23 @@ public class WebSocketForGG extends GoodGame {
         connection.sendTextMessage(command);
     }
 
+
+    private int getCountOfNew(JSONArray jsonArray) throws JSONException {
+        int countOfNewMessages = 0;
+        Cursor c;
+        do{
+            JSONObject jsonObject = jsonArray.getJSONObject(jsonArray.length() - countOfNewMessages - 1);
+            String[] selectionArgs = new String[] { parent.getSiteEnum().name() + jsonObject.getString(JSON_ID_MESSAGE_ID), parent.channel };
+
+            c = MyApp.getContext().getContentResolver().query(
+                    Site.INSERT_URI, null,
+                    "identificator = ? AND channel = ?", selectionArgs, null);
+            if (c.getCount() == 0) countOfNewMessages++;
+        }while ((c.getCount() == 0) && (jsonArray.length() != countOfNewMessages));
+        c.close();
+
+        return countOfNewMessages;
+    }
 
 }
 

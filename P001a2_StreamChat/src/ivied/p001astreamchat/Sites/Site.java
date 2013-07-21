@@ -8,12 +8,14 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.IBinder;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.UnderlineSpan;
+import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -53,7 +55,7 @@ public abstract class Site {
     public ChatService chatService;
     boolean bound =false;
     public Future mFuture;
-    final Uri INSERT_URI = Uri.parse("content://ivied.p001astreamchat/chats/insert");
+    public static final Uri INSERT_URI = Uri.parse("content://ivied.p001astreamchat/chats/insert");
     final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
 
     abstract public Drawable getLogo();
@@ -77,6 +79,14 @@ public abstract class Site {
     public  int numberOfSmiles=0;
     protected static final Spannable.Factory spannableFactory = Spannable.Factory
             .getInstance();
+    private Handler handler;
+
+
+    public static String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
+    }
+
 
     public void destroyLoadMessages(){
         mFuture.cancel(true);
@@ -84,7 +94,7 @@ public abstract class Site {
 
     public void prepareThread (Site site, String channel) {
 
-
+        handler = new Handler();
         ChannelRun channelRun = new ChannelRun(site, channel);
         startThread(channelRun);
 
@@ -149,7 +159,7 @@ public abstract class Site {
         cv.put("nick", message.nick);
         cv.put("message", message.text);
         cv.put("time", message.time);
-        cv.put("identificator", message.id);
+        cv.put("identificator", site.name() + message.id);
         Cursor customCursor = getCursorFromChannelDB(site.name(), message.channel);
         String personal = personalSet(customCursor);
         if (personal.equalsIgnoreCase("")) personal = message.channel;
@@ -375,6 +385,18 @@ public abstract class Site {
                 .getColor(R.color.nick)), 0, length,
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
+    }
+
+
+    protected void sendToast(final String toast){
+        handler.post(new Runnable() {
+            public void run() {
+                Toast.makeText(MyApp.getContext(), toast, Toast.LENGTH_SHORT).show();
+
+            }
+
+
+        });
     }
 
 

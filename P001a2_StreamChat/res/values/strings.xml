@@ -76,6 +76,8 @@
     <string name="hint_add_video_prefer_name">Prefer Name</string>
     <string name="dialog_ad_qr_code">Add by QR code</string>
     <string name="dialog_add_chat_sites">Add chat</string>
+    <string name="toast_failed_get_goodgame_id">Failed to get GoodGame channel</string>
+    <string name="btn_login_goodgame">Press to login on GoodGame</string>
 
 
 </resources>

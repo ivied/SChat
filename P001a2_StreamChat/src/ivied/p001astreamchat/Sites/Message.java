@@ -14,7 +14,7 @@ public class Message {
         this.channel = channel;
         this.nick = nick;
         this.text = text;
-        this.id = id;
+        this.id = messageID;
         this.time = time;
     }
 }
