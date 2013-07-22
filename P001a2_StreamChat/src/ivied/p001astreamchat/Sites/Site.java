@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -44,6 +45,7 @@ import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.MyContentProvider;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
+import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
 
 /**
@@ -65,7 +67,7 @@ public abstract class Site {
     abstract public FragmentAddChannelStandard getFragmentAddChannel();
     abstract public int getColorForAdd (String channel, int length , int color);
     abstract public int sendMessage(String channel, String message);
-    abstract public void getLogin();
+
     abstract public String getSmileAddress();
     abstract public String getSmileModifyHeader();
     abstract public void getSiteSmiles(String header);
@@ -74,6 +76,7 @@ public abstract class Site {
     abstract public  Spannable getSmiledText(String text, String nick);
     abstract protected  Map<String,Bitmap> getSmileMapLink();
     abstract public  Map<String,Bitmap> getSmileMap();
+    abstract public void setNickAndPass (String nick,  String pass);
 
     public  int smileFlag =0;
     public  int numberOfSmiles=0;
@@ -134,22 +137,15 @@ public abstract class Site {
     }
 
 
+    public void getLogin(){
+        SharedPreferences preferences = MyApp.getContext().getSharedPreferences(Login.XML_LOGIN, 0);
 
-    private ServiceConnection sConn = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            ChatService.ChatBinder binder = (ChatService.ChatBinder) service;
-            chatService = binder.getService();
+        String name = preferences.getString(getSiteEnum().name() , "");
 
-            bound = true;
+        String pass = preferences.getString(getSiteEnum().name() + "pass", "");
+        setNickAndPass(name, pass);
+    }
 
-        }
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-            bound = false;
-        }
-    };
 
     protected void insertMessage (Message message) {
         FactorySite.SiteName site= getSiteEnum();
@@ -398,6 +394,23 @@ public abstract class Site {
 
         });
     }
+
+
+    private ServiceConnection sConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            ChatService.ChatBinder binder = (ChatService.ChatBinder) service;
+            chatService = binder.getService();
+
+            bound = true;
+
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+            bound = false;
+        }
+    };
 
 
 }

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,9 +37,13 @@ public class WebSocketForGG  {
     public static final String JSON_ID_TIMESTAMP = "timestamp";
     public static final String JSON_ID_USER_NAME = "user_name";
     private final GoodGame parent;
-
+    protected static final Object waitLoginLocking = new Object();
+    protected static boolean ready = false;
     private WebSocket connection;
     private Pattern patternForChannelID = Pattern.compile("(stream id=\")([0-9]*)");
+    private String chatToken;
+    private Pattern patternUserToken = Pattern.compile("(token: ')(\\w*)");
+
 
     public WebSocketForGG (GoodGame parent, WebSocket webSocket) {
         connection = webSocket;
@@ -51,6 +56,11 @@ public class WebSocketForGG  {
 
         WebSocket.ConnectionHandler webSocketHandler = getWebSocketHandler();
         connection.connect(wsUri, webSocketHandler);
+    }
+
+    public void sendMessage (String message) {
+        String command = "[\"{\\\"type\\\":\\\"send_message\\\",\\\"data\\\":{\\\"channel_id\\\":\\\"" + parent.channelID  + "\\\",\\\"text\\\":\\\"" + message + "\\\"}}\"]";
+        connection.sendTextMessage(command);
     }
 
     private WebSocket.ConnectionHandler getWebSocketHandler() {
@@ -104,7 +114,7 @@ public class WebSocketForGG  {
     }
 
     private void getConnectIDs() {
-        HttpGet getIDs = new HttpGet(GOODGAME_CHANNEL_STATUS_URL + parent.channel);
+        HttpGet getIDs = new HttpGet(GOODGAME_CHANNEL_STATUS_URL + parent.channelWithoutBreakPoints);
 
         HttpResponse response = parent.getResponse(getIDs);
         parseIDs(response);
@@ -185,7 +195,7 @@ public class WebSocketForGG  {
             JSONArray messages = messageData.getJSONArray("messages");
             int countOfNew = getCountOfNew(messages);
             for (int i = messages.length() - countOfNew ; i < messages.length(); i++) {
-                  insertMessage(messages.getJSONObject(i));
+                insertMessage(messages.getJSONObject(i));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -205,11 +215,35 @@ public class WebSocketForGG  {
 
 
     private void setAuthorization() {
-        parent.getLogin();
+        synchronized (waitLoginLocking){
+            while (!ready){
+                try {
+                    waitLoginLocking.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            getUserIDAndToken();
+            String command = "[\"{\\\"type\\\":\\\"auth\\\",\\\"data\\\":{\\\"user_id\\\":\\\"" + parent.GGUserID + "\\\",\\\"token\\\":\\\"" + chatToken + "\\\"}}\"]";
+            connection.sendTextMessage(command);
+        }
+    }
 
+    private void getUserIDAndToken()  {
+        try{
+            HttpResponse response = parent.httpClient.execute(new HttpGet(parent.CHAT_URL + parent.channelWithoutBreakPoints));
+            HttpEntity entity = response.getEntity();
+            InputStream content = entity.getContent();
 
-        String command = "[\"{\\\"type\\\":\\\"auth\\\",\\\"data\\\":{\\\"user_id\\\":\\\"" + parent.GGUserID + "\\\",\\\"token\\\":\\\"" + parent.GGUserToken + "\\\"}}\"]";
-        connection.sendTextMessage(command);
+            String line = Site.convertStreamToString(content);
+            Matcher lockForUserToken = patternUserToken.matcher(line);
+            if(lockForUserToken.find())      chatToken = lockForUserToken.group(2);
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void joinChannel() {

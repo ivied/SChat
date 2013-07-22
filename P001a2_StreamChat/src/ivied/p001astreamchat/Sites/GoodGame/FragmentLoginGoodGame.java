@@ -29,6 +29,7 @@ public class FragmentLoginGoodGame extends FragmentLoginStandard{
     public boolean tryLogin(String nick, String pass) {
         GoodGame goodGame = new GoodGame();
         goodGame.getLogin();
-        return false;
+
+        return GoodGame.GGNick == null ? false : true;
     }
 }

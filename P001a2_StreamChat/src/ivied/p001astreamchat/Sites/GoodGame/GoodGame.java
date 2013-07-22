@@ -5,8 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -20,16 +18,14 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import de.tavendo.autobahn.WebSocket;
 import de.tavendo.autobahn.WebSocketConnection;
@@ -50,22 +46,18 @@ public class GoodGame extends Site {
     public static String GGNick;
     public static String GGPassWord;
     String channel;
+    String channelWithoutBreakPoints;
     int channelID;
-
+    static String GGUserID;
     ExecutorService es;
     private final String domain = "goodgame.ru";
     final String CHAT_URL = "http://www." + domain + "/chat/";
     final String LOGIN_URL = "http://" + domain + "/ajax/login/";
     private final int maxServerNum = 0x1e3;
     private Random randomNum = new Random();
+    private static Map<String, WebSocketForGG> ggChanelMap =  new HashMap<>();
 
-    private String channelWithoutBreakPoints;
-    private List<BasicNameValuePair> headersList = new ArrayList<BasicNameValuePair>();
     private WebSocket webSocket;
-    String GGUserToken;
-    String GGUserID;
-    private Pattern patternUserToken = Pattern.compile("(token: ')(\\w*)");
-    private Pattern patternUserID = Pattern.compile("(userId: ')(\\d*)");
     @Override
     public Drawable getLogo() {
         return MyApp.getContext().getResources().getDrawable(R.drawable.goodgame);
@@ -104,39 +96,42 @@ public class GoodGame extends Site {
 
     @Override
     public int sendMessage(String channel, String message) {
+        try{
+        WebSocketForGG socket = ggChanelMap.get(channel);
+        socket.sendMessage(message);
+        }catch (RuntimeException e){
+            //cant find channel
+        }
         return 0;
     }
 
+    static DefaultHttpClient httpClient;
+
     @Override
     public void getLogin() {
-        DefaultHttpClient mHttpClient = new DefaultHttpClient();
-        try {
-            BasicHttpContext mHttpContext = new BasicHttpContext();
-            CookieStore mCookieStore      = mHttpClient.getCookieStore();
-            mHttpContext.setAttribute(ClientContext.COOKIE_STORE, mCookieStore);
-            mHttpClient.execute(new HttpGet(CHAT_URL + "ivied"), mHttpContext);
+        super.getLogin();
+        synchronized (WebSocketForGG.waitLoginLocking){
+            httpClient = new DefaultHttpClient();
+            try {
+                BasicHttpContext httpContext = new BasicHttpContext();
+                CookieStore cookieStore      = httpClient.getCookieStore();
+                httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+                httpClient.execute(new HttpGet("http://www." + domain), httpContext);
+                setLoginCookies(cookieStore);
+                HttpPost postLogin = new HttpPost(LOGIN_URL);
+                setPostLoginData(postLogin);
+                httpClient.execute(postLogin, httpContext);
+                GGUserID = cookieStore.getCookies().get(7).getValue();
 
-            setLoginCookies(mCookieStore);
-            HttpPost postLogin = new HttpPost(LOGIN_URL);
-            setPostLoginData(postLogin);
-             mHttpClient.execute(postLogin, mHttpContext);
-           HttpResponse response = mHttpClient.execute(new HttpGet(CHAT_URL + "ivied"));
-            HttpEntity entity = response.getEntity();
-            InputStream content = entity.getContent();
-
-            String line = convertStreamToString(content);
-            Matcher lockForUserToken = patternUserToken.matcher(line);
-            if(lockForUserToken.find())      GGUserToken  = lockForUserToken.group(2);
-            Matcher lockForUserID = patternUserID.matcher(line);
-            if(lockForUserID.find())      GGUserID  = lockForUserID.group(2);
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (RuntimeException e){
+                //user and password not set
+            }
+           WebSocketForGG.ready = true;
+           WebSocketForGG.waitLoginLocking.notifyAll();
         }
     }
-
-
-
 
     @Override
     public String getSmileAddress() {
@@ -180,6 +175,12 @@ public class GoodGame extends Site {
     }
 
     @Override
+    public void setNickAndPass(String nick, String pass) {
+        GGNick = nick;
+        GGPassWord = pass;
+    }
+
+    @Override
     protected void insertMessage(Message message) {
         super.insertMessage(message);
     }
@@ -198,6 +199,7 @@ public class GoodGame extends Site {
 
     private void connectToChannel() {
         WebSocketForGG connection = new WebSocketForGG(this, webSocket);
+        ggChanelMap.put(channel, connection);
         String connectUri = getConnectAddress();
 
         try {
@@ -212,12 +214,11 @@ public class GoodGame extends Site {
     private void setPostLoginData(HttpPost httpPost) {
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
         nameValuePairs.clear();
-        nameValuePairs.add(new BasicNameValuePair("login", "ivied"));
-        nameValuePairs.add(new BasicNameValuePair("password", "impimp"));
+        nameValuePairs.add(new BasicNameValuePair("login", GGNick));
+        nameValuePairs.add(new BasicNameValuePair("password", GGPassWord));
         nameValuePairs.add(new BasicNameValuePair("remember", "1"));
         try {
-            httpPost.setEntity(new UrlEncodedFormEntity(
-                    nameValuePairs, HTTP.UTF_8));
+            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs, HTTP.UTF_8));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -228,7 +229,7 @@ public class GoodGame extends Site {
         BasicClientCookie cookie = new BasicClientCookie("fixed", "1");
         cookie.setDomain(domain);
         mCookieStore.addCookie(cookie) ;
-        cookie = new BasicClientCookie("auto_login_name", "ivied");
+        cookie = new BasicClientCookie("auto_login_name", GGNick);
         cookie.setDomain(domain);
         mCookieStore.addCookie(cookie ) ;
 

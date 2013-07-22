@@ -1,6 +1,5 @@
 package ivied.p001astreamchat.Sites.Twitch;
 
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -28,7 +27,6 @@ import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
-import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.Message;
@@ -38,12 +36,13 @@ import ivied.p001astreamchat.Sites.Site;
  * Created by Serv on 30.05.13.
  */
 public class Twitch  extends Site {
-    final String TWITCH_SAVED_NAME = "TWITCH";
-    final String TWITCH_SAVED_PASS = "TWITCHpass";
+
     final String TWITCH_SMILE_ADDRESS = "https://api.twitch.tv/kraken/chat/emoticons";
     final String TWITCH_SMILE_HEADER_UPDATE = "x-api-version";
     public static IrcClient botSend;
     public static String twitchNick;
+    public static String twitchPass;
+
     ExecutorService es;
     IrcClientShow bot;
     private static Map<String, Bitmap> smileMap = new HashMap<String, Bitmap>();
@@ -54,6 +53,7 @@ public class Twitch  extends Site {
         aMap.put("\\&gt\\;\\(", ">\\(");
         unrecognizedSmiles = Collections.unmodifiableMap(aMap);
     }
+
 
 
 
@@ -162,6 +162,11 @@ public class Twitch  extends Site {
         return smileMap;
     }
 
+    @Override
+    public void setNickAndPass(String nick, String pass) {
+        twitchNick =nick;
+        twitchPass = pass;
+    }
 
 
     public class IrcClientShow extends PircBot {
@@ -228,15 +233,13 @@ public class Twitch  extends Site {
 
     @Override
     public void getLogin() {
-        SharedPreferences preferences = MyApp.getContext().getSharedPreferences(Login.XML_LOGIN, 0);
-        Twitch.twitchNick = preferences.getString(TWITCH_SAVED_NAME, "");
-        String name = preferences.getString(TWITCH_SAVED_NAME, "");
 
-        String pass = preferences.getString(TWITCH_SAVED_PASS, "");
-        Twitch.botSend = new IrcClient(name);
+        super.getLogin();
+
+        Twitch.botSend = new IrcClient(twitchNick);
 
         try {
-            botSend.connect("199.9.250.229", 6667, pass);
+            botSend.connect("199.9.250.229", 6667, twitchPass);
         } catch (NickAlreadyInUseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

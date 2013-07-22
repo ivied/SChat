@@ -1,6 +1,5 @@
 package ivied.p001astreamchat.Sites.Sc2tv;
 
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -47,7 +46,6 @@ import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
-import ivied.p001astreamchat.Login.Login;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.Message;
@@ -61,6 +59,7 @@ public class Sc2tv extends Site {
     final public static Pattern bold = Pattern.compile("(\\<b\\>)(.*)(\\<\\/b\\>)");
     private static final String SC2TV_SMILES = "http://chat.sc2tv.ru/js/smiles.js";
     public static String sc2tvNick;
+    public static String sc2tvPass;
     public static String token=null;
     static public HttpClient client = new DefaultHttpClient();
     private static final String CHANNEL_MESSAGES = "http://chat.sc2tv.ru/memfs/channel-";
@@ -77,6 +76,7 @@ public class Sc2tv extends Site {
     final static StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
     ScheduledExecutorService sEs;
     private static Map<String, Bitmap> smileMap = new HashMap<String, Bitmap>();
+
 
 
     @Override
@@ -134,14 +134,11 @@ public class Sc2tv extends Site {
 
     @Override
     public void getLogin() {
+        super.getLogin();
 
-        SharedPreferences preferences = MyApp.getContext().getSharedPreferences(Login.XML_LOGIN,0);
-        String name = preferences.getString(SAVED_NAME, "");
-        String pass = preferences.getString(SAVED_PASS, "");
-        sc2tvNick = preferences.getString(SAVED_NAME, "");
         try {
             client = new DefaultHttpClient();
-            HttpPost post = getSc2tvPost(name , pass);
+            HttpPost post = getSc2tvPost(sc2tvNick , sc2tvPass);
             client.execute(post);
             HttpGet httpGet = new HttpGet(GET_TOKEN );
 
@@ -336,7 +333,11 @@ public class Sc2tv extends Site {
         return smileMap;
     }
 
-
+    @Override
+    public void setNickAndPass(String nick, String pass) {
+        sc2tvNick = nick;
+        sc2tvPass = pass;
+    }
 
 
     @Override
