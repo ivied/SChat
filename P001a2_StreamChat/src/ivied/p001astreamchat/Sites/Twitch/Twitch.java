@@ -134,14 +134,11 @@ public class Twitch  extends Site {
     }
 
     @Override
-    protected Map<String, Bitmap> getSmileMapLink() {
-        return smileMap;
-    }
-
-    @Override
     public Map<String, Bitmap> getSmileMap() {
         return smileMap;
     }
+
+
 
     @Override
     public void setNickAndPass(String nick, String pass) {

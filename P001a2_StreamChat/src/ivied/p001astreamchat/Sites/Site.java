@@ -76,7 +76,6 @@ public abstract class Site {
     abstract protected void readChannel(String channel);
     abstract protected void startThread (ChannelRun channelRun);
     abstract protected String getSmileAddress();
-    abstract protected Map<String,Bitmap> getSmileMapLink();
     abstract protected void setNickAndPass (String nick,  String pass);
     abstract protected FactorySite.SiteName getSiteEnum();
     abstract protected boolean isPrivateMessage(String message);
@@ -305,7 +304,7 @@ public abstract class Site {
 
 
     public void setSmileMaps() {
-         Map<String, Bitmap> smileMap = getSmileMapLink();
+         Map<String, Bitmap> smileMap = getSmileMap();
         String selection = "site = ?";
         String [] selectionArgs = {getSiteName()};
         Cursor c = MyApp.getContext().getContentResolver().query(MyContentProvider.SMILE_INSERT_URI , null, selection, selectionArgs, null );
@@ -358,7 +357,7 @@ public abstract class Site {
 
     public void addSmiles( Spannable spannable,  int length, String perfix) {
 
-        Map<String, Bitmap> smileMap = new HashMap (getSmileMapLink());
+        Map<String, Bitmap> smileMap = new HashMap (getSmileMap());
         if (MainActivity.showSmiles){
 
             for (Map.Entry<String, Bitmap> entry : smileMap.entrySet()) {

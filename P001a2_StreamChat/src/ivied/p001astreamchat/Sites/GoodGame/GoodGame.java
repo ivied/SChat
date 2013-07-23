@@ -70,7 +70,6 @@ public class GoodGame extends Site {
     public void readChannel(String channel) {
             this.channel = channel;
             this.channelWithoutBreakPoints = channel.replace(".","");
-
             connectToChannel();
     }
 
@@ -180,13 +179,8 @@ public class GoodGame extends Site {
     }
 
     @Override
-    protected Map<String, Bitmap> getSmileMapLink() {
-        return smileMap;
-    }
-
-    @Override
     public Map<String, Bitmap> getSmileMap() {
-        return null;
+        return smileMap;
     }
 
     @Override
@@ -272,7 +266,5 @@ public class GoodGame extends Site {
         for (int i = 0; i < 8; i++)  builder.append(chars[random.nextInt(chars.length - 1)]);
         return builder.toString();
     }
-
-
 
 }

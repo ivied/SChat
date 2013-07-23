@@ -65,8 +65,6 @@ public class Sc2tv extends Site {
     private static final String GET_TOKEN = "http://chat.sc2tv.ru/gate.php?task=GetUserInfo&ref=http://sc2tv.ru/";
     private static final String SC2TV_GATE =  "http://chat.sc2tv.ru/gate.php";
     private static final String SC2TV_SMILE_MODIFY_HEADER = "Last-Modified";
-    final String SAVED_NAME = "SC2TV";
-    final String SAVED_PASS = "SC2TVpass";
     private static final String SC2TV_STANDARD_SMILE_WAY = "http://chat.sc2tv.ru/img/";
     private static final int SC2TV_SMILE_FIELD_ADDRESS = 2;
     private static final int SC2TV_SMILE_FIELD_REGEXP = 1;
@@ -310,10 +308,7 @@ public class Sc2tv extends Site {
         return spannable;
     }
 
-    @Override
-    protected Map<String, Bitmap> getSmileMapLink() {
-        return smileMap;
-    }
+
 
     @Override
     public Map<String, Bitmap> getSmileMap() {

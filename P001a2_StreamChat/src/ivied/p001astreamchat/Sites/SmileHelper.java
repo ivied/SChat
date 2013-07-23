@@ -26,10 +26,8 @@ public class SmileHelper  {
     public  SmileHelper() {
 
         for (FactorySite.SiteName siteName : FactorySite.SiteName.values()){
-
-
-           // SmileParser smileParser = new SmileParser();
-           // smileParser.execute(siteName);
+            SmileParser smileParser = new SmileParser();
+            smileParser.execute(siteName);
 
         }
 
@@ -47,7 +45,7 @@ public class SmileHelper  {
 
             site = factorySite.getSite(params[0]);
 
-//            site.setSmileMaps();
+            site.setSmileMaps();
             if(site.getSmileAddress() == null) return null;
 
             HttpGet httpGet = new HttpGet(site.getSmileAddress());
