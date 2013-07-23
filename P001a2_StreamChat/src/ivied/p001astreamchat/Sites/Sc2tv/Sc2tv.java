@@ -256,7 +256,8 @@ public class Sc2tv extends Site {
                 insertMessage( messageForInsert );
                 privateMessage( messageForInsert );
             }else {
-            c.close();}
+                c.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

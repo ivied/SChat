@@ -155,7 +155,9 @@ public abstract class Site {
         cv.put("message", message.text);
         cv.put("time", message.time);
         cv.put("identificator", site.name() + message.id);
-        Cursor customCursor = getCursorFromChannelDB(site.name(), message.channel);
+        Cursor customCursor = MyApp.getContext().getContentResolver()
+                .query(ADD_URI, new String[]{"color", "personal"}, "site = ? AND channel = ?",
+                        new String[]{site.name(), message.channel}, null);
         String personal = personalSet(customCursor);
         if (personal.equalsIgnoreCase("")) personal = message.channel;
         cv.put("personal", personal);
@@ -225,13 +227,14 @@ public abstract class Site {
     }
 
     protected Cursor getCursorFromChannelDB (String site, String channel) {
-        Cursor c = MyApp.getContext().getContentResolver()
+        return MyApp.getContext().getContentResolver()
                 .query(ADD_URI, new String[]{"color", "personal"}, "site = ? AND channel = ?",
                         new String[]{site, channel}, null);
 
-        return c;
+
 
     }
+
     protected String personalSet (Cursor c) {
 
         String personal = "";
