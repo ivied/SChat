@@ -113,6 +113,6 @@ public class TwitchVideoSetter extends VideoViewSetter implements AsyncDownloadJ
     @Override
 
     public FactoryVideoViewSetter.VideoSiteName getEnum() {
-        return FactoryVideoViewSetter.VideoSiteName.TWITCHStream;
+        return FactoryVideoViewSetter.VideoSiteName.TWITCHSTREAM;
     }
 }

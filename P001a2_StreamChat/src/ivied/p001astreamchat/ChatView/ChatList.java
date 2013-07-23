@@ -381,6 +381,7 @@ public class ChatList extends SherlockFragmentActivity {
 					}
 
 				}
+                c.close();
 				mode.finish();
 				return true;
 			}

@@ -42,7 +42,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
-import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
@@ -255,15 +254,9 @@ public class Sc2tv extends Site {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
-                insertMessage(new Message( channel, nick, message, id, time));
-                if (MainActivity.showNotifySystem){
-                    if (privateMessage(message)){
-                        message = message.replace("<b>", "").replace("</b>", "");
-                        chatService.sendPrivateNotify(message,channel,  getSiteEnum());
-                    }
-
-                }
+                Message messageForInsert = new Message( channel, nick, message, id, time);
+                insertMessage( messageForInsert );
+                privateMessage( messageForInsert );
             }else {
             c.close();}
         } catch (Exception e) {
@@ -272,9 +265,8 @@ public class Sc2tv extends Site {
     }
 
 
-
-
-    private boolean privateMessage (String message) {
+    @Override
+    protected boolean isPrivateMessage(String message) {
 
         Matcher matcher = bold.matcher(message);
         if (matcher.find()) {
@@ -304,12 +296,9 @@ public class Sc2tv extends Site {
             privateM = address.equalsIgnoreCase(sc2tvNick);
             addressLength = matcher.group(2).length();
         }
-        text = getLinks(text);
-
-
-        Spannable spannable = spannableFactory.newSpannable(nick + ": " + text);
         int length = nick.length() + 1;
-        getLinkedSpan(spannable, length );
+
+        Spannable spannable = getLinkedSpan(nick, text);
         if (addressLength > 0){
             spannable.setSpan(bss, length+1, length + 1 + addressLength, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
             if (privateM) {	spannable.setSpan(new ForegroundColorSpan(MyApp.getContext().getResources()
@@ -317,8 +306,6 @@ public class Sc2tv extends Site {
                     spannable.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
-
-
         addSmiles( spannable, length, "\\:s");
         return spannable;
     }
@@ -389,9 +376,6 @@ public class Sc2tv extends Site {
 
     }
 
-
-
-
     public HttpPost getSc2tvPost(String name, String pass) {
         HttpPost post = new HttpPost("http://sc2tv.ru/");
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(
@@ -407,8 +391,5 @@ public class Sc2tv extends Site {
         }
         return post;
     }
-
-
-
 
 }

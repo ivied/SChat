@@ -25,12 +25,6 @@ import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.Site;
 
-/**
- * ��������� �������� �������� �����
- * 
- * @author Serv
- * 
- */
 
 public class ChatService extends Service {
 
@@ -82,16 +76,6 @@ public class ChatService extends Service {
 
 		}
 
-
-	/*	Collection<IrcClientShow> irc = ircMap.values();
-		Iterator<IrcClientShow> ircIter = irc.iterator();
-		IrcClientShow ircName = null;
-		while (ircIter.hasNext()) {
-			ircName = ircIter.next();
-			ircName.disconnect();
-			Log.d(LOG_TAG, ircName.toString());
-
-		}*/
 
 		super.onDestroy();
 		Log.d(LOG_TAG, "MyService onDestroy1");
@@ -185,9 +169,6 @@ public class ChatService extends Service {
                  }
             }
 
-
-
-	
 	private boolean isAppOnForeground(Context context) {
 	    ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 	    List<RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();

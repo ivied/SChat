@@ -59,29 +59,29 @@ public abstract class Site {
     public Future mFuture;
     public static final Uri INSERT_URI = Uri.parse("content://ivied.p001astreamchat/chats/insert");
     final Uri ADD_URI = Uri.parse("content://ivied.p001astreamchat/channels/add");
-
+    public  int smileFlag =0;
+    public  int numberOfSmiles=0;
     abstract public Drawable getLogo();
-    abstract public void readChannel(String channel);
-    abstract public void startThread (ChannelRun channelRun);
     abstract public FragmentLoginStandard getFragment ();
     abstract public FragmentAddChannelStandard getFragmentAddChannel();
     abstract public int getColorForAdd (String channel, int length , int color);
+    abstract public  Spannable getSmiledText(String text, String nick);
     abstract public int sendMessage(String channel, String message);
-
-    abstract public String getSmileAddress();
+    abstract public  Map<String,Bitmap> getSmileMap();
     abstract public String getSmileModifyHeader();
     abstract public void getSiteSmiles(String header);
     abstract public int getMiniLogo();
-    abstract public  FactorySite.SiteName getSiteEnum();
-    abstract public  Spannable getSmiledText(String text, String nick);
-    abstract protected  Map<String,Bitmap> getSmileMapLink();
-    abstract public  Map<String,Bitmap> getSmileMap();
-    abstract public void setNickAndPass (String nick,  String pass);
 
-    public  int smileFlag =0;
-    public  int numberOfSmiles=0;
-    protected static final Spannable.Factory spannableFactory = Spannable.Factory
-            .getInstance();
+
+    abstract protected void readChannel(String channel);
+    abstract protected void startThread (ChannelRun channelRun);
+    abstract protected String getSmileAddress();
+    abstract protected Map<String,Bitmap> getSmileMapLink();
+    abstract protected void setNickAndPass (String nick,  String pass);
+    abstract protected FactorySite.SiteName getSiteEnum();
+    abstract protected boolean isPrivateMessage(String message);
+
+    protected static final Spannable.Factory spannableFactory = Spannable.Factory.getInstance();
     private Handler handler;
 
 
@@ -99,6 +99,7 @@ public abstract class Site {
 
         handler = new Handler();
         ChannelRun channelRun = new ChannelRun(site, channel);
+
         startThread(channelRun);
 
     }
@@ -113,7 +114,6 @@ public abstract class Site {
 
         Site siteClass;
         public String channel;
-        //	String message;
 
         public ChannelRun(Site site, String channel) {
 
@@ -122,19 +122,19 @@ public abstract class Site {
         }
 
         public void run() {
-            Intent intent = new Intent(MyApp.getContext(), ChatService.class);
 
-            MyApp.getContext().bindService(intent, sConn, 0);
-
+            bindService();
 
             siteClass.readChannel(channel);
-            MyApp.getContext().unbindService(sConn);
+            unbindService();
         }
 
 
 
 
     }
+
+
 
 
     public void getLogin(){
@@ -335,7 +335,13 @@ public abstract class Site {
         return message;
     }
 
-    protected void getLinkedSpan(Spannable spannable, int length) {
+    protected Spannable getLinkedSpan( String nick , String text) {
+        int length = nick.length() + 1;
+        text = getLinks(text);
+
+
+        Spannable spannable = spannableFactory.newSpannable(nick + ": " + text);
+
         for (Integer startOfLink : AdapterChatCursor.linkMap){
             spannable.setSpan(new UnderlineSpan(), length + 1 + startOfLink ,
                     length + 1  + startOfLink + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -344,6 +350,8 @@ public abstract class Site {
                     length + 1  + startOfLink + 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         }
+
+        return spannable;
 
     }
 
@@ -394,6 +402,30 @@ public abstract class Site {
 
         });
     }
+
+
+
+    protected void unbindService() {
+        MyApp.getContext().unbindService(sConn);
+    }
+
+    protected void bindService() {
+        Intent intent = new Intent(MyApp.getContext(), ChatService.class);
+        MyApp.getContext().bindService(intent, sConn, 0);
+    }
+
+    protected void privateMessage(Message message) {
+        String text = message.text;
+        if (MainActivity.showNotifySystem){
+            if (isPrivateMessage(message.text)){
+                text = text.replace("<b>", "").replace("</b>", "");
+                chatService.sendPrivateNotify( text, message.channel,  getSiteEnum());
+            }
+
+        }
+    }
+
+
 
 
     private ServiceConnection sConn = new ServiceConnection() {

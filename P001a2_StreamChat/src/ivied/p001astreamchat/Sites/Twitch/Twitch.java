@@ -54,39 +54,24 @@ public class Twitch  extends Site {
         unrecognizedSmiles = Collections.unmodifiableMap(aMap);
     }
 
-
-
-
     @Override
     public Drawable getLogo() {
         return MyApp.getContext().getResources().getDrawable(R.drawable.twitch);
     }
     @Override
     public void readChannel(String channel) {
-
-
             int rnd=(int) (1 + Math.random() * 100);
-
-
             String random ="justinfan"+Integer.toString(rnd);
             bot = new IrcClientShow(random);
 
-
-            // Enable debugging output.
             bot.setVerbose(true);
-
-            // Connect to the IRC server.
-
             try {
                 bot.connect("199.9.250.229", 6667, "");
             } catch (NickAlreadyInUseException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IrcException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
@@ -94,10 +79,7 @@ public class Twitch  extends Site {
             bot.joinChannel("#" + channel);
 
 
-    };
-
-
-
+    }
 
     @Override
     public void startThread(ChannelRun channelRun) {
@@ -117,23 +99,19 @@ public class Twitch  extends Site {
     @Override
     public int sendMessage(String channel, String message) {
         if (Twitch.twitchNick.equalsIgnoreCase("")){
-           return SendMessageService.NEED_LOGIN;
+            return SendMessageService.NEED_LOGIN;
         }else{
-
-        try {
-            botSend.reconnect();
-
-        } catch (NickAlreadyInUseException e) {
-
-            e.printStackTrace();
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        } catch (IrcException e) {
-            e.printStackTrace();
-        }
-        botSend.sendMessage("#" + channel, message);
-        return 0;
+            try {
+                botSend.reconnect();
+            } catch (NickAlreadyInUseException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (IrcException e) {
+                e.printStackTrace();
+            }
+            botSend.sendMessage("#" + channel, message);
+            return 0;
         }
     }
 
@@ -143,11 +121,14 @@ public class Twitch  extends Site {
     }
 
     @Override
+    protected boolean isPrivateMessage(String message) {
+        return false;
+    }
+
+    @Override
     public Spannable getSmiledText(String text, String nick) {
-        text = getLinks(text);
-        Spannable spannable = spannableFactory.newSpannable(nick + ": " + text);
         int length = nick.length() + 1;
-        getLinkedSpan(spannable, length);
+        Spannable spannable = getLinkedSpan( nick , text);
         addSmiles( spannable, length, "");
         return spannable;
     }
@@ -241,13 +222,10 @@ public class Twitch  extends Site {
         try {
             botSend.connect("199.9.250.229", 6667, twitchPass);
         } catch (NickAlreadyInUseException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IrcException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

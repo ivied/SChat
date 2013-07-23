@@ -12,9 +12,9 @@ public class FactoryVideoViewSetter {
     public VideoViewSetter getVideoSite(VideoSiteName site) {
 
         switch (site){
-            case TWITCHStream:
+            case TWITCHSTREAM:
                 return new TwitchVideoSetter();
-            case GOODGAMEStream:
+            case GOODGAMESTREAM:
                 return new GoodGameVideoSetter();
         }
         return null;
@@ -23,6 +23,6 @@ public class FactoryVideoViewSetter {
 
 
     public enum VideoSiteName {
-        TWITCHStream, GOODGAMEStream
+        TWITCHSTREAM, GOODGAMESTREAM
     }
 }

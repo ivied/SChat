@@ -48,7 +48,7 @@ public class GoodGameVideoSetter extends VideoViewSetter implements AsyncDownloa
 
     @Override
     public FactoryVideoViewSetter.VideoSiteName getEnum() {
-        return FactoryVideoViewSetter.VideoSiteName.GOODGAMEStream;
+        return FactoryVideoViewSetter.VideoSiteName.GOODGAMESTREAM;
     }
 
     @Override
@@ -66,8 +66,6 @@ public class GoodGameVideoSetter extends VideoViewSetter implements AsyncDownloa
             if (matcher.find()) {
                  url = matcher.group(1);
             }
-
-
             HTML5WebView mWebView = new HTML5WebView(context);
             mWebView.loadUrl(url);
             setVideoView.setVideoView(mWebView, channel, getEnum());

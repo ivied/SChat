@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
@@ -56,6 +58,7 @@ public class GoodGame extends Site {
     private final int maxServerNum = 0x1e3;
     private Random randomNum = new Random();
     private static Map<String, WebSocketForGG> ggChanelMap =  new HashMap<>();
+    private static Map<String, Bitmap> smileMap = new HashMap<String, Bitmap>();
 
     private WebSocket webSocket;
     @Override
@@ -159,14 +162,26 @@ public class GoodGame extends Site {
     }
 
     @Override
+    protected boolean isPrivateMessage(String message) {
+        return ((GGNick != null) && (message.toLowerCase().indexOf(GGNick.toLowerCase() + ",")) == 0);
+    }
+
+    @Override
     public Spannable getSmiledText(String text, String nick) {
-        Spannable spannable = spannableFactory.newSpannable(nick + ": " + text);
+        int length = nick.length() + 1;
+        Spannable spannable = getLinkedSpan( nick , text);
+        if (isPrivateMessage(text)) {
+            spannable.setSpan(new ForegroundColorSpan(MyApp.getContext().getResources()
+                    .getColor(R.color.private_msg)), length, spannable.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        addSmiles( spannable, length, "");
         return spannable;
     }
 
     @Override
     protected Map<String, Bitmap> getSmileMapLink() {
-        return null;
+        return smileMap;
     }
 
     @Override
@@ -182,7 +197,11 @@ public class GoodGame extends Site {
 
     @Override
     protected void insertMessage(Message message) {
+        bindService();
         super.insertMessage(message);
+        privateMessage(message);
+        unbindService();
+
     }
 
     @Override
@@ -232,12 +251,10 @@ public class GoodGame extends Site {
         cookie = new BasicClientCookie("auto_login_name", GGNick);
         cookie.setDomain(domain);
         mCookieStore.addCookie(cookie ) ;
-
     }
 
 
     private String getConnectAddress() {
-
         return String.format("ws://%s:443/chat/%s/%s/websocket", domain, getRandomNumberWithLeadingZeros(), getRandomString());
     }
 
@@ -249,14 +266,10 @@ public class GoodGame extends Site {
 
     private String getRandomString()
     {
-
         String[] chars = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9"};
         StringBuilder builder = new StringBuilder();
         Random random = new Random();
-
-        for (int i = 0; i < 8; i++)
-            builder.append(chars[random.nextInt(chars.length - 1)]);
-
+        for (int i = 0; i < 8; i++)  builder.append(chars[random.nextInt(chars.length - 1)]);
         return builder.toString();
     }
 
