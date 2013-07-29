@@ -3,6 +3,7 @@ package ivied.p001astreamchat.Sites;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.AsyncTask;
 
 import org.apache.http.HttpEntity;
@@ -22,6 +23,9 @@ import ivied.p001astreamchat.Core.MyContentProvider;
  * Created by Serv on 03.06.13.
  */
 public class SmileHelper  {
+
+    private static int height =50;
+    private static int width =50;
 
     public  SmileHelper() {
 
@@ -96,6 +100,7 @@ public class SmileHelper  {
 
         }
     }
+
     static public byte[] urlToImageBLOB(String url) throws IOException {
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpEntity entity = null;
@@ -108,9 +113,22 @@ public class SmileHelper  {
         return EntityUtils.toByteArray(entity);
     }
 
-    public static Bitmap getImageFromBLOB(byte[] mBlob) {
-        byte[] bb = mBlob;
-        return BitmapFactory.decodeByteArray(bb, 0, bb.length);
+    public static Bitmap getImageFromBLOB(byte[] mBlob, float smileSizeMultiplicator) {
 
+        return getResizedBitmap(BitmapFactory.decodeByteArray(mBlob, 0, mBlob.length), smileSizeMultiplicator);
+
+    }
+
+    public static Bitmap getResizedBitmap(Bitmap bm, float smileSizeMultiplicator) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(smileSizeMultiplicator, smileSizeMultiplicator);
+
+        // "RECREATE" THE NEW BITMAP
+        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
     }
 }

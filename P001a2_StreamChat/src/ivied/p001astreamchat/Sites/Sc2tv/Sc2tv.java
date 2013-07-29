@@ -73,7 +73,7 @@ public class Sc2tv extends Site {
     final static StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
     ScheduledExecutorService sEs;
     private static Map<String, Bitmap> smileMap = new HashMap<String, Bitmap>();
-
+    private float smileSizeMultiplicator = 1f;
 
 
     @Override
@@ -370,6 +370,11 @@ public class Sc2tv extends Site {
             }
         }
 
+    }
+
+    @Override
+    public float getSmileSizeMultiplicator() {
+        return smileSizeMultiplicator;
     }
 
     public HttpPost getSc2tvPost(String name, String pass) {

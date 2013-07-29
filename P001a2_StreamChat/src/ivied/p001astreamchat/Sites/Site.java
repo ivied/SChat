@@ -106,34 +106,9 @@ public abstract class Site {
        return  getSiteEnum().name();
     }
 
-
-
-
-    protected class ChannelRun implements Runnable {
-
-        Site siteClass;
-        public String channel;
-
-        public ChannelRun(Site site, String channel) {
-
-            this.channel = channel;
-            this.siteClass = site;
-        }
-
-        public void run() {
-
-            bindService();
-
-            siteClass.readChannel(channel);
-            unbindService();
-        }
-
-
-
-
+    public float getSmileSizeMultiplicator() {
+        return 1;
     }
-
-
 
 
     public void getLogin(){
@@ -145,30 +120,6 @@ public abstract class Site {
         setNickAndPass(name, pass);
     }
 
-
-    protected void insertMessage (Message message) {
-        FactorySite.SiteName site= getSiteEnum();
-        ContentValues cv = new ContentValues();
-        cv.put("site", site.name());
-        cv.put("channel", message.channel);
-        cv.put("nick", message.nick);
-        cv.put("message", message.text);
-        cv.put("time", message.time);
-        cv.put("identificator", site.name() + message.id);
-        Cursor customCursor = MyApp.getContext().getContentResolver()
-                .query(ADD_URI, new String[]{"color", "personal"}, "site = ? AND channel = ?",
-                        new String[]{site.name(), message.channel}, null);
-        String personal = personalSet(customCursor);
-        if (personal.equalsIgnoreCase("")) personal = message.channel;
-        cv.put("personal", personal);
-
-        cv.put("color",colorSet(customCursor));
-        MyApp.getContext().getContentResolver().insert(
-                INSERT_URI, cv);
-        customCursor.close();
-        chatService.sendNotify(cv.getAsString("channel"), site);
-
-    }
 
     public HttpResponse getResponse(HttpUriRequest request) {
         HttpResponse response = null;
@@ -188,6 +139,30 @@ public abstract class Site {
 
         return response;
     }
+
+    protected class ChannelRun implements Runnable {
+
+        Site siteClass;
+        public String channel;
+
+        public ChannelRun(Site site, String channel) {
+
+            this.channel = channel;
+            this.siteClass = site;
+        }
+
+        public void run() {
+
+            bindService();
+
+            siteClass.readChannel(channel);
+            unbindService();
+        }
+    }
+
+
+
+
 
     public StringBuilder jsonRequest(HttpGet httpGet) {
         StringBuilder builder = new StringBuilder();
@@ -226,30 +201,8 @@ public abstract class Site {
         return builder;
     }
 
-    protected Cursor getCursorFromChannelDB (String site, String channel) {
-        return MyApp.getContext().getContentResolver()
-                .query(ADD_URI, new String[]{"color", "personal"}, "site = ? AND channel = ?",
-                        new String[]{site, channel}, null);
 
 
-
-    }
-
-    protected String personalSet (Cursor c) {
-
-        String personal = "";
-
-        if (c.moveToNext()){personal = c.getString(1);}
-
-        return personal;
-    }
-
-    protected int colorSet (Cursor c) {
-        int color = -111111;
-        if (c.moveToFirst()){color = c.getInt(0);}
-
-        return color;
-    }
 
     public class  PutSmile implements Runnable {
         String header;
@@ -298,13 +251,6 @@ public abstract class Site {
     }
 
 
-    protected int getSmileFlag() {
-        return smileFlag;
-    }
-
-
-
-
 
     public void setSmileMaps() {
          Map<String, Bitmap> smileMap = getSmileMap();
@@ -314,7 +260,7 @@ public abstract class Site {
         if (c.getCount()!=0){
             for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()){
                 String regexp = c.getString(3);
-                Bitmap smile = SmileHelper.getImageFromBLOB(c.getBlob(2));
+                Bitmap smile = SmileHelper.getImageFromBLOB(c.getBlob(2), getSmileSizeMultiplicator());
                 smileMap.put(regexp, smile);
 
             }
@@ -322,7 +268,49 @@ public abstract class Site {
         c.close();
     }
 
+    protected void insertMessage (Message message) {
+        FactorySite.SiteName site= getSiteEnum();
+        ContentValues cv = new ContentValues();
+        cv.put("site", site.name());
+        cv.put("channel", message.channel);
+        cv.put("nick", message.nick);
+        cv.put("message", message.text);
+        cv.put("time", message.time);
+        cv.put("identificator", site.name() + message.id);
+        Cursor customCursor = MyApp.getContext().getContentResolver()
+                .query(ADD_URI, new String[]{"color", "personal"}, "site = ? AND channel = ?",
+                        new String[]{site.name(), message.channel}, null);
+        String personal = personalSet(customCursor);
+        if (personal.equalsIgnoreCase("")) personal = message.channel;
+        cv.put("personal", personal);
 
+        cv.put("color",colorSet(customCursor));
+        MyApp.getContext().getContentResolver().insert(
+                INSERT_URI, cv);
+        customCursor.close();
+        chatService.sendNotify(cv.getAsString("channel"), site);
+
+    }
+
+    protected String personalSet (Cursor c) {
+
+        String personal = "";
+
+        if (c.moveToNext()){personal = c.getString(1);}
+
+        return personal;
+    }
+
+    protected int colorSet (Cursor c) {
+        int color = -111111;
+        if (c.moveToFirst()){color = c.getInt(0);}
+
+        return color;
+    }
+
+    protected int getSmileFlag() {
+        return smileFlag;
+    }
 
     protected String getLinks(String message){
         if(MainActivity.messageLinksShow){
@@ -358,7 +346,7 @@ public abstract class Site {
     }
 
 
-    public void addSmiles( Spannable spannable,  int length, String perfix) {
+    protected void addSmiles( Spannable spannable,  int length, String perfix) {
 
         Map<String, Bitmap> smileMap = new HashMap (getSmileMap());
         if (MainActivity.showSmiles){
