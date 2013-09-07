@@ -191,10 +191,10 @@ public class GoodGame extends Site {
 
     @Override
     protected void insertMessage(Message message) {
-        bindService();
+        //bindService();
         super.insertMessage(message);
         privateMessage(message);
-        unbindService();
+        //unbindService();
 
     }
 

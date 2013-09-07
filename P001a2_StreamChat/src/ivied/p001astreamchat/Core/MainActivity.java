@@ -70,7 +70,7 @@ public class MainActivity extends SherlockFragmentActivity implements MenuItem.O
 	static final String BROADCAST_ACTION = "ivied.p001astreamchat.servicebackbroadcast";
 	BroadcastReceiver br;
     Intent intent;
-    ChatService chatService;
+    public static ChatService chatService;
     SendMessageService SendService;
  	boolean bound = false;
  	boolean boundSend = false;
@@ -154,9 +154,9 @@ public class MainActivity extends SherlockFragmentActivity implements MenuItem.O
 
 		
 		intent = new Intent(this, ChatService.class);
+        startService(intent);
 		bindService(intent, sConn, 0);
-		Log.d(LOG_TAG, "MyService onCreate");
-		startService(intent);
+
 		intent = new Intent(this, SendMessageService.class);
 		startService(intent);
 		bindService(intent, sendConn, 0);
@@ -342,15 +342,13 @@ public class MainActivity extends SherlockFragmentActivity implements MenuItem.O
     	
        
         indexOfChats.add(chatName);
-      
-        if (!bound) return;
-	    Log.i(LOG_TAG, "here");
-	   chatService.startChatThread(chatName);
 
     }
    
     public void restartApp () {
         Intent i;
+        unbindService(sConn);
+        unbindService(sendConn);
         stopService(new Intent(this,SendMessageService.class));
         stopService(new Intent(this,ChatService.class));
         MyApp.factoryReset();
@@ -359,8 +357,6 @@ public class MainActivity extends SherlockFragmentActivity implements MenuItem.O
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         MyApp.getContext().startActivity(i);
 
-		
-	
     }
     
 	@Override
@@ -527,16 +523,7 @@ public class MainActivity extends SherlockFragmentActivity implements MenuItem.O
 		 super.onPause();
 		 
 	 }
-	 
-	 @Override
-	    public void onDestroy(){
 
-	    	//unbindService(sConn);
-	    	//unbindService(sendConn);
-	    	//stopServiceSend();
-	    	//stopService();
-	    	super.onDestroy();
-	    }
 	 
 	 
     /**

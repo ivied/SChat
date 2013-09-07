@@ -2,7 +2,6 @@ package ivied.p001astreamchat.Sites;
 
 import android.content.ComponentName;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -54,7 +53,6 @@ import ivied.p001astreamchat.R;
 public abstract class Site {
 
 
-    public ChatService chatService;
     boolean bound =false;
     public Future mFuture;
     public static final Uri INSERT_URI = Uri.parse("content://ivied.p001astreamchat/chats/insert");
@@ -153,10 +151,10 @@ public abstract class Site {
 
         public void run() {
 
-            bindService();
+            //bindService();
 
             siteClass.readChannel(channel);
-            unbindService();
+            //unbindService();
         }
     }
 
@@ -288,7 +286,7 @@ public abstract class Site {
         MyApp.getContext().getContentResolver().insert(
                 INSERT_URI, cv);
         customCursor.close();
-        chatService.sendNotify(cv.getAsString("channel"), site);
+        MainActivity.chatService.sendNotify(cv.getAsString("channel"), site);
 
     }
 
@@ -395,21 +393,21 @@ public abstract class Site {
 
 
 
-    protected void unbindService() {
+    /*protected void unbindService() {
         MyApp.getContext().unbindService(sConn);
     }
 
     protected void bindService() {
         Intent intent = new Intent(MyApp.getContext(), ChatService.class);
         MyApp.getContext().bindService(intent, sConn, 0);
-    }
+    }*/
 
     protected void privateMessage(Message message) {
         String text = message.text;
         if (MainActivity.showNotifySystem){
             if (isPrivateMessage(message.text)){
                 text = text.replace("<b>", "").replace("</b>", "");
-                chatService.sendPrivateNotify( text, message.channel,  getSiteEnum());
+                MainActivity.chatService.sendPrivateNotify(text, message.channel, getSiteEnum());
             }
 
         }
@@ -422,7 +420,7 @@ public abstract class Site {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             ChatService.ChatBinder binder = (ChatService.ChatBinder) service;
-            chatService = binder.getService();
+            MainActivity.chatService = binder.getService();
 
             bound = true;
 
