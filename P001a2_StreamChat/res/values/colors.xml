@@ -6,4 +6,6 @@
     <color name="private_msg">#ED7221</color>
    <color name="link">#94DDFF</color>
    <color name="green">#00FF00</color>
+    <color name="asphalt">#333333</color>
+    <color name="grey">#777777</color>
 </resources>

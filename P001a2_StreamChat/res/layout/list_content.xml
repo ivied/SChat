@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout android:id="@+id/progressContainer"
                   android:orientation="vertical"
@@ -34,46 +33,79 @@
                 android:background="#000000"
                 android:orientation="vertical" >
 
-            <ImageButton
-                    android:id="@+id/enter"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:onClick="pressEnter"
-                    android:text="Enter"
-                    android:textSize="12sp"
-                    android:background="@drawable/btn_enter_message" />
-
             <ListView
                     android:id="@android:id/list"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@id/enter"
                     android:stackFromBottom="true"
-                    android:transcriptMode="alwaysScroll" />
-
-            <ImageButton
-                    android:id="@+id/smiles"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="10dp"
-
-                    android:background="@drawable/btn_send_smile"
-                    android:contentDescription="Smile"
-                    android:onClick="addSmile"
-                    android:textSize="12sp" />
+                    android:transcriptMode="alwaysScroll"
+                    android:layout_above="@+id/textOfMessage"
+                android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                android:layout_marginBottom="70dp" />
 
             <EditText
                     android:id="@+id/textOfMessage"
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_alignParentBottom="true"
+                    android:layout_height="30dp"
 
-                    android:layout_toLeftOf="@+id/enter"
-                    android:layout_toRightOf="@+id/smiles"
-                    android:ems="10" />
+                    android:ems="10"
+                    android:background="@color/white"
+                    android:layout_above="@+id/linearLayout"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"/>
+
+            <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/linearLayout"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp">
+
+                <ImageButton
+                        android:id="@+id/smiles"
+                        android:layout_width="40dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="10dp"
+
+                        android:background="@drawable/smile"
+                        android:contentDescription="Smile"
+                        android:onClick="addSmile"
+                        android:textSize="12sp"
+                        android:layout_weight="0.4"
+                        />
+
+                <ImageButton
+                        style="?android:attr/buttonStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:text="New Button"
+                        android:id="@+id/button"
+                        android:layout_weight="0.05"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:background="@android:drawable/ic_menu_manage"/>
+
+                <ImageButton
+                        android:id="@+id/enter"
+                        android:layout_width="60dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:onClick="pressEnter"
+                        android:text="Enter"
+                        android:textSize="12sp"
+                        android:background="@drawable/send"
+                        android:layout_weight="0.4"
+                        />
+            </LinearLayout>
 
             <!--   <fragment
                        android:layout_width="match_parent"
@@ -86,12 +118,5 @@
 
         </RelativeLayout>
     </FrameLayout>
-
-    <TextView
-            android:id="@+id/internalEmpty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </FrameLayout>

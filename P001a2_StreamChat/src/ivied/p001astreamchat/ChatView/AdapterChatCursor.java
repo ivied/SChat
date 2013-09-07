@@ -46,6 +46,7 @@ public class AdapterChatCursor extends SimpleCursorAdapter {
         linkMap.clear();
 		Spannable text = site.getSmiledText(message.getText().toString(), nick);//getSmiledText(this.mContext, message.getText(), nick);
 		message.setText(text);
+
 		TextView channel = (TextView) view.findViewById(R.id.channelName);
 		
 		int color = cursor.getInt(7);

@@ -110,6 +110,7 @@ public class MainActivity extends SherlockFragmentActivity implements MenuItem.O
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(R.style.Theme_Sherlock); // Used for theme switching in samples
+
 		super.onCreate(savedInstanceState);
 		indexOfChats.clear();
 		indexOfHeaders.clear();

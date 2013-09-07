@@ -132,7 +132,7 @@ public class ChatList extends SherlockFragmentActivity {
 
             tagNumber = Integer.parseInt(tokens[3]);
 
-            int INTERNAL_EMPTY_ID = 0x00ff0001;
+
             View root = inflater.inflate(R.layout.list_content, container,
                     false);
             if (!MainActivity.messageStringShow) {
@@ -142,7 +142,7 @@ public class ChatList extends SherlockFragmentActivity {
                         .setVisibility(View.GONE);
             }
 
-            (root.findViewById(R.id.internalEmpty)).setId(INTERNAL_EMPTY_ID);
+
             Log.i(MainActivity.LOG_TAG, "id textOfMessage = " + tagNumber);
             (root.findViewById(R.id.textOfMessage)).setId(tagNumber + 1);
 
