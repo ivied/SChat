@@ -24,7 +24,7 @@ public class MyContentProvider extends ContentProvider {
 	// // Êîíñòàíòû äëÿ ÁÄ
 	// ÁÄ
 	static final String DB_NAME = "mydb20";
-	static final int DB_VERSION = 9;
+	static final int DB_VERSION = 10;
 
 	// Òàáëèöà
 	static final String MESSAGES_TABLE = "chats";
@@ -46,7 +46,7 @@ public class MyContentProvider extends ContentProvider {
 			+ MESSAGES_UNIX_TIME + " integer, " + MESSAGES_SITE_NAME
 			+ " text, " + MESSAGES_CHANEL + " text, " + MESSAGES_NICK_NAME
 			+ " text, " + MESSAGES_MESSAGE + " text, " + MESSAGES_SPECIFIC_ID
-			+ " integer, "  + MESSAGES_COLOR
+			+ " text, "  + MESSAGES_COLOR
 			+ " integer, " + MESSAGES_PERSONAL + " text " + ");";
     public static final String CHANNELS_ID = "_id";
     public static final String CHANNELS_CHAT_NAME = "chat";

@@ -87,6 +87,7 @@ public class Sc2tv extends Site {
 
         JSONArray jsonArray = new JSONArray();
         try {
+            if(builderJson.toString().equals("")) return;
             JSONObject jsonObj = new JSONObject(builderJson.toString());
 
 
@@ -94,7 +95,6 @@ public class Sc2tv extends Site {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         insertSc2tv (jsonArray, 0, channel);
 
 
@@ -226,8 +226,9 @@ public class Sc2tv extends Site {
 
     private void insertSc2tv(JSONArray jsonArray, int i, String channel) {
         try {
+            if (jsonArray.length() == i) return;
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            String[] selectionArgs = new String[] { jsonObject.getString("id") };
+            String[] selectionArgs = new String[] { getSiteName() + jsonObject.getString("id") };
             Cursor c = MyApp.getContext().getContentResolver().query(
                     INSERT_URI, null,
                     "identificator = ?", selectionArgs, null);
@@ -261,6 +262,30 @@ public class Sc2tv extends Site {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private int getCountOfNew(JSONArray jsonArray) {
+
+        int i = 0 ;
+
+        Cursor c  ;
+        JSONObject jsonObj = new JSONObject();
+        try {
+
+
+            do{
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                String[] selectionArgs = new String[] { jsonObject.getString("id") };
+
+                c = MyApp.getContext().getContentResolver().query(
+                        INSERT_URI, null,
+                        "identificator = ?", selectionArgs, null);
+                if (c.getCount() == 0) i++;
+            }while ((c.getCount() == 0) && (jsonArray.length() != i));
+            c.close();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } return i;
     }
 
 

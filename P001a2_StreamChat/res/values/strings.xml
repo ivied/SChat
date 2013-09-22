@@ -66,7 +66,7 @@
     <string name="dialog_title_check_twitch_channel">Check twitch channel</string>
     <string name="dialog_title_select_smile_site">Select site</string>
     <string name="loading_video">Loading video</string>
-    <string name="dialog_field_add_video">Add video stream</string>
+    <string name="dialog_field_add_video">Add video stream(Alpha version)</string>
     <string name="btn_add_twitch_video">Add Twitch video</string>
     <string name="toast_add_stream_first">Add stream first</string>
     <string name="btn_find_Twitch_via_api">Find channel via Twitch API</string>
@@ -74,7 +74,7 @@
     <string name="hint_type_gg_streamer">Type GG streamer</string>
     <string name="btn_check_stream">Check Stream</string>
     <string name="hint_add_video_prefer_name">Prefer Name</string>
-    <string name="dialog_ad_qr_code">Add by QR code</string>
+    <string name="dialog_ad_qr_code">Add by QR code(Alpha version)</string>
     <string name="dialog_add_chat_sites">Add chat</string>
     <string name="toast_failed_get_goodgame_id">Failed to get GoodGame channel</string>
     <string name="btn_login_goodgame">Press to login on GoodGame</string>

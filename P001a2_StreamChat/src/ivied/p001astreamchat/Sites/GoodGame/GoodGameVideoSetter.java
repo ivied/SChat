@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
 import ivied.p001astreamchat.Core.MyApp;
+import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.AsyncDownloadJson;
 import ivied.p001astreamchat.Sites.FactoryVideoViewSetter;
 import ivied.p001astreamchat.Sites.VideoViewSetter;
@@ -38,7 +39,7 @@ public class GoodGameVideoSetter extends VideoViewSetter implements AsyncDownloa
 
     @Override
     public Drawable getLogo() {
-        return MyApp.getContext().getResources().getDrawable(android.R.drawable.btn_star);
+        return MyApp.getContext().getResources().getDrawable(R.drawable.goodgame);
     }
 
     @Override

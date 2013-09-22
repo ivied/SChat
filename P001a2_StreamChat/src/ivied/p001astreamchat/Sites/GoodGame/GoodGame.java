@@ -152,7 +152,7 @@ public class GoodGame extends Site {
 
     @Override
     public int getMiniLogo() {
-        return R.drawable.goodgame;
+        return R.drawable.goodgame_small;
     }
 
     @Override

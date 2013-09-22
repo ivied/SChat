@@ -56,7 +56,7 @@ public class DialogChoiceSite extends DialogFragment implements  OnClickListener
 
         TextView textViewQRReader = createTextView(getResources().getDrawable(R.drawable.qr_code), getResources().getString(R.string.dialog_ad_qr_code), ID_ADD_QR_CODE );
         layout.addView(textViewQRReader);
-        TextView textViewChatSite = createTextView(getResources().getDrawable(R.drawable.ic_launcher), getResources().getString(R.string.dialog_add_chat_sites), ID_ADD_CHAT_SITE );
+        TextView textViewChatSite = createTextView(getResources().getDrawable(R.drawable.chat_icon), getResources().getString(R.string.dialog_add_chat_sites), ID_ADD_CHAT_SITE );
         layout.addView(textViewChatSite);
 
         if (getArguments().getInt("flag") == 0){
