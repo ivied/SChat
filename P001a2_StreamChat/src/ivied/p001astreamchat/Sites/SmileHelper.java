@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.AsyncTask;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -60,7 +61,9 @@ public class SmileHelper  {
             int statusCode = statusLine.getStatusCode();
             if (!(statusCode == 200)) return null;
 
-            String header = response.getFirstHeader(site.getSmileModifyHeader()).getValue();
+            Header firstHeader = response.getFirstHeader(site.getSmileModifyHeader());
+            if (firstHeader == null) return null;
+            String header = firstHeader.getValue();
             String selection = "site = ?";
             String headerName = site.getSiteName()+ "header";
             String [] selectionArgs =  new String []{headerName};
