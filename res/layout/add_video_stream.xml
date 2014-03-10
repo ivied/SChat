@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp">
+
+        <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/imageSelectVideoStream"
+                android:background="@android:drawable/checkbox_on_background"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:onClick="onClickBtnAddStreamVideo"
+                android:layout_alignBottom="@+id/editText"/>
+
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/editNameVideoStream"
+                android:inputType="textCapCharacters|text|textCapWords"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/imageSelectVideoStream"
+                android:hint="@string/hint_add_video_prefer_name"/>
+    </RelativeLayout>
+    <FrameLayout
+            android:id="@+id/frameToVideoFragments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+    </FrameLayout>
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+    </LinearLayout>
+
+    <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="left|center_vertical"
+            android:id="@+id/frame_add_show_video">
+
+    </FrameLayout>
+
+
+
+</LinearLayout>
