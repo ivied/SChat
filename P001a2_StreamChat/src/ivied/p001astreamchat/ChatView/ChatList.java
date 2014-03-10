@@ -222,7 +222,6 @@ public class ChatList extends SherlockFragmentActivity {
 			// application this would come from a resource.
 			//setEmptyText(getResources().getText(R.string.default_message));
 
-			// We have a menu iteуm to show in action bar.
 			setHasOptionsMenu(true);
 
 			String[] from = new String[] {
@@ -453,9 +452,7 @@ public class ChatList extends SherlockFragmentActivity {
 				// The Cursor is now set to the right position
 
 				channels.add(c.getString(c.getColumnIndex("channel")));
-				Log.i(LOG_TAG,
-						"chat name" + chatName + " имя канала"
-								+ c.getString(c.getColumnIndex("channel")));
+
 			}
             c.close();
 			selectionArgs = channels.toArray(selectionArgs);

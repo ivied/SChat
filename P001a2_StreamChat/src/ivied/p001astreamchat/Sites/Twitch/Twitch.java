@@ -27,6 +27,7 @@ import ivied.p001astreamchat.Core.MainActivity;
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
+import ivied.p001astreamchat.Login.LoginException;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.Message;
@@ -210,7 +211,7 @@ public class Twitch  extends Site {
     }
 
     @Override
-    public void getLogin() {
+    public void getLogin() throws LoginException{
 
         super.getLogin();
 

@@ -45,6 +45,7 @@ import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.MyContentProvider;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
 import ivied.p001astreamchat.Login.Login;
+import ivied.p001astreamchat.Login.LoginException;
 import ivied.p001astreamchat.R;
 
 /**
@@ -108,12 +109,9 @@ public abstract class Site {
         return 1;
     }
 
-
-    public void getLogin(){
+    public void getLogin() throws LoginException{
         SharedPreferences preferences = MyApp.getContext().getSharedPreferences(Login.XML_LOGIN, 0);
-
         String name = preferences.getString(getSiteEnum().name() , "");
-
         String pass = preferences.getString(getSiteEnum().name() + "pass", "");
         setNickAndPass(name, pass);
     }
@@ -128,11 +126,9 @@ public abstract class Site {
             client.getConnectionManager().shutdown();
 
         } catch (ClientProtocolException e) {
-
-
+            e.printStackTrace();
         } catch (IOException e) {
-
-
+            e.printStackTrace();
         }
 
         return response;
@@ -165,9 +161,6 @@ public abstract class Site {
     public StringBuilder jsonRequest(HttpGet httpGet) {
         StringBuilder builder = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
-
-
-
         try {
 
             HttpResponse response = client.execute(httpGet);

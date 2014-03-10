@@ -7,6 +7,7 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -45,6 +46,7 @@ import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Core.SendMessageService;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
+import ivied.p001astreamchat.Login.LoginException;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.Message;
@@ -74,6 +76,7 @@ public class Sc2tv extends Site {
     ScheduledExecutorService sEs;
     private static Map<String, Bitmap> smileMap = new HashMap<String, Bitmap>();
     private float smileSizeMultiplicator = 1f;
+    private String LOG_TAG = "Sc2tv";
 
 
     @Override
@@ -130,7 +133,7 @@ public class Sc2tv extends Site {
     }
 
     @Override
-    public void getLogin() {
+    public void getLogin() throws LoginException{
         super.getLogin();
 
         try {
@@ -159,7 +162,7 @@ public class Sc2tv extends Site {
             content.close();
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            throw new LoginException();
         }
 
         catch (IOException e) {

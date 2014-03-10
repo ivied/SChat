@@ -35,6 +35,7 @@ import de.tavendo.autobahn.WebSocketException;
 import ivied.p001astreamchat.AddChat.FragmentAddChannelStandard;
 import ivied.p001astreamchat.Core.MyApp;
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
+import ivied.p001astreamchat.Login.LoginException;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.Message;
@@ -110,7 +111,7 @@ public class GoodGame extends Site {
     static DefaultHttpClient httpClient;
 
     @Override
-    public void getLogin() {
+    public void getLogin() throws LoginException{
         super.getLogin();
         synchronized (WebSocketForGG.waitLoginLocking){
             httpClient = new DefaultHttpClient();

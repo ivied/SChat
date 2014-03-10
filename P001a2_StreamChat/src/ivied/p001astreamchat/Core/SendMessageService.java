@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import ivied.p001astreamchat.Login.LoginException;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 import ivied.p001astreamchat.Sites.Site;
@@ -63,11 +64,18 @@ public class SendMessageService extends Service {
 	}
 	
 	class LoadLogin extends AsyncTask<Void, Void, Void> {
-		@Override
+        private String LOG_TAG = "LoadLogin";
+
+        @Override
 		protected Void doInBackground(Void... a) {
 
 			for(FactorySite.SiteName siteName : FactorySite.SiteName.values()){
-                factorySite.getSite(siteName).getLogin();
+                try {
+                    factorySite.getSite(siteName).getLogin();
+                } catch (LoginException e) {
+                    sendToast("Negative login attempt to " + siteName);
+                    Log.d(LOG_TAG, "Negative login attempt\n" + e.getMessage());
+                }
             }
 			return null;
 		}

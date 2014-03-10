@@ -1,8 +1,10 @@
 package ivied.p001astreamchat.Sites.GoodGame;
 
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import ivied.p001astreamchat.Login.FragmentLoginStandard;
+import ivied.p001astreamchat.Login.LoginException;
 import ivied.p001astreamchat.R;
 import ivied.p001astreamchat.Sites.FactorySite;
 
@@ -10,6 +12,8 @@ import ivied.p001astreamchat.Sites.FactorySite;
  * Created by Serv on 21.07.13.
  */
 public class FragmentLoginGoodGame extends FragmentLoginStandard{
+    private String LOG_TAG = "FragmentLoginGoodGame";
+
     @Override
     public Drawable getLogo() {
         return getResources().getDrawable(R.drawable.goodgame);
@@ -28,7 +32,11 @@ public class FragmentLoginGoodGame extends FragmentLoginStandard{
     @Override
     public boolean tryLogin(String nick, String pass) {
         GoodGame goodGame = new GoodGame();
-        goodGame.getLogin();
+        try {
+            goodGame.getLogin();
+        } catch (LoginException e) {
+            Log.d(LOG_TAG, "Negative login attempt\n" + e.getMessage());
+        }
 
         return GoodGame.GGNick == null ? false : true;
     }
